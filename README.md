@@ -1,4 +1,4 @@
-havalo
-======
+# Havalo
 
-A zero configuration, non-distributed key-value structured storage system that runs in your existing Servlet container.
+A zero configuration, non-distributed key-value store that runs in your existing Servlet container.
+
