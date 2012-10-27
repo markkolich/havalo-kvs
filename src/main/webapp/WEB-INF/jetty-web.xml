@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+<Configure id="Server" class="org.eclipse.jetty.webapp.WebAppContext">
+
+	<!-- JNDI java:comp/env -->
+	<New id="contextPath" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+		<Arg>java:comp/env/repositoryBase</Arg>
+		<Arg type="java.lang.String">/WEB-INF/work</Arg>
+		<Arg type="boolean">true</Arg>
+	</New>
+
+	<!-- JNDI java:comp/env -->
+	<New id="someApplicationContextProperty" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+		<Arg>java:comp/env/tempUploadDirectory</Arg>
+		<Arg type="java.lang.String">/WEB-INF/work</Arg>
+		<Arg type="boolean">true</Arg>
+	</New>
+
+</Configure>

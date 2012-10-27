@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context cookies="false">
+
+	<Environment name="repositoryBase"
+        description="The repository base data directory, all Havalo repositories live under this root."
+        override="true" type="java.lang.String"
+        value="/WEB-INF/work" />
+
+    <Environment name="tempUploadDirectory"
+        description="Files are uploaded here before processing."
+        override="true" type="java.lang.String"
+        value="/WEB-INF/work" />
+
+</Context>

@@ -4,3 +4,10 @@
 *.jar
 *.war
 *.ear
+
+.classpath
+project/target
+target
+bin
+
+src/main/webapp/WEB-INF/work

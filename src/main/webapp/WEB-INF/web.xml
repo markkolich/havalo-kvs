@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<display-name>Havalo</display-name>
+	<description>Havalo, a not so scalable storage service.</description>
+	
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>havalo.root</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/app-context.xml</param-value>
+	</context-param>
+		
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>	
+	    
+    <servlet>
+		<servlet-name>havalo</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/servlets/havalo.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>	
+	<servlet-mapping>
+		<servlet-name>havalo</servlet-name>
+		<url-pattern>/app/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Reads request input using UTF-8 encoding -->
+	<filter>
+		<filter-name>characterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>characterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- Spring Security -->
+	<filter>
+    	<filter-name>springSecurityFilterChain</filter-name>
+    	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+    	<filter-name>springSecurityFilterChain</filter-name>
+    	<url-pattern>/*</url-pattern>
+	</filter-mapping>
+		
+	<!-- Enables clean URLs with JSP views e.g. /welcome instead of /app/welcome -->
+	<filter>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+		<init-param>
+            <param-name>confPath</param-name>
+            <param-value>/WEB-INF/filters/urlrewrite.xml</param-value>
+        </init-param>
+        <!--
+        <init-param>
+            <param-name>logLevel</param-name>
+            <param-value>DEBUG</param-value>
+        </init-param>
+        -->
+	</filter>
+	<filter-mapping>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<error-page>
+		<error-code>401</error-code>
+		<location>/WEB-INF/jsp/errors/401-unauthorized.jsp</location>
+  	</error-page>
+	
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/jsp/errors/404-not-found.jsp</location>
+  	</error-page>
+  	
+  	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/jsp/errors/500-internal-server-error.jsp</location>
+  	</error-page>
+	
+</web-app>

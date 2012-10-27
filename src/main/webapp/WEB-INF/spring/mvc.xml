@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+			
+    <!-- Configures our default set of interceptors. -->    
+    <mvc:interceptors>
+    
+    	<mvc:interceptor>    		
+    		<mvc:mapping path="/api/authenticate**" />
+        	<bean class="com.kolich.spring.interceptors.RequestPathInterceptor">
+        		<property name="requestMappings">
+	       			<list value-type="java.lang.String">
+	       				<value>POST:\/authenticate$</value>
+	       			</list>
+	       		</property>
+        	</bean>
+    	</mvc:interceptor>
+    	
+    	<mvc:interceptor>    		
+    		<mvc:mapping path="/api/repository**" />
+        	<bean class="com.kolich.spring.interceptors.RequestPathInterceptor">
+        		<property name="requestMappings">
+	       			<list value-type="java.lang.String">
+	       				<value>GET:\/repository$</value>
+	       				<value>POST:\/repository$</value>
+	       			</list>
+	       		</property>
+        	</bean>
+    	</mvc:interceptor>
+    	
+    	<mvc:interceptor>	
+    		<mvc:mapping path="/api/object**" />
+        	<bean class="com.kolich.spring.interceptors.RequestPathInterceptor">
+        		<property name="requestMappings">
+	       			<list value-type="java.lang.String">
+	       				<!-- HEAD an object (exists) -->
+	       				<value>HEAD:\/object\/\\S{1,1000}$</value>
+	       				<!-- GET an object (download) -->
+	       				<value>GET:\/object\/\\S{1,1000}$</value>
+	       				<!-- POST or PUT an object (upload) -->
+	       				<value>POST:\/object$</value>
+	       				<value>PUT:\/object\/\\S{1,1000}$</value>
+	       				<!-- DELETE an object (delete) -->
+	       				<value>DELETE:\/object\/\\S{1,1000}$</value>
+	       			</list>
+	       		</property>
+        	</bean>
+    	</mvc:interceptor>
+    	
+    </mvc:interceptors>
+
+	<!-- Configures the annotation programming model -->
+	<context:annotation-config />
+
+	<!-- Scans the classpath of this application for @Components to deploy as beans -->
+	<context:component-scan base-package="com.kolich.havalo.spring">
+		<context:include-filter type="annotation" expression="org.springframework.context.annotation.Configuration"/>
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+	<!-- View resolvers -->
+	
+	<bean id="KolichContentNegotiatingViewResolver"
+		class="com.kolich.spring.views.KolichContentNegotiatingViewResolver"
+		p:order="#{T(org.springframework.core.Ordered).HIGHEST_PRECEDENCE}">	
+		<property name="mediaTypes">
+			<map>
+				<entry key="html" value="text/html" />
+			</map>
+		</property>
+		<property name="defaultContentType" value="text/html" />
+		<property name="favorPathExtension" value="true" />
+		<property name="ignoreAcceptHeader" value="true" />		
+		<property name="viewResolvers">
+			<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+				<property name="prefix" value="/WEB-INF/jsp/" />  
+				<property name="suffix" value=".jsp" />
+				<!--
+					A list of beans by ID that can be directly accessed in the
+					view layer (in a JSP) using the ${...} notation.
+				-->
+				<property name="exposedContextBeanNames">
+      				<list value-type="java.lang.String">
+				         <value>HavaloBootstrap</value>
+      				</list>
+   				</property>
+			</bean>
+		</property>
+		<property name="globalDefaultView" value="errors/404-not-found" />
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<!-- Spring driven exceptions -->
+				<prop key="org.springframework.web.HttpRequestMethodNotSupportedException">errors/405-method-not-allowed</prop>
+				<prop key="org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException">errors/404-not-found</prop>
+				<prop key="org.springframework.web.bind.MissingServletRequestParameterException">errors/400-bad-request</prop>
+				<!-- Typical Java exceptions -->
+				<prop key="java.lang.IllegalArgumentException">errors/400-bad-request</prop>								
+				<!-- Repository exceptions -->
+				<prop key="com.kolich.havalo.exceptions.repositories.DuplicateRepositoryException">errors/409-conflict</prop>
+				<prop key="com.kolich.havalo.exceptions.repositories.RepositoryCreationException">errors/500-internal-server-error</prop>
+				<prop key="com.kolich.havalo.exceptions.repositories.RepositoryFlushException">errors/412-precondition-failed</prop>
+				<prop key="com.kolich.havalo.exceptions.repositories.RepositoryLoadException">errors/503-service-unavailable</prop>
+				<prop key="com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException">errors/404-not-found</prop>
+				<!-- Object exceptions -->
+				<prop key="com.kolich.havalo.exceptions.objects.ObjectConflictException">errors/409-conflict</prop>
+				<prop key="com.kolich.havalo.exceptions.objects.ObjectDeletionException">errors/500-internal-server-error</prop>
+				<prop key="com.kolich.havalo.exceptions.objects.ObjectFlushException">errors/412-precondition-failed</prop>
+				<prop key="com.kolich.havalo.exceptions.objects.ObjectLoadException">errors/503-service-unavailable</prop>
+				<prop key="com.kolich.havalo.exceptions.objects.ObjectNotFoundException">errors/404-not-found</prop>
+				<!-- Lock exceptions -->
+				<prop key="com.kolich.havalo.exceptions.locks.LockConflictException">errors/409-conflict</prop>				
+				<!-- General exceptions -->
+				<prop key="com.kolich.havalo.exceptions.BadHavaloUUIDException">errors/400-bad-request</prop>				
+				<prop key="com.kolich.havalo.exceptions.InvalidResourceException">errors/404-not-found</prop>
+				<prop key="com.kolich.havalo.HavaloException">errors/500-internal-server-error</prop>
+			</props>
+		</property>
+		<property name="statusCodes">
+			<props>
+				<prop key="errors/400-bad-request">400</prop>
+				<prop key="errors/401-unauthorized">401</prop>
+				<prop key="errors/403-forbidden">403</prop>
+				<prop key="errors/404-not-found">404</prop>
+				<prop key="errors/405-method-not-allowed">405</prop>
+				<prop key="errors/409-conflict">409</prop>
+				<prop key="errors/410-gone">410</prop>
+				<prop key="errors/411-length-required">411</prop>
+				<prop key="errors/412-precondition-failed">412</prop>
+				<prop key="errors/500-internal-server-error">500</prop>
+				<prop key="errors/503-service-unavailable">503</prop>	
+			</props>
+		</property>
+		<property name="defaultStatusCode" value="404" />
+	</bean>
+	
+	<!-- It annoys me that all of my other bean ID's are CamelCase.  However,
+			in this instance, the id has to start with a lower case letter so
+			all beans in this context don't seem to necessairly follow the same
+			pricipal. -->
+	<bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+		id="messageSource" p:basenames="WEB-INF/i18n/messages"
+			p:fallbackToSystemLocale="false" />
+	
+</beans>
