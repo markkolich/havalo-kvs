@@ -40,35 +40,35 @@ object Dependencies {
   // Internal dependencies
 
   private val kolichSpring = "com.kolich" % "kolich-spring" % "0.0.3.1" % "compile"
-  
+
   // External dependencies
 
   private val jetty = "org.eclipse.jetty" % "jetty-server" % "8.0.4.v20111024" % "container"
   private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % "8.0.4.v20111024" % "container"
   private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % "8.0.4.v20111024" % "container"
   private val jettyJsp = "org.mortbay.jetty" % "jsp-2.1-glassfish" % "2.1.v20100127" % "container"
-  
+
   private val jspApi = "javax.servlet.jsp" % "jsp-api" % "2.2" % "provided" // Provided by servlet container  
-  private val servlet = "org.glassfish" % "javax.servlet" % "3.0" % "provided"  // Provided by servlet container
+  private val servlet = "org.glassfish" % "javax.servlet" % "3.0" % "provided" // Provided by servlet container
   private val jstl = "jstl" % "jstl" % "1.2" % "compile" // Package with WAR
-  private val javaEEWebApi = "javax" % "javaee-web-api" % "6.0" % "provided"  // Provided by servlet container
-  
+  private val javaEEWebApi = "javax" % "javaee-web-api" % "6.0" % "provided" // Provided by servlet container
+
   private val urlrewrite = "org.tuckey" % "urlrewritefilter" % "3.2.0" % "compile"
-  
+
   private val springTx = "org.springframework" % "spring-tx" % "3.1.2.RELEASE" % "compile"
   private val springSecurityCore = "org.springframework.security" % "spring-security-core" % "3.1.2.RELEASE" % "compile"
   private val springSecurityWeb = "org.springframework.security" % "spring-security-web" % "3.1.2.RELEASE" % "compile"
   private val springSecurityConfig = "org.springframework.security" % "spring-security-config" % "3.1.2.RELEASE" % "compile"
-  
+
   private val cgLibNoDep = "cglib" % "cglib-nodep" % "2.2.2" % "compile"
-  
+
   private val ardverkTrie = "org.ardverk" % "patricia-trie" % "0.6" % "compile"
-  
+
   private val logback = "ch.qos.logback" % "logback-core" % "1.0.7" % "compile"
   private val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.0.7" % "compile" // An Slf4j impl
   private val slf4j = "org.slf4j" % "slf4j-api" % "1.6.4" % "compile"
   private val jclOverSlf4j = "org.slf4j" % "jcl-over-slf4j" % "1.6.6" % "compile"
-  
+
   private val commonsLang = "org.apache.commons" % "commons-lang3" % "3.1" % "compile"
   private val commonsCodec = "commons-codec" % "commons-codec" % "1.6" % "compile"
   private val commonsFileupload = "commons-fileupload" % "commons-fileupload" % "1.2.2" % "compile"
@@ -89,7 +89,7 @@ object Resolvers {
 
   private val kolichRepo = "Kolich repo" at "http://markkolich.github.com/repo"
   private val ardverkRepo = "Ardverk repo" at "http://mvn.ardverk.org/repository/release" // For "patricia-trie"
-  
+
   val depResolvers = Seq(kolichRepo, ardverkRepo)
 
 }
@@ -148,6 +148,18 @@ object Common extends Build {
       retrieveManaged := true) ++
       // xsbt-web-plugin settings
       webSettings ++
+      Seq(warPostProcess in Compile <<= (target) map {
+        // Ensures the src/main/webapp/WEB-INF/work directory is NOT included
+        // in the packaged WAR file.  This is a temporary directory used by
+        // the Havalo application and servlet container in development that
+        // should not be shipped with a build.
+        (target) =>
+          {
+            () =>
+              val webinf = target / "webapp" / "WEB-INF"
+              IO.delete(webinf / "work") // recursive
+          }
+      }) ++
       Seq(EclipseKeys.createSrc := EclipseCreateSrc.Default,
         // Make sure SBT also fetches/loads the "src" (source) JAR's for
         // all declared dependencies.
