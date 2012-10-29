@@ -50,12 +50,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.kolich.bolt.ReentrantReadWriteEntityLock;
 import com.kolich.havalo.entities.types.DiskObject;
 import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
-import com.kolich.havalo.io.ReentrantReadWriteFileLock;
 import com.kolich.havalo.io.managers.RepositoryManager;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
 import com.kolich.spring.controllers.KolichControllerClosure;
@@ -89,7 +89,7 @@ public class GetAPI extends AbstractHavaloAPIController {
 					urlDecode(key),
 					// Fail if not found.
 					true);
-				new ReentrantReadWriteFileLock<HashedFileObject>(hfo) {
+				new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
 					@Override
 					public HashedFileObject transaction() throws Exception {
 						final DiskObject object = getCanonicalObject(repo, hfo);
@@ -118,7 +118,7 @@ public class GetAPI extends AbstractHavaloAPIController {
 					urlDecode(key),
 					// Fail if not found.
 					true);
-				new ReentrantReadWriteFileLock<HashedFileObject>(hfo) {
+				new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
 					@Override
 					public HashedFileObject transaction() throws Exception {
 						final DiskObject object = getCanonicalObject(repo, hfo);

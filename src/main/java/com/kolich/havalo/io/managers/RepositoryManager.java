@@ -50,12 +50,13 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.kolich.bolt.ReentrantReadWriteEntityLock;
+import com.kolich.bolt.exceptions.ReentrantReadWriteFileLockException;
 import com.kolich.havalo.entities.types.DiskObject;
 import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.Repository;
-import com.kolich.havalo.exceptions.locks.ReentrantReadWriteFileLockException;
 import com.kolich.havalo.exceptions.objects.ObjectConflictException;
 import com.kolich.havalo.exceptions.objects.ObjectDeletionException;
 import com.kolich.havalo.exceptions.objects.ObjectLoadException;
@@ -65,7 +66,6 @@ import com.kolich.havalo.exceptions.repositories.RepositoryCreationException;
 import com.kolich.havalo.exceptions.repositories.RepositoryFlushException;
 import com.kolich.havalo.exceptions.repositories.RepositoryLoadException;
 import com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException;
-import com.kolich.havalo.io.ReentrantReadWriteFileLock;
 import com.kolich.havalo.io.stores.MetaObjectStore;
 import com.kolich.havalo.io.stores.ObjectStore;
 
@@ -126,7 +126,7 @@ public final class RepositoryManager extends ObjectStore
 					// during the flush-to-disk process.
 					try {
 						if(repo != null) {
-							new ReentrantReadWriteFileLock<Repository>(repo) {
+							new ReentrantReadWriteEntityLock<Repository>(repo) {
 								@Override
 								public Repository transaction() throws Exception {
 									// Flush the repository meta data to disk.
@@ -217,7 +217,7 @@ public final class RepositoryManager extends ObjectStore
 			// Grab an exclusive "write" lock on the Repository and
 			// attempt to actually create the corresponding/underlying
 			// directory on disk.
-			return new ReentrantReadWriteFileLock<Repository>(repo) {
+			return new ReentrantReadWriteEntityLock<Repository>(repo) {
 				@Override
 				public Repository transaction() throws Exception {
 					// Attempt to create the repository directory if it does
@@ -303,7 +303,7 @@ public final class RepositoryManager extends ObjectStore
 	public HashedFileObject getHashedFileObject(final Repository repo,
 		final String key, final boolean failIfNotFound) {
 		try {
-			return new ReentrantReadWriteFileLock<HashedFileObject>(repo) {
+			return new ReentrantReadWriteEntityLock<HashedFileObject>(repo) {
 				@Override
 				public HashedFileObject transaction() throws Exception {
 					HashedFileObject hfo = repo.getObject(key);
@@ -338,7 +338,7 @@ public final class RepositoryManager extends ObjectStore
 	public HashedFileObject deleteHashedFileObject(final Repository repo,
 		final String key, final String ifMatch) {
 		try {
-			return new ReentrantReadWriteFileLock<HashedFileObject>(repo) {
+			return new ReentrantReadWriteEntityLock<HashedFileObject>(repo) {
 				@Override
 				public HashedFileObject transaction() throws Exception {
 					// Get the object we're going to delete.
@@ -353,7 +353,7 @@ public final class RepositoryManager extends ObjectStore
 					// Now attempt to grab an exclusive write lock on the
 					// file object do delete.  And, attempt to follow through
 					// on the physical delete from the platters.
-					new ReentrantReadWriteFileLock<HashedFileObject>(hfo) {
+					new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
 						@Override
 						public HashedFileObject transaction() throws Exception {
 							// If we have an incoming If-Match, we need to

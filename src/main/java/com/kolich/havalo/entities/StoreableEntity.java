@@ -31,13 +31,7 @@ public abstract class StoreableEntity extends HavaloFileEntity {
 	public StoreableEntity(String name) {
 		super(name);
 	}
-	
-	/*
-	public StoreableEntity(File file, String name) {
-		super(file, name);
-	}
-	*/
-	
+		
 	public abstract String getKey();
 	
 }

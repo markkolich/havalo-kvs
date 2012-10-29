@@ -55,12 +55,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kolich.bolt.ReentrantReadWriteEntityLock;
 import com.kolich.havalo.entities.types.DiskObject;
 import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.objects.ObjectConflictException;
-import com.kolich.havalo.io.ReentrantReadWriteFileLock;
 import com.kolich.havalo.io.managers.RepositoryManager;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
 import com.kolich.spring.controllers.KolichControllerClosure;
@@ -153,7 +153,7 @@ public class PutAPI extends AbstractHavaloAPIController {
 		final HashedFileObject hfo = getHashedFileObject(repo,
 			// URL-decode the incoming key (the name of the object)
 			urlDecode(key));
-		new ReentrantReadWriteFileLock<HashedFileObject>(hfo) {
+		new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
 			@Override
 			public HashedFileObject transaction() throws Exception {
 				// If we have an incoming If-Match, we need to compare that

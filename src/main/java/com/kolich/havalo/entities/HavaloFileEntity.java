@@ -30,9 +30,10 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.google.gson.annotations.SerializedName;
+import com.kolich.bolt.LockableEntity;
 
 public abstract class HavaloFileEntity extends HavaloEntity
-	implements Comparable<HavaloFileEntity> {
+	implements LockableEntity, Comparable<HavaloFileEntity> {
 	
 	protected transient final ReadWriteLock lock_;
 		
@@ -54,6 +55,7 @@ public abstract class HavaloFileEntity extends HavaloEntity
 		this(null);
 	}
 		
+	@Override
 	public ReadWriteLock getLock() {
 		return lock_;
 	}
