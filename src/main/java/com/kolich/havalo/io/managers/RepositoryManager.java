@@ -51,7 +51,7 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
-import com.kolich.bolt.exceptions.ReentrantReadWriteFileLockException;
+import com.kolich.bolt.exceptions.ReentrantReadWriteEntityLockException;
 import com.kolich.havalo.entities.types.DiskObject;
 import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.HavaloUUID;
@@ -242,7 +242,7 @@ public final class RepositoryManager extends ObjectStore
 					metaWriter_.queue(repo);
 				}
 			}.write(true); // Exclusive lock, wait if necessary
-		} catch (ReentrantReadWriteFileLockException e) {
+		} catch (ReentrantReadWriteEntityLockException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new RepositoryCreationException("Failed to create " +
@@ -320,7 +320,7 @@ public final class RepositoryManager extends ObjectStore
 					return hfo;
 				}
 			}.write(true); // Exclusive lock, wait if necessary
-		} catch (ReentrantReadWriteFileLockException e) {
+		} catch (ReentrantReadWriteEntityLockException e) {
 			throw e;
 		} catch (ObjectNotFoundException e) {
 			throw e;
@@ -409,7 +409,7 @@ public final class RepositoryManager extends ObjectStore
 					metaWriter_.queue(repo);
 				}
 			}.write(true); // Exclusive lock, wait if necessary
-		} catch (ReentrantReadWriteFileLockException e) {
+		} catch (ReentrantReadWriteEntityLockException e) {
 			throw e;
 		} catch (ObjectNotFoundException e) {
 			throw e;
