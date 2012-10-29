@@ -118,7 +118,7 @@
 				<prop key="com.kolich.havalo.exceptions.objects.ObjectLoadException">errors/503-service-unavailable</prop>
 				<prop key="com.kolich.havalo.exceptions.objects.ObjectNotFoundException">errors/404-not-found</prop>
 				<!-- Lock exceptions -->
-				<prop key="com.kolich.havalo.exceptions.locks.LockConflictException">errors/409-conflict</prop>				
+				<prop key="com.kolich.bolt.exceptions.LockConflictException">errors/409-conflict</prop>				
 				<!-- General exceptions -->
 				<prop key="com.kolich.havalo.exceptions.BadHavaloUUIDException">errors/400-bad-request</prop>				
 				<prop key="com.kolich.havalo.exceptions.InvalidResourceException">errors/404-not-found</prop>
