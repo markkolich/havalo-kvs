@@ -39,7 +39,7 @@ public abstract class HavaloFileEntity extends HavaloEntity
 	@SerializedName("name")
 	protected String name_;
 		
-	public HavaloFileEntity(String name) {
+	public HavaloFileEntity(final String name) {
 		name_ = name;
 		// Non-fair mode (default)
 		// When constructed as non-fair (the default), the order of entry

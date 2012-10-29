@@ -28,11 +28,10 @@ package com.kolich.havalo.io;
 
 import java.util.concurrent.locks.Lock;
 
-import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.HavaloFileEntity;
 import com.kolich.havalo.exceptions.locks.LockConflictException;
 
-public abstract class ReentrantReadWriteFileLock<T extends HavaloEntity> {
+public abstract class ReentrantReadWriteFileLock<T> {
 			
 	private final HavaloFileEntity fileEntity_;
 	
