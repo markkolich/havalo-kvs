@@ -36,12 +36,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kolich.spring.controllers.KolichControllerClosure;
 
 @Controller
-@RequestMapping(value="/")
+@RequestMapping(value="/api")
 public class Index extends AbstractHavaloController {
 	
 	private static final Logger logger__ = LoggerFactory.getLogger(Index.class);
 	
-	private static final String VIEW_NAME = "index";
+	// For WEB-INF/jsp/index-api.jsp
+	private static final String VIEW_NAME = "index-api";
 		
 	@RequestMapping(method={RequestMethod.GET, RequestMethod.HEAD})
 	public ModelAndView index() {

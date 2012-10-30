@@ -35,7 +35,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>havalo</servlet-name>
-		<url-pattern>/app/*</url-pattern>
+		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Reads request input using UTF-8 encoding -->
@@ -66,26 +66,6 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	<!-- Enables clean URLs with JSP views e.g. /welcome instead of /app/welcome -->
-	<filter>
-		<filter-name>UrlRewriteFilter</filter-name>
-		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-		<init-param>
-			<param-name>confPath</param-name>
-			<param-value>/WEB-INF/filters/urlrewrite.xml</param-value>
-		</init-param>
-		<!--
-		<init-param>
-			<param-name>logLevel</param-name>
-			<param-value>DEBUG</param-value> 
-		</init-param>
-		-->
-	</filter>
-	<filter-mapping>
-		<filter-name>UrlRewriteFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
 	<error-page>
 		<error-code>401</error-code>
 		<location>/WEB-INF/jsp/errors/401-unauthorized.jsp</location>
@@ -100,5 +80,9 @@
 		<error-code>500</error-code>
 		<location>/WEB-INF/jsp/errors/500-internal-server-error.jsp</location>
 	</error-page>
+	
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
 
 </web-app>

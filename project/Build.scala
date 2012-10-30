@@ -54,8 +54,6 @@ object Dependencies {
   private val jstl = "jstl" % "jstl" % "1.2" % "compile" // Package with WAR
   private val javaEEWebApi = "javax" % "javaee-web-api" % "6.0" % "provided" // Provided by servlet container
 
-  private val urlrewrite = "org.tuckey" % "urlrewritefilter" % "3.2.0" % "compile"
-
   private val springTx = "org.springframework" % "spring-tx" % "3.1.2.RELEASE" % "compile"
   private val springSecurityCore = "org.springframework.security" % "spring-security-core" % "3.1.2.RELEASE" % "compile"
   private val springSecurityWeb = "org.springframework.security" % "spring-security-web" % "3.1.2.RELEASE" % "compile"
@@ -77,7 +75,6 @@ object Dependencies {
   val webAppDeps = Seq(kolichSpring, kolichBolt,
     jetty, jettyWebApp, jettyPlus, jettyJsp,
     jspApi, jstl, servlet, javaEEWebApi,
-    urlrewrite,
     springTx, springSecurityCore, springSecurityWeb, springSecurityConfig,
     cgLibNoDep,
     ardverkTrie,
