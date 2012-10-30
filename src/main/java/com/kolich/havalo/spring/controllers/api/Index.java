@@ -24,7 +24,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.spring.controllers;
+package com.kolich.havalo.spring.controllers.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kolich.havalo.spring.controllers.AbstractHavaloController;
 import com.kolich.spring.controllers.KolichControllerClosure;
 
 @Controller
