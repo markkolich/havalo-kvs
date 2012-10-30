@@ -11,18 +11,7 @@
 			
     <!-- Configures our default set of interceptors. -->    
     <mvc:interceptors>
-    
-    	<mvc:interceptor>    		
-    		<mvc:mapping path="/api**" />
-        	<bean class="com.kolich.spring.interceptors.RequestPathInterceptor">
-        		<property name="requestMappings">
-	       			<list value-type="java.lang.String">
-	       				<value>*:\/api$</value>
-	       			</list>
-	       		</property>
-        	</bean>
-    	</mvc:interceptor>
-    
+        
     	<mvc:interceptor>    		
     		<mvc:mapping path="/api/authenticate**" />
         	<bean class="com.kolich.spring.interceptors.RequestPathInterceptor">
