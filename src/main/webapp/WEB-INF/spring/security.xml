@@ -42,6 +42,16 @@
 	
 	<security:http auto-config="false" use-expressions="true" entry-point-ref="HavaloAuthenticationEntryPoint">
 	
+		<!--		
+			NOTE on the paths/patterns in this file -- the patterns you see below
+			are a bit odd given that the Spring Dispatcher Servlet listens under /api/*.
+			And, the Spring Security Filter is also configured to catch on /api/*.
+			However, the patterns below want to **start** with the path match used
+			with the springSecurityFilterChain in web.xml.  So, if the url-pattern
+			for the springSecurityFilterChain is "/api/*" then the patterns defined
+			in this file have to start with "/api/".
+		-->
+	
 		<!--
 			A bit misleading, this filter isn't really a formal
 			BASIC_AUTH_FILTER ("Basic Authentication Filter").  It is
@@ -50,15 +60,15 @@
 		-->
 		<security:custom-filter position="BASIC_AUTH_FILTER" ref="HavaloAuthenticationFilter" />		
 		
-		<security:intercept-url pattern="/authenticate**" access="hasRole('ROLE_USER')" />		
+		<security:intercept-url pattern="/api/authenticate**" access="hasRole('ROLE_USER')" />
 		
-		<security:intercept-url pattern="/repository" method="GET" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/api/repository" method="GET" access="hasRole('ROLE_USER')" />
 		
 		<!-- Only ADMIN level users can create new repositories. -->
-		<security:intercept-url pattern="/repository" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/api/repository" access="hasRole('ROLE_ADMIN')" />
 		
-		<security:intercept-url pattern="/object" access="hasRole('ROLE_USER')" />
-		<security:intercept-url pattern="/object/**" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/api/object" access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/api/object/**" access="hasRole('ROLE_USER')" />
 
         <security:intercept-url pattern="/**" access="permitAll" />
         
