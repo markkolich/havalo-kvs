@@ -43,7 +43,7 @@
 	<security:http auto-config="false" use-expressions="true" entry-point-ref="HavaloAuthenticationEntryPoint">
 	
 		<!--		
-			NOTE on the paths/patterns in this file -- the patterns you see below
+			NOTE on the paths/patterns in this file: the patterns you see below
 			are a bit odd given that the Spring Dispatcher Servlet listens under /api/*.
 			And, the Spring Security Filter is also configured to catch on /api/*.
 			However, the patterns below want to **start** with the path match used
