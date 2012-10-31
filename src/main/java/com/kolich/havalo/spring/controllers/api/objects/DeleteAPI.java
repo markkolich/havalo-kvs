@@ -45,11 +45,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.spring.controllers.HavaloControllerClosure;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
-import com.kolich.spring.controllers.KolichControllerClosure;
 
 @Controller
-@RequestMapping(value="/api/object")
+@RequestMapping(value="/object")
 public class DeleteAPI extends AbstractHavaloAPIController {
 	
 	private static final Logger logger__ =
@@ -69,7 +69,7 @@ public class DeleteAPI extends AbstractHavaloAPIController {
 		@RequestHeader(value=IF_MATCH, required=false) final String ifMatch,
 		final HttpServletResponse response,
 		final HavaloUUID userId) {
-		return new KolichControllerClosure<ResponseEntity<byte[]>>(
+		return new HavaloControllerClosure<ResponseEntity<byte[]>>(
 			"DELETE:/api/object/" + key, logger__) {
 			@Override
 			public ResponseEntity<byte[]> doit() throws Exception {

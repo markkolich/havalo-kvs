@@ -34,10 +34,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kolich.havalo.spring.controllers.AbstractHavaloController;
-import com.kolich.spring.controllers.KolichControllerClosure;
+import com.kolich.havalo.spring.controllers.HavaloControllerClosure;
 
 @Controller
-@RequestMapping(value="/api")
+@RequestMapping(value="/")
 public class Index extends AbstractHavaloController {
 	
 	private static final Logger logger__ = LoggerFactory.getLogger(Index.class);
@@ -47,7 +47,7 @@ public class Index extends AbstractHavaloController {
 		
 	@RequestMapping(method={RequestMethod.GET, RequestMethod.HEAD})
 	public ModelAndView index() {
-		return new KolichControllerClosure<ModelAndView>(
+		return new HavaloControllerClosure<ModelAndView>(
 			"[GET,HEAD]:/", logger__) {
 			@Override
 			public ModelAndView doit() throws Exception {

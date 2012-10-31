@@ -62,11 +62,11 @@ import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.objects.ObjectConflictException;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.spring.controllers.HavaloControllerClosure;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
-import com.kolich.spring.controllers.KolichControllerClosure;
 
 @Controller
-@RequestMapping(value="/api/object")
+@RequestMapping(value="/object")
 public class PutAPI extends AbstractHavaloAPIController {
 	
 	private static final Logger logger__ =
@@ -95,7 +95,7 @@ public class PutAPI extends AbstractHavaloAPIController {
 		// Servlet request parameter (not a header).
 		@RequestParam(required=false) final String contentType,
 		final HavaloUUID userId) {
-		return new KolichControllerClosure<ResponseEntity<byte[]>>(
+		return new HavaloControllerClosure<ResponseEntity<byte[]>>(
 			"POST:/api/object?key=" + key, logger__) {
 			@Override
 			public ResponseEntity<byte[]> doit() throws Exception {
@@ -128,7 +128,7 @@ public class PutAPI extends AbstractHavaloAPIController {
 		// to the server via HTTP.
 		final HttpServletRequest request,
 		final HavaloUUID userId) {
-		return new KolichControllerClosure<ResponseEntity<byte[]>>(
+		return new HavaloControllerClosure<ResponseEntity<byte[]>>(
 			"PUT:/api/object/" + key, logger__) {
 			@Override
 			public ResponseEntity<byte[]> doit() throws Exception {

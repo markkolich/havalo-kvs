@@ -42,11 +42,11 @@ import com.kolich.havalo.entities.types.ObjectList;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.entities.types.UserRole;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.spring.controllers.HavaloControllerClosure;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
-import com.kolich.spring.controllers.KolichControllerClosure;
 
 @Controller
-@RequestMapping(value="/api/repository")
+@RequestMapping(value="/repository")
 public class RepositoryAPI extends AbstractHavaloAPIController {
 	
 	private static final Logger logger__ =
@@ -59,7 +59,7 @@ public class RepositoryAPI extends AbstractHavaloAPIController {
 	
 	@RequestMapping(method={RequestMethod.POST})
 	public ResponseEntity<byte[]> create() {
-		return new KolichControllerClosure<ResponseEntity<byte[]>>(
+		return new HavaloControllerClosure<ResponseEntity<byte[]>>(
 			"POST:/api/repository", logger__) {
 			@Override
 			public ResponseEntity<byte[]> doit() throws Exception {				
@@ -83,7 +83,7 @@ public class RepositoryAPI extends AbstractHavaloAPIController {
 	public ResponseEntity<byte[]> list(
 		@RequestParam(required=false) final String startsWith,
 		final HavaloUUID userId) {
-		return new KolichControllerClosure<ResponseEntity<byte[]>>(
+		return new HavaloControllerClosure<ResponseEntity<byte[]>>(
 			"GET:/api/repository", logger__) {
 			@Override
 			public ResponseEntity<byte[]> doit() throws Exception {

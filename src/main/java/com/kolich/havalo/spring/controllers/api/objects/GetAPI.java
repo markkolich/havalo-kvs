@@ -57,11 +57,11 @@ import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.spring.controllers.HavaloControllerClosure;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
-import com.kolich.spring.controllers.KolichControllerClosure;
 
 @Controller
-@RequestMapping(value="/api/object")
+@RequestMapping(value="/object")
 public class GetAPI extends AbstractHavaloAPIController {
 	
 	// http://benramsey.com/blog/2008/05/206-partial-content-and-range-requests/
@@ -78,7 +78,7 @@ public class GetAPI extends AbstractHavaloAPIController {
 	public void get(@PathVariable final String key,
 		final HttpServletResponse response,
 		final HavaloUUID userId) {
-		new KolichControllerClosure<Void>(
+		new HavaloControllerClosure<Void>(
 			"GET:/api/object/" + key, logger__) {
 			@Override
 			public Void doit() throws Exception {
@@ -107,7 +107,7 @@ public class GetAPI extends AbstractHavaloAPIController {
 	public void head(@PathVariable final String key,
 		final HttpServletResponse response,
 		final HavaloUUID userId) {
-		new KolichControllerClosure<Void>(
+		new HavaloControllerClosure<Void>(
 			"HEAD:/api/object/" + key, logger__) {
 			@Override
 			public Void doit() throws Exception {

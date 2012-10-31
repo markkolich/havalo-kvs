@@ -38,11 +38,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.spring.controllers.HavaloControllerClosure;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
-import com.kolich.spring.controllers.KolichControllerClosure;
 
 @Controller
-@RequestMapping(value="/api/authenticate")
+@RequestMapping(value="/authenticate")
 public class AuthenticateAPI extends AbstractHavaloAPIController {
 	
 	private static final Logger logger__ =
@@ -55,7 +55,7 @@ public class AuthenticateAPI extends AbstractHavaloAPIController {
 	
 	@RequestMapping(method={RequestMethod.POST})
 	public ResponseEntity<byte[]> authenticate(final HavaloUUID userId) {
-		return new KolichControllerClosure<ResponseEntity<byte[]>>(
+		return new HavaloControllerClosure<ResponseEntity<byte[]>>(
 			"POST:/api/authenticate", logger__) {
 			@Override
 			public ResponseEntity<byte[]> doit() throws Exception {
