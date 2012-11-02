@@ -11,8 +11,19 @@
 			
     <!-- Configures our default set of interceptors. -->    
     <mvc:interceptors>
+    
+    	<mvc:interceptor>
+    		<mvc:mapping path="/api**" />
+        	<bean class="com.kolich.spring.interceptors.RequestPathInterceptor">
+        		<property name="requestMappings">
+	       			<list value-type="java.lang.String">
+	       				<value>GET:\/api$</value>
+	       			</list>
+	       		</property>
+        	</bean>
+    	</mvc:interceptor>
         
-    	<mvc:interceptor>    		
+    	<mvc:interceptor>
     		<mvc:mapping path="/api/authenticate**" />
         	<bean class="com.kolich.spring.interceptors.RequestPathInterceptor">
         		<property name="requestMappings">
@@ -23,7 +34,7 @@
         	</bean>
     	</mvc:interceptor>
     	
-    	<mvc:interceptor>    		
+    	<mvc:interceptor>
     		<mvc:mapping path="/api/repository**" />
         	<bean class="com.kolich.spring.interceptors.RequestPathInterceptor">
         		<property name="requestMappings">
@@ -35,7 +46,7 @@
         	</bean>
     	</mvc:interceptor>
     	
-    	<mvc:interceptor>	
+    	<mvc:interceptor>
     		<mvc:mapping path="/api/object**" />
         	<bean class="com.kolich.spring.interceptors.RequestPathInterceptor">
         		<property name="requestMappings">
@@ -86,11 +97,13 @@
 					A list of beans by ID that can be directly accessed in the
 					view layer (in a JSP) using the ${...} notation.
 				-->
+				<!--
 				<property name="exposedContextBeanNames">
       				<list value-type="java.lang.String">
 				         <value>HavaloBootstrap</value>
       				</list>
    				</property>
+   				-->
 			</bean>
 		</property>
 		<property name="globalDefaultView" value="errors/404-not-found" />
