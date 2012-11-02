@@ -44,28 +44,23 @@ public class HavaloBootstrap implements InitializingBean {
 	
 	private RepositoryManager manager_;
 	
-	private KeyPair adminKeyPair_;
-
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		try {
 			// Create a new random keypair for the default ADMIN level user.
-			adminKeyPair_ = new KeyPair(HAVALO_ADMIN_UUID, ADMIN);
+			final KeyPair adminKeyPair = new KeyPair(HAVALO_ADMIN_UUID, ADMIN);
 			// Actually attempt to create a new Repository for the Admin user.
 			// This should work, if not, bail the whole app.
-			manager_.createRepository(adminKeyPair_.getIdKey(), adminKeyPair_);
+			manager_.createRepository(adminKeyPair.getIdKey(), adminKeyPair);
 			logger__.info("Successfully created ADMIN user repository (key=" +
-				adminKeyPair_.getIdKey() + ", secret=" +
-					adminKeyPair_.getSecret() + ")");
+				adminKeyPair.getIdKey() + ", secret=" +
+					adminKeyPair.getSecret() + ")");
 		} catch (RepositoryCreationException e) {
 			// Log in DEBUG and continue silently.  This is a normal case,
 			// when the admin repo has already been created on firstboot
 			// but Havalo is being re-started.
 			logger__.debug("Failed to create ADMIN user repository -- " +
 				"repository already exists.", e);
-			// Load the repository so we can cache the admin KeyPair.
-			adminKeyPair_ = manager_.getRepository(HAVALO_ADMIN_UUID)
-				.getKeyPair();
 		} catch (Exception e) {
 			// Hm, something else went wrong on startup, need to log
 			// and then bail.  The application cannot continue at this point.
@@ -73,14 +68,6 @@ public class HavaloBootstrap implements InitializingBean {
 				"cannot continue, giving up.", e);
 			throw e;
 		}
-	}
-	
-	public String getAdminKey() {
-		return adminKeyPair_.getIdKey().toString();
-	}
-	
-	public String getAdminSecret() {
-		return adminKeyPair_.getSecret();
 	}
 
 	public void setRepositoryManager(RepositoryManager manager) {

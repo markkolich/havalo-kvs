@@ -34,6 +34,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
+import com.kolich.havalo.exceptions.NullorEmptySecretException;
 import com.kolich.havalo.io.managers.RepositoryManager;
 
 public class HavaloUserDetailsService implements UserDetailsService {
@@ -46,6 +47,10 @@ public class HavaloUserDetailsService implements UserDetailsService {
 		try {
 			final HavaloUUID ownerId = new HavaloUUID(username);
 			final KeyPair kp = repoManager_.getRepository(ownerId).getKeyPair();
+			if(kp.getSecret() == null) {
+				throw new NullorEmptySecretException("Oops, KeyPair secret " +
+					"for user (" + ownerId + ") was null.");
+			}
 			return new User(kp.getIdKey().toString(), kp.getSecret(),
 				true, true, true, true, kp.getAuthorities());
 		} catch (Exception e) {

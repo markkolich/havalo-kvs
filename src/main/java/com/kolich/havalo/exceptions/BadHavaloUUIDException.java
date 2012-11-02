@@ -26,7 +26,6 @@
 
 package com.kolich.havalo.exceptions;
 
-
 public class BadHavaloUUIDException extends HavaloException {
 
 	private static final long serialVersionUID = -7473419765855248861L;
