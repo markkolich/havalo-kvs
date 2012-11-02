@@ -22,7 +22,17 @@
         class="org.springframework.jndi.JndiObjectFactoryBean">
         <property name="jndiName" value="java:comp/env/tempUploadDirectory" />
     </bean>
-           
+    
+    <bean id="AdminApiUUID" 
+        class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="java:comp/env/adminApiUUID" />
+    </bean>
+    
+    <bean id="AdminApiSecret" 
+        class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="java:comp/env/adminApiSecret" />
+    </bean>
+     
     <!-- Supporting beans -->
     
     <bean id="multipartResolver"
@@ -47,7 +57,9 @@
    	<bean id="HavaloBootstrap"
    		class="com.kolich.havalo.spring.beans.HavaloBootstrap"
    		depends-on="RepositoryManager">
-   		<property name="repositoryManager" ref="RepositoryManager" />  		
+   		<property name="repositoryManager" ref="RepositoryManager" />
+   		<property name="adminApiUUID" ref="AdminApiUUID" />
+   		<property name="adminApiSecret" ref="AdminApiSecret" />
    	</bean>
    	
 </beans>

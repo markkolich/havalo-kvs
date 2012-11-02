@@ -26,14 +26,15 @@
 
 package com.kolich.havalo.spring.beans;
 
-import static com.kolich.havalo.entities.types.HavaloUUID.HAVALO_ADMIN_UUID;
 import static com.kolich.havalo.entities.types.UserRole.ADMIN;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
+import com.kolich.havalo.exceptions.HavaloException;
 import com.kolich.havalo.exceptions.repositories.RepositoryCreationException;
 import com.kolich.havalo.io.managers.RepositoryManager;
 
@@ -44,11 +45,15 @@ public class HavaloBootstrap implements InitializingBean {
 	
 	private RepositoryManager manager_;
 	
+	private HavaloUUID adminApiUUID_;
+	private String adminApiSecret_;
+	
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		try {
 			// Create a new random keypair for the default ADMIN level user.
-			final KeyPair adminKeyPair = new KeyPair(HAVALO_ADMIN_UUID, ADMIN);
+			final KeyPair adminKeyPair = new KeyPair(adminApiUUID_,
+				adminApiSecret_, ADMIN);
 			// Actually attempt to create a new Repository for the Admin user.
 			// This should work, if not, bail the whole app.
 			manager_.createRepository(adminKeyPair.getIdKey(), adminKeyPair);
@@ -72,6 +77,19 @@ public class HavaloBootstrap implements InitializingBean {
 
 	public void setRepositoryManager(RepositoryManager manager) {
 		manager_ = manager;
+	}
+	
+	public void setAdminApiUUID(String adminApiUUID) {
+		try {
+			adminApiUUID_ = new HavaloUUID(adminApiUUID);
+		} catch (IllegalArgumentException e) {
+			throw new HavaloException("Provided Admin API UUID is not " +
+				"a valid UUID.", e);
+		}
+	}
+	
+	public void setAdminApiSecret(String adminApiSecret) {
+		adminApiSecret_ = adminApiSecret;
 	}
 
 }

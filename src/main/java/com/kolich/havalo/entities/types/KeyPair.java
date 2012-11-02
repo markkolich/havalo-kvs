@@ -56,10 +56,14 @@ public final class KeyPair extends HavaloEntity implements Serializable {
 	@SerializedName("role")
 	private UserRole role_;
 	
-	public KeyPair(HavaloUUID idKey, UserRole role) {
+	public KeyPair(HavaloUUID idKey, String secret, UserRole role) {
 		idKey_ = idKey;
-		secret_ = generateRandomSecret(); // Default
+		secret_ = secret;
 		role_ = role;
+	}
+	
+	public KeyPair(HavaloUUID idKey, UserRole role) {
+		this(idKey, generateRandomSecret(), role);
 	}
 	
 	public KeyPair(UserRole role) {

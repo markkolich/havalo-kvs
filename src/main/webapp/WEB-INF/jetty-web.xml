@@ -3,16 +3,30 @@
 <Configure id="Server" class="org.eclipse.jetty.webapp.WebAppContext">
 
 	<!-- JNDI java:comp/env -->
-	<New id="contextPath" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+	<New id="repositoryBase" class="org.eclipse.jetty.plus.jndi.EnvEntry">
 		<Arg>java:comp/env/repositoryBase</Arg>
 		<Arg type="java.lang.String">/WEB-INF/work</Arg>
 		<Arg type="boolean">true</Arg>
 	</New>
-
+	
 	<!-- JNDI java:comp/env -->
-	<New id="someApplicationContextProperty" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+	<New id="tempUploadDirectory" class="org.eclipse.jetty.plus.jndi.EnvEntry">
 		<Arg>java:comp/env/tempUploadDirectory</Arg>
 		<Arg type="java.lang.String">/WEB-INF/work</Arg>
+		<Arg type="boolean">true</Arg>
+	</New>
+	
+	<!-- JNDI java:comp/env -->
+	<New id="adminApiUUID" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+		<Arg>java:comp/env/adminApiUUID</Arg>
+		<Arg type="java.lang.String">00000000-0000-0000-0000-000000000000</Arg>
+		<Arg type="boolean">true</Arg>
+	</New>
+	
+	<!-- JNDI java:comp/env -->
+	<New id="adminApiSecret" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+		<Arg>java:comp/env/adminApiSecret</Arg>
+		<Arg type="java.lang.String">overrideme</Arg>
 		<Arg type="boolean">true</Arg>
 	</New>
 
