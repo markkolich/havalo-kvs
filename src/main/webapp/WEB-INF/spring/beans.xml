@@ -13,15 +13,15 @@
 		
 	<!-- Properties file location specific to Jetty deployments. -->
 	<context:property-placeholder location="file:${jetty.home}/conf/havalo.properties"
-    	ignore-unresolvable="true" ignore-resource-not-found="true" />
+    	ignore-unresolvable="true" ignore-resource-not-found="true" order="1" />
     
     <!-- Properties file location specific to Tomcat deployments. -->
     <context:property-placeholder location="file:${catalina.home}/conf/havalo.properties"
-    	ignore-unresolvable="true" ignore-resource-not-found="true" />
+    	ignore-unresolvable="true" ignore-resource-not-found="true" order="2" />
     	
-   	<!-- The default Havalo application properties (packaged with .war) -->
+   	<!-- The default Havalo application properties (packaged with .war). -->
 	<context:property-placeholder location="classpath:havalo.default.properties"
-		ignore-unresolvable="true" />
+		ignore-unresolvable="true" order="3" />
 
     <!-- Supporting beans -->
     
