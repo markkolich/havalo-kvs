@@ -98,7 +98,7 @@ object Common extends Build {
   import Resolvers._
 
   private val aName = "havalo"
-  private val aVer = "0.0.1"
+  private val aVer = "0.0.2"
   private val aOrg = "com.kolich"
 
   lazy val havalo: Project = Project(

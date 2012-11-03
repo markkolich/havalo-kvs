@@ -28,8 +28,8 @@
     <bean id="multipartResolver"
    		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
    		<property name="maxUploadSize" value="${max.upload.bytes}" />
-   		<property name="maxInMemorySize" value="${max.upload.bytes}" />
-   		<property name="uploadTempDir" value="${max.in-memory.bytes}" />
+   		<property name="maxInMemorySize" value="${max.in-memory.bytes}" />
+   		<property name="uploadTempDir" value="${temp.upload.directory}" />
    	</bean>
    	   	
    	<bean id="RepositoryManager"
