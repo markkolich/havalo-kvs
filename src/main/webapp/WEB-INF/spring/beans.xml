@@ -10,29 +10,19 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+		
+	<!-- Properties file location specific to Jetty deployments. -->
+	<context:property-placeholder location="file:${jetty.home}/conf/havalo.properties"
+    	ignore-unresolvable="true" ignore-resource-not-found="true" />
     
-    <!-- User configurable properties -->
-        
-    <bean id="RepositoryBase" 
-        class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="java:comp/env/repositoryBase" />
-    </bean>
-    
-    <bean id="TempUploadDirectory" 
-        class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="java:comp/env/tempUploadDirectory" />
-    </bean>
-    
-    <bean id="AdminApiUUID" 
-        class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="java:comp/env/adminApiUUID" />
-    </bean>
-    
-    <bean id="AdminApiSecret" 
-        class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="java:comp/env/adminApiSecret" />
-    </bean>
-     
+    <!-- Properties file location specific to Tomcat deployments. -->
+    <context:property-placeholder location="file:${catalina.home}/conf/havalo.properties"
+    	ignore-unresolvable="true" ignore-resource-not-found="true" />
+    	
+   	<!-- The default Havalo application properties (packaged with .war) -->
+	<context:property-placeholder location="classpath:havalo.default.properties"
+		ignore-unresolvable="true" />
+
     <!-- Supporting beans -->
     
     <bean id="multipartResolver"
@@ -42,12 +32,12 @@
    		<!-- 1MB -->
    		<property name="maxInMemorySize" value="1048576" />
    		<!-- Upload temp directory -->
-   		<property name="uploadTempDir" ref="TempUploadDirectory" />
+   		<property name="uploadTempDir" value="${temp.upload.directory}" />
    	</bean>
    	   	
    	<bean id="RepositoryManager"
    		class="com.kolich.havalo.io.managers.RepositoryManager">
-   		<constructor-arg ref="RepositoryBase"/>
+   		<constructor-arg value="${repository.base}"/>
    		<property name="maxFilenameLength" value="2" />
    		<property name="maxRepositoryCacheSize" value="10" />   		
    	</bean>
@@ -58,8 +48,8 @@
    		class="com.kolich.havalo.spring.beans.HavaloBootstrap"
    		depends-on="RepositoryManager">
    		<property name="repositoryManager" ref="RepositoryManager" />
-   		<property name="adminApiUUID" ref="AdminApiUUID" />
-   		<property name="adminApiSecret" ref="AdminApiSecret" />
+   		<property name="adminApiUUID" value="${api.admin.uuid}" />
+   		<property name="adminApiSecret" value="${api.admin.secret}" />
    	</bean>
    	
 </beans>
