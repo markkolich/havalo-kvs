@@ -84,6 +84,11 @@ public class GetAPI extends AbstractHavaloAPIController {
 			public Void doit() throws Exception {
 				notEmpty(key, "Key cannot be null or empty.");
 				final Repository repo = getRepository(userId);
+				// In theory, another thread could have "deleted" the repository
+				// from the time we fetched it and from the time we attempt to
+				// capture a write() lock on it to load the HFO.  If this happens,
+				// however, the underlying HFO would have been deleted on disk
+				// and therefore the request to get the HFO would fail gracefully.
 				final HashedFileObject hfo = getHashedFileObject(repo,
 					// URL-decode the incoming key on the path.
 					urlDecode(key),

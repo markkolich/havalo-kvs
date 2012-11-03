@@ -48,6 +48,10 @@ public abstract class AbstractHavaloAPIController extends AbstractHavaloControll
 		return repositoryManager_.createRepository(id, keyPair);
 	}
 	
+	protected final void deleteRepository(final HavaloUUID id) {
+		repositoryManager_.deleteRepository(id);
+	}
+	
 	protected final Repository getRepository(final HavaloUUID userId) {
 		return repositoryManager_.getRepository(userId);
 	}

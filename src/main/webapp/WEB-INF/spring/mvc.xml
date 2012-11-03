@@ -25,16 +25,18 @@
     	
     	<mvc:interceptor>
     		<mvc:mapping path="/api/repository**" />
+    		<mvc:mapping path="/api/repository/**" />
         	<bean class="com.kolich.spring.interceptors.RequestPathInterceptor">
         		<property name="requestMappings">
 	       			<list value-type="java.lang.String">
 	       				<value>GET:\/repository$</value>
 	       				<value>POST:\/repository$</value>
+	       				<value>DELETE:\/repository\/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$</value>
 	       			</list>
 	       		</property>
         	</bean>
     	</mvc:interceptor>
-    	
+    	    	
     	<mvc:interceptor>
     		<mvc:mapping path="/api/object**" />
         	<bean class="com.kolich.spring.interceptors.RequestPathInterceptor">

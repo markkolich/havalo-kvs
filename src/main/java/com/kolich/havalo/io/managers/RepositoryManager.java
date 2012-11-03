@@ -51,7 +51,7 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
-import com.kolich.bolt.exceptions.ReentrantReadWriteEntityLockException;
+import com.kolich.bolt.exceptions.LockConflictException;
 import com.kolich.havalo.entities.types.DiskObject;
 import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.HavaloUUID;
@@ -63,6 +63,7 @@ import com.kolich.havalo.exceptions.objects.ObjectLoadException;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
 import com.kolich.havalo.exceptions.repositories.DuplicateRepositoryException;
 import com.kolich.havalo.exceptions.repositories.RepositoryCreationException;
+import com.kolich.havalo.exceptions.repositories.RepositoryDeletionException;
 import com.kolich.havalo.exceptions.repositories.RepositoryFlushException;
 import com.kolich.havalo.exceptions.repositories.RepositoryLoadException;
 import com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException;
@@ -94,7 +95,7 @@ public final class RepositoryManager extends ObjectStore
 				closeQuietly(reader);
 			}
 		}
-		
+				
 	}
 	
 	private final static class RepositoryMetaWriter {
@@ -190,10 +191,17 @@ public final class RepositoryManager extends ObjectStore
 						// _STRONG_ references to the keys and values in the
 						// cache, but we should check just in case.
 						if((repo = removed.getValue()) != null) {
-							// Queue the repository to be flushed to disk.
-							metaWriter_.queue(repo);
+							// If the repository directory has been deleted, we
+							// should not attempt to flush the meta data about it
+							// to disk -- the underlying repository has already
+							// been lost/removed.
+							if(repo.getFile().exists()) {
+								// Queue the repository to be flushed to disk.
+								metaWriter_.queue(repo);
+							}
 						} else {
-							// Should really _not_ happen.
+							// Should really _not_ happen based on the notes
+							// provided above.
 							throw new RepositoryFlushException("Could not " +
 								"flush NULL repository -- was perhaps " +
 									"already garbage collected?");
@@ -242,7 +250,7 @@ public final class RepositoryManager extends ObjectStore
 					metaWriter_.queue(repo);
 				}
 			}.write(true); // Exclusive lock, wait if necessary
-		} catch (ReentrantReadWriteEntityLockException e) {
+		} catch (LockConflictException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new RepositoryCreationException("Failed to create " +
@@ -254,7 +262,6 @@ public final class RepositoryManager extends ObjectStore
 		final boolean failIfNotFound) {
 		checkNotNull(id, "ID of the repository (owner) cannot be null.");
 		try {
-			//synchronized(repositories_) {
 			// Google Guava documentation claims that implementations of
 			// "Cache" should be thread safe, and therefore, wrapping accesses
 			// to a Cache instance with synchronized is unnecessary.
@@ -284,15 +291,65 @@ public final class RepositoryManager extends ObjectStore
 					return repo;
 				}
 			});
-			//}
 		} catch (Exception e) {
-			throw new RepositoryLoadException("Failed to load " +
-				"repository: " + id, e);
+			// Google Guava (the cache) wraps exceptions thrown from within its
+			// Callable.call() method.  When the Exception e ultimately makes it
+			// here, the real "cause" of the failure is embedded inside of
+			// e.getCause().  Not a big deal, just a detail to be aware of.
+			final Throwable cause = e.getCause();
+			if(cause instanceof RepositoryNotFoundException) {
+				throw (RepositoryNotFoundException)cause;
+			} else {
+				throw new RepositoryLoadException("Failed to load " +
+					"repository: " + id, e);
+			}
 		}
 	}
 	
 	public Repository getRepository(final HavaloUUID id) {
 		return getRepository(id, true);
+	}
+	
+	public void deleteRepository(final Repository repo) {
+		try {
+			new ReentrantReadWriteEntityLock<Void>(repo) {
+				@Override
+				public Void transaction() throws Exception {
+					// Delete all in-memory mappings to all objects in the repo.
+					repo.deleteAllObjects();
+					// Get a handle to the repository directory and recursively
+					// delete it and everything inside of it.
+					final File repoFile = repo.getFile();
+					if(!deleteQuietly(repoFile)) {
+						throw new RepositoryDeletionException("Failed to " +
+							"recursively delete repository (repo=" +
+								repo.getRepoId() + ", file=" +
+									repoFile.getCanonicalPath() + ")");
+					}
+					// Delete the meta data associated with the repository too.
+					metaStore_.delete(repo);
+					return null;
+				}
+				@Override
+				public void success(final Void v) throws Exception {
+					// On deletion success, remove the repository from the
+					// local in-memory "cache".  If the repository was not
+					// deleted successfully, then fail.
+					repositories_.invalidate(repo.getRepoId());
+				}
+			}.write(); // Exclusive lock, no wait
+		} catch (LockConflictException e) {
+			throw e;
+		} catch (RepositoryDeletionException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RepositoryDeletionException("Failed to delete " +
+				"repository (repo=" + repo.getKey() + ")", e);
+		}
+	}
+	
+	public void deleteRepository(final HavaloUUID id) {
+		deleteRepository(getRepository(id));		
 	}
 	
 	public HashedFileObject getHashedFileObject(final HavaloUUID id,
@@ -320,7 +377,7 @@ public final class RepositoryManager extends ObjectStore
 					return hfo;
 				}
 			}.write(true); // Exclusive lock, wait if necessary
-		} catch (ReentrantReadWriteEntityLockException e) {
+		} catch (LockConflictException e) {
 			throw e;
 		} catch (ObjectNotFoundException e) {
 			throw e;
@@ -353,7 +410,7 @@ public final class RepositoryManager extends ObjectStore
 					// Now attempt to grab an exclusive write lock on the
 					// file object do delete.  And, attempt to follow through
 					// on the physical delete from the platters.
-					new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
+					return new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
 						@Override
 						public HashedFileObject transaction() throws Exception {
 							// If we have an incoming If-Match, we need to
@@ -400,7 +457,6 @@ public final class RepositoryManager extends ObjectStore
 							return hfo;
 						}
 					}.write(); // Exclusive lock, fail immediately if HFO busy
-					return hfo;
 				}
 				@Override
 				public void success(final HashedFileObject hfo) throws Exception {					
@@ -409,7 +465,7 @@ public final class RepositoryManager extends ObjectStore
 					metaWriter_.queue(repo);
 				}
 			}.write(true); // Exclusive lock, wait if necessary
-		} catch (ReentrantReadWriteEntityLockException e) {
+		} catch (LockConflictException e) {
 			throw e;
 		} catch (ObjectNotFoundException e) {
 			throw e;

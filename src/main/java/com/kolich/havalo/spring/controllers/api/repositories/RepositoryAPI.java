@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,6 +58,24 @@ public class RepositoryAPI extends AbstractHavaloAPIController {
 		super(repositoryManager);
 	}
 	
+	@RequestMapping(method={RequestMethod.GET})
+	public ResponseEntity<byte[]> list(
+		@RequestParam(required=false) final String startsWith,
+		final HavaloUUID userId) {
+		return new HavaloControllerClosure<ResponseEntity<byte[]>>(
+			"GET:/api/repository", logger__) {
+			@Override
+			public ResponseEntity<byte[]> doit() throws Exception {
+				final Repository repo = getRepository(userId);
+				final ObjectList list = repo.startsWith((startsWith != null) ?
+					// Only load objects that start with the given
+					// prefix, if one was provided.
+					startsWith : "");
+				return getJsonResponseEntity(list, HttpStatus.OK);
+			}
+		}.execute();
+	}
+	
 	@RequestMapping(method={RequestMethod.POST})
 	public ResponseEntity<byte[]> create() {
 		return new HavaloControllerClosure<ResponseEntity<byte[]>>(
@@ -79,20 +98,16 @@ public class RepositoryAPI extends AbstractHavaloAPIController {
 		}.execute();
 	}
 	
-	@RequestMapping(method={RequestMethod.GET})
-	public ResponseEntity<byte[]> list(
-		@RequestParam(required=false) final String startsWith,
-		final HavaloUUID userId) {
+	@RequestMapping(method={RequestMethod.DELETE}, value="{repoId}")
+	public ResponseEntity<byte[]> delete(@PathVariable final String repoId) {
 		return new HavaloControllerClosure<ResponseEntity<byte[]>>(
-			"GET:/api/repository", logger__) {
+			"DELETE:/api/repository/" + repoId, logger__) {
 			@Override
 			public ResponseEntity<byte[]> doit() throws Exception {
-				final Repository repo = getRepository(userId);
-				final ObjectList list = repo.startsWith((startsWith != null) ?
-					// Only load objects that start with the given
-					// prefix, if one was provided.
-					startsWith : "");
-				return getJsonResponseEntity(list, HttpStatus.OK);
+				// Attempt to delete the repository, its meta data, and all
+				// objects inside of it.
+				deleteRepository(new HavaloUUID(repoId));
+				return getEmptyResponseEntity(HttpStatus.NO_CONTENT);
 			}
 		}.execute();
 	}

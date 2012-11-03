@@ -127,9 +127,23 @@ public final class Repository extends StoreableEntity implements Serializable {
 		// modifications are allowed to the Trie while it's being serialized).
 		// We are _not_ synchronizing around individual operations on the Trie
 		// (e.g., a single get, put, remove, etc.) but rather the entire Trie
-		// on each operation.		
+		// on each operation.
 		synchronized(objects_) {
 			return objects_.remove(key);
+		}
+	}
+	
+	public void deleteAllObjects() {
+		// Explicitly synchronized around the objects Trie such that no
+		// internal conflicts occur during GSON serialization (when GSON
+		// is serializing this object to JSON).  NOTE: The TrieTypeAdapter
+		// is also synchronized on the Trie to be serialized (such that no
+		// modifications are allowed to the Trie while it's being serialized).
+		// We are _not_ synchronizing around individual operations on the Trie
+		// (e.g., a single get, put, remove, etc.) but rather the entire Trie
+		// on each operation.
+		synchronized(objects_) {
+			objects_.clear();
 		}
 	}
 	
