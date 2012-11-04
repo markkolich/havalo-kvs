@@ -249,7 +249,7 @@ public final class RepositoryManager extends ObjectStore
 					// Queue the repository to be flushed to disk.
 					metaWriter_.queue(repo);
 				}
-			}.write(true); // Exclusive lock, wait if necessary
+			}.write(true); // Exclusive lock, wait
 		} catch (LockConflictException e) {
 			throw e;
 		} catch (Exception e) {
@@ -337,7 +337,7 @@ public final class RepositoryManager extends ObjectStore
 					// deleted successfully, then fail.
 					repositories_.invalidate(repo.getRepoId());
 				}
-			}.write(); // Exclusive lock, no wait
+			}.write(); // Exclusive lock on repo, no wait
 		} catch (LockConflictException e) {
 			throw e;
 		} catch (RepositoryDeletionException e) {
@@ -376,7 +376,7 @@ public final class RepositoryManager extends ObjectStore
 					}
 					return hfo;
 				}
-			}.write(true); // Exclusive lock, wait if necessary
+			}.read(false); // Shared reader lock on repo, no wait
 		} catch (LockConflictException e) {
 			throw e;
 		} catch (ObjectNotFoundException e) {
@@ -464,7 +464,7 @@ public final class RepositoryManager extends ObjectStore
 					// Queue the repository to be flushed to disk.
 					metaWriter_.queue(repo);
 				}
-			}.write(true); // Exclusive lock, wait if necessary
+			}.read(false); // Shared reader lock on repo, no wait
 		} catch (LockConflictException e) {
 			throw e;
 		} catch (ObjectNotFoundException e) {

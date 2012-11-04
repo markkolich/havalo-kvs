@@ -84,25 +84,26 @@ public class GetAPI extends AbstractHavaloAPIController {
 			public Void doit() throws Exception {
 				notEmpty(key, "Key cannot be null or empty.");
 				final Repository repo = getRepository(userId);
-				// In theory, another thread could have "deleted" the repository
-				// from the time we fetched it and from the time we attempt to
-				// capture a write() lock on it to load the HFO.  If this happens,
-				// however, the underlying HFO would have been deleted on disk
-				// and therefore the request to get the HFO would fail gracefully.
-				final HashedFileObject hfo = getHashedFileObject(repo,
-					// URL-decode the incoming key on the path.
-					urlDecode(key),
-					// Fail if not found.
-					true);
-				new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
+				new ReentrantReadWriteEntityLock<Void>(repo) {
 					@Override
-					public HashedFileObject transaction() throws Exception {
-						final DiskObject object = getCanonicalObject(repo, hfo);
-						streamHeaders(object, hfo, response);
-						streamObject(object, response);
-						return hfo;
+					public Void transaction() throws Exception {
+						final HashedFileObject hfo = getHashedFileObject(repo,
+							// URL-decode the incoming key on the path.
+							urlDecode(key),
+							// Fail if not found.
+							true);
+						new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
+							@Override
+							public HashedFileObject transaction() throws Exception {
+								final DiskObject object = getCanonicalObject(repo, hfo);
+								streamHeaders(object, hfo, response);
+								streamObject(object, response);
+								return hfo;
+							}
+						}.read(); // Shared read lock on file object
+						return null;
 					}
-				}.read(); // Shared read lock on file object
+				}.read();  // Shared read lock on repo
 				return null; // Meh, Void
 			}
 		}.execute();
@@ -118,19 +119,25 @@ public class GetAPI extends AbstractHavaloAPIController {
 			public Void doit() throws Exception {
 				notEmpty(key, "Key cannot be null or empty.");
 				final Repository repo = getRepository(userId);
-				final HashedFileObject hfo = getHashedFileObject(repo,
-					// URL-decode the incoming key on the path.
-					urlDecode(key),
-					// Fail if not found.
-					true);
-				new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
+				new ReentrantReadWriteEntityLock<Void>(repo) {
 					@Override
-					public HashedFileObject transaction() throws Exception {
-						final DiskObject object = getCanonicalObject(repo, hfo);
-						streamHeaders(object, hfo, response);
-						return hfo;
+					public Void transaction() throws Exception {
+						final HashedFileObject hfo = getHashedFileObject(repo,
+							// URL-decode the incoming key on the path.
+							urlDecode(key),
+							// Fail if not found.
+							true);
+						new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
+							@Override
+							public HashedFileObject transaction() throws Exception {
+								final DiskObject object = getCanonicalObject(repo, hfo);
+								streamHeaders(object, hfo, response);
+								return hfo;
+							}
+						}.read(); // Shared read lock on file object
+						return null;
 					}
-				}.read(); // Shared read lock on file object
+				}.read(); // Shared read lock on repo
 				return null; // Meh, Void
 			}
 		}.execute();
