@@ -150,71 +150,79 @@ public class PutAPI extends AbstractHavaloAPIController {
 		final String ifMatch, final String contentType, final InputStream is,
 		final HavaloUUID userId) throws Exception {
 		final Repository repo = getRepository(userId);
-		final HashedFileObject hfo = getHashedFileObject(repo,
-			// URL-decode the incoming key (the name of the object)
-			urlDecode(key));
-		new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
+		return new ReentrantReadWriteEntityLock<ResponseEntity<byte[]>>(repo) {
 			@Override
-			public HashedFileObject transaction() throws Exception {
-				// If we have an incoming If-Match, we need to compare that
-				// against the current HFO before we attempt to update.  If
-				// the If-Match ETag does not match, fail.
-				if(ifMatch != null && hfo.getETag() != null) {
-					// OK, we have an incoming If-Match ETag, use it.
-					// NOTE: HFO's will _always_ have an ETag attached to their
-					// meta-data.  ETag's are always computed for HFO's upload.
-					// But new HFO's (one's the repo have never seen before) may
-					// not yet have an ETag.
-					if(!ifMatch.equals(hfo.getETag())) {
-						throw new ObjectConflictException("Failed to update " +
-							"HFO; incoming If-Match ETag does not match (hfo=" +
-								hfo.getName() + ", etag=" + hfo.getETag() +
-									", if-match=" + ifMatch + ")");
+			public ResponseEntity<byte[]> transaction() throws Exception {
+				final HashedFileObject hfo = getHashedFileObject(repo,
+					// URL-decode the incoming key (the name of the object)
+					urlDecode(key));
+				return new ReentrantReadWriteEntityLock<ResponseEntity<byte[]>>(hfo) {
+					@Override
+					public ResponseEntity<byte[]> transaction() throws Exception {
+						// If we have an incoming If-Match, we need to compare
+						// that against the current HFO before we attempt to
+						// update.  If the If-Match ETag does not match, fail.
+						if(ifMatch != null && hfo.getETag() != null) {
+							// OK, we have an incoming If-Match ETag, use it.
+							// NOTE: HFO's will _always_ have an ETag attached
+							// to their meta-data.  ETag's are always computed
+							// for HFO's upload. But new HFO's (one's the repo
+							// have never seen before) may not yet have an ETag.
+							if(!ifMatch.equals(hfo.getETag())) {
+								throw new ObjectConflictException("Failed " +
+									"to update HFO; incoming If-Match ETag " +
+										"does not match (hfo=" + hfo.getName() +
+											", etag=" + hfo.getETag() +
+												", if-match=" + ifMatch + ")");
+							}
+						}
+						final DiskObject object = getCanonicalObject(repo, hfo,
+							// Create the File on disk if it does not already
+							// exist. Yay!
+							true);
+						// The file itself (should exist now).
+						final File objFile = object.getFile();
+						OutputStream os = null;
+						try {
+							// Create a new output stream which will point at
+							// the new home of this HFO on the file system.
+							os = new FileOutputStream(objFile);
+							// Compute the ETag (an MD5 hash of the file) while
+							// copying the file into place.  The bytes of the
+							// input stream and piped into an MD5 digest _and_
+							// to the output stream -- ideally computing the
+							// hash and copying the file at the same time.
+							// Set the resulting ETag header (meta data).
+							hfo.setETag(getSHA1HashAndCopy(is, os));
+							// Set the Last-Modified header (meta data).
+							hfo.setLastModified(objFile.lastModified());
+							// Set the Content-Length header (meta data).
+							hfo.setContentLength(objFile.length());
+							// Set the Content-Type header (meta data).
+							if(contentType != null) {
+								hfo.setContentType(contentType);
+							}
+						} finally {
+							closeQuietly(os);
+							closeQuietly(is);
+						}
+						// Append an ETag header to the response for the
+						// PUT'ed object.
+						final HttpHeaders headers = new HttpHeaders();
+						headers.setETag(hfo.getETag());
+						return getJsonResponseEntity(hfo, headers,
+							HttpStatus.OK);
 					}
-				}
-				final DiskObject object = getCanonicalObject(repo, hfo,
-					// Create the File on disk if it does not already
-					// exist. Yay!
-					true);
-				// The file itself (should exist now).
-				final File objFile = object.getFile();
-				OutputStream os = null;
-				try {
-					// Create a new output stream which will point at
-					// the new home of this HFO on the file system.
-					os = new FileOutputStream(objFile);
-					// Compute the ETag (an MD5 hash of the file) while
-					// copying the file into place.  The bytes of the
-					// input stream and piped into an MD5 digest _and_
-					// to the output stream -- ideally computing the
-					// hash and copying the file at the same time.
-					// Set the resulting ETag header (meta data).
-					hfo.setETag(getSHA1HashAndCopy(is, os));
-					// Set the Last-Modified header (meta data).
-					hfo.setLastModified(objFile.lastModified());
-					// Set the Content-Length header (meta data).
-					hfo.setContentLength(objFile.length());
-					// Set the Content-Type header (meta data).
-					if(contentType != null) {
-						hfo.setContentType(contentType);
+					@Override
+					public void success(final ResponseEntity<byte[]> e) throws Exception {
+						// On success only, ask the repo manager to
+						// asynchronously flush this repository's meta data
+						// to disk.
+						flushRepository(repo);
 					}
-				} finally {
-					closeQuietly(os);
-					closeQuietly(is);
-				}
-				return hfo;
+				}.write(); // Exclusive lock on this HFO, no wait
 			}
-			@Override
-			public void success(final HashedFileObject hfo) throws Exception {
-				// On success only, ask the repo manager to asynchronously
-				// flush this repository's meta data to disk.
-				flushRepository(repo);
-			}
-		}.write(); // Exclusive lock on this HFO, no wait
-		// Append an ETag header to the response for the PUT'ed object.
-		final HttpHeaders headers = new HttpHeaders();
-		headers.setETag(hfo.getETag());
-		return getJsonResponseEntity(hfo, headers, HttpStatus.OK);
+		}.read(false); // Shared read lock on repo, no wait
 	}
 	
 }

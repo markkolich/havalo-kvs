@@ -51,7 +51,7 @@ public class HavaloBootstrap implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		try {
-			// Create a new random keypair for the default ADMIN level user.
+			// Create a new keypair for the default ADMIN level user.
 			final KeyPair adminKeyPair = new KeyPair(adminApiUUID_,
 				adminApiSecret_, ADMIN);
 			// Actually attempt to create a new Repository for the Admin user.

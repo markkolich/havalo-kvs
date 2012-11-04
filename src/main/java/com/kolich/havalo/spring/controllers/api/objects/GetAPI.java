@@ -103,7 +103,7 @@ public class GetAPI extends AbstractHavaloAPIController {
 						}.read(); // Shared read lock on file object
 						return null;
 					}
-				}.read();  // Shared read lock on repo
+				}.read(false);  // Shared read lock on repo, no wait
 				return null; // Meh, Void
 			}
 		}.execute();
