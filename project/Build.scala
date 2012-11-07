@@ -72,7 +72,7 @@ object Dependencies {
   private val commonsCodec = "commons-codec" % "commons-codec" % "1.6" % "compile"
   private val commonsFileupload = "commons-fileupload" % "commons-fileupload" % "1.2.2" % "compile"
 
-  val webAppDeps = Seq(kolichSpring, kolichBolt,
+  val deps = Seq(kolichSpring, kolichBolt,
     jetty, jettyWebApp, jettyPlus, jettyJsp,
     jspApi, jstl, servlet, javaEEWebApi,
     springTx, springSecurityCore, springSecurityWeb, springSecurityConfig,
@@ -142,7 +142,12 @@ object Common extends Build {
       artifactPath in (Compile, packageBin) ~= { defaultPath =>
         file("dist") / defaultPath.getName
       },
-      libraryDependencies ++= webAppDeps,
+      // Override the default 'test:package' path used by SBT. Places the
+      // resulting JAR into a more meaningful location.
+      artifactPath in (Test, packageBin) ~= { defaultPath =>
+        file("dist") / "test" / defaultPath.getName
+      },
+      libraryDependencies ++= deps,
       retrieveManaged := true) ++
       // xsbt-web-plugin settings
       webSettings ++
