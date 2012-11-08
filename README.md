@@ -12,7 +12,7 @@ The latest <a href="https://github.com/markkolich/havalo/downloads">stable versi
 
 * **Zero Configuration** &ndash; Drop `havalo.war` into your Servlet container, and get a local K,V store with **nothing else to install**.  For a slightly *more* secure deployment, create one `.properties` file with the right magic in it and place it in your Servlet container's default configuration directory.
 
-* **Runs in your Existing Servlet Container** &ndash; Most "enterprisy" like environments *still* deploy their business logic core in some type of Servlet container.  If you need local K,V storage without installing or configurating any additional software in your stack, chances are good Havalo will just work for you out-of-the box.
+* **Runs in your Existing Servlet Container** &ndash; Most "enterprisy" like environments *still* deploy their business logic core in some type of Servlet container.  If you need local K,V storage without installing or configurating any additional software in your stack, chances are good Havalo will just work for you out-of-the-box.
 
 * **In-Memory Locking** &ndash; Completely avoids relying on the filesystem to manage resource locking.  As a result, Havalo manages all locks on objects and repositories in local memory.  As such, Havalo behaves the same on ext3, ext4, NTFS, NFS Plus, etc.  No matter where you deploy Havalo, you can trust it will do the right thing.
 
@@ -69,7 +69,39 @@ Havalo provides a completely RESTful API that lets users `PUT` objects, `GET` ob
 
 ### Authentication
 
+Authentication credentials are passed to the Havalo API in the `Authorization` HTTP request header.  The required format of the `Authorization` HTTP request header is as follows.
 
+    Authorization: Havalo RepositoryUUID:Signature
+
+Note the repository UUID is a randomly generated UUID that uniquely represents the user and their associated repository, their object container.
+
+The authorization Signature is the result of the following logical function.
+
+    Base64( HMAC-SHA256( UTF-8-Encoding-Of( RepositoryUUID, StringToSign ) ) )
+
+And, StringToSign is the result of the following logical function.
+
+    HTTP-Verb ("GET", "PUT", "POST", or "DELETE") + "\n" +
+    RFC-822 Formatted Date (as sent with 'Date' request header, required) + "\n" +
+    Content-Type (from 'Content-Type' request header, optional) + "\n" +
+    CanonicalizedResource (the part of this request's URL from
+      the protocol name up to the query string in the first line
+      of the HTTP request)
+
+And lastly, CanonicalizedResource is nothing more than just the "raw path" of the request.
+
+If you're using HttpClient 4.x, the "raw path" is:
+
+```java
+final HttpRequestBase request = new HttpGet();
+final String canonicalizedResource = request.getURI().getRawPath();
+```
+
+Or, if you're thinking about the CanonicalizedResource in context of an `HttpServletRequest` the CanonicalizedResource is:
+
+```java
+final String canonicalizedResource = request.getRequestURI();
+```
 
 ## Building and Running
 
