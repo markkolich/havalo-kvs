@@ -6,6 +6,8 @@ Sometimes you just need fast K,V storage, but don't need full redundancy and sca
 
 Havalo is perfect for testing, maintaining fast indexes of records stored "elsewhere", and almost every other deployment scenario where relational databases are just too heavy.
 
+The latest <a href="https://github.com/markkolich/havalo/downloads">stable version of Havalo is 0.0.3</a>.
+
 ## Features
 
 * Zero Configuration &ndash; Drop `havalo.war` into your Servlet container, and get a local K,V store with **nothing else to install**.  For a slightly *more* secure deployment, create one `.properties` file with the right magic in it and place it in your Servlet container's default configuration directory.
@@ -53,6 +55,58 @@ Havalo is **not** an off-the-shelf replacement for <a href="http://aws.amazon.co
 
 ## API
 
+## Building and Running
+
+Havalo is built and managed using <a href="https://github.com/harrah/xsbt">SBT 0.12.1</a>.
+
+To clone and build this project, you must have <a href="http://www.scala-sbt.org/release/docs/Getting-Started/Setup">SBT 0.12.1 installed and configured on your computer</a>.
+
+The Havalo <a href="https://github.com/markkolich/havalo/blob/master/project/Build.scala">Build.scala</a> file is highly customized to build and package this Java web-application.
+
+To build, clone the repository.
+
+    #~> git clone git://github.com/markkolich/havalo.git
+
+Run SBT from within your newly cloned *havalo* directory.
+
+    #~> cd havalo
+    #~/havalo> sbt
+    ...
+    havalo:0.0.3>
+
+You will see a `havalo` SBT prompt once all dependencies are resolved and the project is loaded.
+
+In SBT, run `container:start` to start the local Servlet container.  By default the server listens on **port 8080**.
+
+    havalo:0.0.3> container:start
+    [info] jetty-8.0.4.v20111024
+    [info] started o.e.j.w.WebAppContext{/,[file:~/havalo/src/main/webapp/]}
+    [info] Initializing Spring root WebApplicationContext
+    ...
+    10/27 10:41:33 INFO  [pool-6-thread-2] o.s.w.s.DispatcherServlet -
+        FrameworkServlet 'havalo': initialization completed in 60 ms
+    [info] Started SelectChannelConnector@0.0.0.0:8080 STARTING
+    [success] Total time: 2 s, completed Oct 27, 2012 10:41:33 AM
+
+In your nearest web-browser, visit <a href="http://localhost:8080">http://localhost:8080</a> and you should see the Havalo application homepage &mdash; it's a blank page that says *Havalo*.
+
+To stop the development server, run `container:stop`.
+
+See the <a href="https://github.com/siasia/xsbt-web-plugin/wiki">xsbt-web-plugin wiki</a> for all of the gory details on managing the development servlet container from SBT.
+
+In SBT, run `package` to build a deployable WAR for your favorite Servlet container.
+
+    havalo:0.0.3> package
+    ...
+    [info] Compiling 49 Java sources to ~/havalo/target/classes...
+    [info] Packaging ~/havalo/dist/havalo-0.0.3.jar ...
+    [info] Done packaging.
+    [info] Packaging ~/havalo/dist/havalo-0.0.3.war ...
+    [info] Done packaging.
+    [success] Total time: 8 s, completed Oct 27, 2012 10:47:38 AM
+
+Note the resulting WAR is placed into the **havalo/dist** directory.  Deploy and enjoy.
+
 ## Licensing
 
 Copyright (c) 2012 <a href="http://mark.koli.ch">Mark S. Kolich</a>
@@ -60,4 +114,3 @@ Copyright (c) 2012 <a href="http://mark.koli.ch">Mark S. Kolich</a>
 All code in this project is freely available for use and redistribution under the <a href="http://opensource.org/comment/991">MIT License</a>.
 
 See <a href="https://github.com/markkolich/havalo/blob/master/LICENSE">LICENSE</a> for details.
-
