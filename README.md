@@ -6,9 +6,11 @@ Sometimes you just need fast K,V like storage, but don't need full redundancy an
 
 Perfect for testing, maintaining indexes of records stored "elsewhere", and almost every other deployment scenario where relational databases are just too much for your applications.
 
-## Uses
+## Benefits
 
-## Upsides
+Some things to consider ...
+
+* In-Memory Locking &mdash; Havalo completely avoids relying on the underlying filesystem to manage resource locking.  As a result, Havalo manages all locks on `objects` and `repositories` in local memory.  As such, Havalo behaves the same on ext3, ext4, NTFS, NFS Plus, etc.
 
 ## Downsides
 
