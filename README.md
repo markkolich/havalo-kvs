@@ -22,7 +22,7 @@ The latest <a href="https://github.com/markkolich/havalo/downloads">stable versi
 
 * **RESTful API** &ndash; Once deployed, Havalo immeaditely provides a RESTful API that just makes perfect sense.
 
-* **ETag and If-Match Support** &mdash; All stored objects are automatically saved with a proper SHA-1 `ETag`.  As such, subsequent update operations on that object can be conditional if desired.  In slightly more technical terms, accept a `PUT` for an object only if the SHA-1 hash sent with the `If-Match` HTTP request header matches the existing object `ETag` hash.
+* **ETag and If-Match Support** &ndash; All stored objects are automatically saved with a proper SHA-1 `ETag`.  As such, subsequent update operations on that object can be conditional if desired.  In slightly more technical terms, accept a `PUT` for an object only if the SHA-1 hash sent with the `If-Match` HTTP request header matches the existing object `ETag` hash.
 
 ## Compatibility
 
