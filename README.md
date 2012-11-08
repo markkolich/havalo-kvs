@@ -22,7 +22,7 @@ The latest <a href="https://github.com/markkolich/havalo/downloads">stable versi
 
 * **RESTful API** &ndash; Once deployed, Havalo immeaditely provides a RESTful API that just makes perfect sense.
 
-* **ETag and If-Match Support** &ndash; All objects are stored with a SHA-1 `ETag` hash of the binary object data.  As such, subsequent update operations on that object can be conditional if desired.  In slightly more technical terms, accept a `PUT` for an object only if the SHA-1 hash sent with the `If-Match` HTTP request header matches the existing object `ETag` hash.
+* **ETag and If-Match Support** &ndash; All objects are stored with an automatically generated SHA-1 `ETag` hash of the binary object data.  As such, subsequent update operations on that object can be conditional if desired.  In slightly more technical terms, accept a `PUT` for an object only if the SHA-1 hash sent with the `If-Match` HTTP request header matches the existing object `ETag` hash.
 
 ## Compatibility
 
@@ -59,9 +59,9 @@ Havalo is **not** an off-the-shelf replacement for <a href="http://aws.amazon.co
 
 There are a few fundamental constructs to be aware of when using Havalo and its API.
 
-* **Repositories** &mdash; Logical containers that hold objects.  You can think of `repositories` as a directory on disk that holds a bunch of files.  Each Havalo "user" you create is assigned a unique `repository` identified under-the-hood by a UUID &ndash; that user, once authenticated, can do whatever they want inside of the `repository`.
+* **Repositories** &ndash; Logical containers that hold objects.  You can think of `repositories` as a directory on disk that holds a bunch of files.  Each Havalo "user" you create is assigned a unique `repository` identified under-the-hood by a UUID &mdash; that user, once authenticated, can do whatever they want inside of their `repository`.
 
-* **Objects** &mdash; A blob of binary data, ultimately stored as a file on disk.  Objects are anything you want up to a reasonable maximum of 2GB.  Using the API, you can attach pieces of arbitrary meta-data to an object &ndash; sent to the API in the `Content-Type` and `ETag` HTTP request headers.
+* **Objects** &ndash; A blob of binary data.  Objects are anything you want up to a reasonable maximum of 2GB.  Using the Havalo API, you can attach pieces of arbitrary metadata to an object &mdash; sent to the API in the `Content-Type` and `ETag` HTTP request headers.  If a `Content-Type` is sent with an object to the API, that same `Content-Type` is sent back to the client when the object is retrieved.
 
 ## API
 
