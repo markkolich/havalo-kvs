@@ -2,7 +2,7 @@
 
 A zero configuration, non-distributed key-value store that runs in your existing Servlet container.
 
-Sometimes you just need fast K,V storage, but don't need full redundancy and scalability (`localhost` will do just fine).  With Havalo, simply drop `havalo.war` into your favorite Servlet container and with almost no configuration you'll have access to a relatively lightweight K,V store backed by your local disk for persistent storage.  And, Havalo has a pleasantly simple RESTful API for your added enjoyment.
+Sometimes you just need fast K,V storage, but don't need full redundancy and scalability (`localhost` will do just fine).  With Havalo, simply drop `havalo.war` into your favorite Servlet container and with almost no configuration you'll have access to a fast, relatively lightweight K,V store backed by your local disk for persistent storage.  And, Havalo has a pleasantly simple RESTful API for your added enjoyment.
 
 Havalo is perfect for testing, maintaining fast indexes of records stored "elsewhere", and almost every other deployment scenario where relational databases are just too heavy.
 
@@ -10,17 +10,17 @@ The latest <a href="https://github.com/markkolich/havalo/downloads">stable versi
 
 ## Features
 
-* Zero Configuration &ndash; Drop `havalo.war` into your Servlet container, and get a local K,V store with **nothing else to install**.  For a slightly *more* secure deployment, create one `.properties` file with the right magic in it and place it in your Servlet container's default configuration directory.
+* **Zero Configuration** &ndash; Drop `havalo.war` into your Servlet container, and get a local K,V store with **nothing else to install**.  For a slightly *more* secure deployment, create one `.properties` file with the right magic in it and place it in your Servlet container's default configuration directory.
 
-* In-Memory Locking &ndash; Completely avoids relying on the filesystem to manage resource locking.  As a result, Havalo manages all locks on `objects` and `repositories` in local memory.  As such, Havalo behaves the same on ext3, ext4, NTFS, NFS Plus, etc.  No matter where you deploy Havalo, you can trust it will do the right thing.
+* **Runs in your Existing Servlet Container** &ndash; Most "enterprisy" like environments *still* deploy their business logic core in some type of Servlet container.  If you need local K,V storage without installing or configurating any additional software in your stack, chances are good Havalo will just work for you out-of-the box.
 
-* In-Memory Indexing &ndash; Searchable object indexes are held in memory and flushed to disk as needed.  The size of your object indexes are only limited by the amount of memory available to your Servlet container.
+* **In-Memory Locking** &ndash; Completely avoids relying on the filesystem to manage resource locking.  As a result, Havalo manages all locks on `objects` and `repositories` in local memory.  As such, Havalo behaves the same on ext3, ext4, NTFS, NFS Plus, etc.  No matter where you deploy Havalo, you can trust it will do the right thing.
 
-* Trusted Stack &ndash; Written in **Java**, built around **Spring 3.1.3**.  Deployable in any **Servlet 3.0** compatible container.  Tested and verified on Tomcat 7 and Jetty 8.
+* **In-Memory Indexing** &ndash; Searchable object indexes are held in memory and flushed to disk as needed.  The size of your object indexes are only limited by the amount of memory available to your Servlet container JVM.
 
-* Runs in your Existing Servlet Container &ndash; Most "enterprisy" like environments *still* deploy their business logic core in some type of Servlet container.  If you need local K,V storage without installing or configurating any additional software in your stack, chances are good Havalo will just work for you out-of-the box.
+* **Trusted Stack** &ndash; Written in Java, built around Spring 3.1.3.  Deployable in any **Servlet 3.0** compatible container.  Tested and verified on Tomcat 7 and Jetty 8.
 
-* RESTful API &ndash; Once deployed, Havalo immeaditely provides a RESTful API that just makes perfect freakin' sense.
+* **RESTful API** &ndash; Once deployed, Havalo immeaditely provides a RESTful API that just makes perfect freakin' sense.
 
 ## Compatibility
 
@@ -52,6 +52,14 @@ NOTE: may work with other containers, such as Weblogic or Websphere, but these h
 ## Deployment Considerations
 
 Havalo is **not** an off-the-shelf replacement for <a href="http://aws.amazon.com/s3/">Amazon S3</a>, <a href="http://redis.io">Redis</a>, <a href="http://www.project-voldemort.com/voldemort/">Voldemort</a> or <a href="http://cassandra.apache.org/">Apache's Cassandra</a>.  If you need completely fault-tolerant, distributed K,V storage then Havalo is probably not for you.
+
+## Fundamentals
+
+There are a few fundamental constructs to be aware of when using Havalo and its API.
+
+* **Repositories** &mdash; Logical containers that hold objects.  You can think of `repositories` as a directory on disk that holds a bunch of files.  Each Havalo "user" you create is assigned a unique `repository` identified under-the-hood by a UUID &ndash; that user, once authenticated, can do whatever they want inside of the `repository`.
+
+* **Objects** &mdash; A blob of binary data, ultimately stored as a file on disk.  Objects are anything you want up to a reasonable maximum of 2GB.  Using the API, you can attach pieces of arbitrary meta-data to an object &ndash; sent to the API in the `Content-Type` and `ETag` HTTP request headers.
 
 ## API
 
