@@ -107,6 +107,17 @@ In SBT, run `package` to build a deployable WAR for your favorite Servlet contai
 
 Note the resulting WAR is placed into the **havalo/dist** directory.  Deploy and enjoy.
 
+To create an Eclipse Java project for Havalo, run `eclipse` in SBT.
+
+    havalo:0.0.3> eclipse
+    ...
+    [info] Successfully created Eclipse project files for project(s):
+    [info] havalo
+
+You'll now have a real Eclipse **.project** file worthy of an Eclipse import.
+
+Note your new **.classpath** file as well -- all source JAR's are fetched and injected into the Eclipse project automatically.
+
 ## Licensing
 
 Copyright (c) 2012 <a href="http://mark.koli.ch">Mark S. Kolich</a>
