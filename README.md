@@ -14,7 +14,42 @@ Havalo is perfect for testing, maintaining fast indexes of records stored "elsew
 
 * Trusted Stack &ndash; Written in **Java**, built around **Spring 3.1.3**.  Deployable in any **Servlet 3.0** compatible container.  Tested on Tomcat and Jetty.
 
+## Compatibility
+
+Havalo is confirmed to work with the following containers:
+
+<table>
+  <tr>
+  <th>Servlet Engine</th>
+  <th>Container</th>
+  <th>&nbsp;</th>
+  </tr>
+  <tr>
+  <td rowspan="3">Servlet 3.0</td>
+  <td>Tomcat 7</td>
+  <td><img src="http://openclipart.org/image/800px/svg_to_png/161503/OK-1.png" height="20"></td>
+  </tr>
+  <tr>
+  <td>Jetty 8</td>
+  <td><img src="http://openclipart.org/image/800px/svg_to_png/161503/OK-1.png" height="20"></td>
+  </tr>
+  <tr>
+  <td>Jetty 9</td>
+  <td><em>Untested</em></td>
+  </tr>
+</table>
+
+NOTE: may work with other containers, such as Weblogic or Websphere, but these have **not** been tested.
+
 ## Downsides
 
 ## API
+
+## Licensing
+
+Copyright (c) 2012 <a href="http://mark.koli.ch">Mark S. Kolich</a>
+
+All code in this project is freely available for use and redistribution under the <a href="http://opensource.org/comment/991">MIT License</a>.
+
+See <a href="https://github.com/markkolich/havalo/blob/master/LICENSE">LICENSE</a> for details.
 
