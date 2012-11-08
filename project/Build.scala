@@ -39,7 +39,7 @@ object Dependencies {
 
   // Internal dependencies
 
-  private val kolichSpring = "com.kolich" % "kolich-spring" % "0.0.3.1" % "compile"
+  private val kolichSpring = "com.kolich" % "kolich-spring" % "0.0.3.2" % "compile"
   private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.2" % "compile"
 
   // External dependencies
@@ -54,10 +54,10 @@ object Dependencies {
   private val jstl = "jstl" % "jstl" % "1.2" % "compile" // Package with WAR
   private val javaEEWebApi = "javax" % "javaee-web-api" % "6.0" % "provided" // Provided by servlet container
 
-  private val springTx = "org.springframework" % "spring-tx" % "3.1.2.RELEASE" % "compile"
-  private val springSecurityCore = "org.springframework.security" % "spring-security-core" % "3.1.2.RELEASE" % "compile"
-  private val springSecurityWeb = "org.springframework.security" % "spring-security-web" % "3.1.2.RELEASE" % "compile"
-  private val springSecurityConfig = "org.springframework.security" % "spring-security-config" % "3.1.2.RELEASE" % "compile"
+  private val springTx = "org.springframework" % "spring-tx" % "3.1.3.RELEASE" % "compile"
+  private val springSecurityCore = "org.springframework.security" % "spring-security-core" % "3.1.3.RELEASE" % "compile"
+  private val springSecurityWeb = "org.springframework.security" % "spring-security-web" % "3.1.3.RELEASE" % "compile"
+  private val springSecurityConfig = "org.springframework.security" % "spring-security-config" % "3.1.3.RELEASE" % "compile"
 
   private val cgLibNoDep = "cglib" % "cglib-nodep" % "2.2.2" % "compile"
 
@@ -98,7 +98,7 @@ object Common extends Build {
   import Resolvers._
 
   private val aName = "havalo"
-  private val aVer = "0.0.2"
+  private val aVer = "0.0.3"
   private val aOrg = "com.kolich"
 
   lazy val havalo: Project = Project(
