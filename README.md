@@ -14,7 +14,7 @@ The latest <a href="https://github.com/markkolich/havalo/downloads">stable versi
 
 * **Runs in your Existing Servlet Container** &ndash; Most "enterprisy" like environments *still* deploy their business logic core in some type of Servlet container.  If you need local K,V storage without installing or configurating any additional software in your stack, chances are good Havalo will just work for you out-of-the box.
 
-* **In-Memory Locking** &ndash; Completely avoids relying on the filesystem to manage resource locking.  As a result, Havalo manages all locks on `objects` and `repositories` in local memory.  As such, Havalo behaves the same on ext3, ext4, NTFS, NFS Plus, etc.  No matter where you deploy Havalo, you can trust it will do the right thing.
+* **In-Memory Locking** &ndash; Completely avoids relying on the filesystem to manage resource locking.  As a result, Havalo manages all locks on objects and repositories in local memory.  As such, Havalo behaves the same on ext3, ext4, NTFS, NFS Plus, etc.  No matter where you deploy Havalo, you can trust it will do the right thing.
 
 * **In-Memory Indexing** &ndash; Searchable object indexes are held in memory and flushed to disk as needed.  The size of your object indexes are only limited by the amount of memory available to your Servlet container JVM.
 
@@ -59,11 +59,17 @@ Havalo is **not** an off-the-shelf replacement for <a href="http://aws.amazon.co
 
 There are a few fundamental constructs to be aware of when using Havalo and its API.
 
-* **Repositories** &ndash; Logical containers that hold objects.  You can think of `repositories` as a directory on disk that holds a bunch of files.  Each Havalo "user" you create is assigned a unique `repository` identified under-the-hood by a UUID &mdash; that user, once authenticated, can do whatever they want inside of their `repository`.
+* **Repositories** &ndash; Logical containers that hold objects.  You can think of repositories as a directory on disk that holds a bunch of files.  Each Havalo "user" you create is assigned a unique repository identified under-the-hood by a UUID &mdash; that user, once authenticated, can do whatever they want inside of their repository.
 
 * **Objects** &ndash; A blob of binary data.  Objects are anything you want up to a reasonable maximum of 2GB.  Using the Havalo API, you can attach pieces of arbitrary metadata to an object &mdash; sent to the API in the `Content-Type` and `ETag` HTTP request headers.  If a `Content-Type` is sent with an object to the API, that same `Content-Type` is sent back to the client when the object is retrieved.
 
 ## API
+
+Havalo provides a completely RESTful API that lets users `PUT` objects, `GET` objects, and `DELETE` objects in their repositories.  Additionally, administrator level users can also `POST` (create) repositories and `DELETE` repositories.  Note that the user-to-repository relationship is 1:1, meaning creating a repository is equivalent to creating a user, and deleteing a repository is equivalent to deleting a user.
+
+### Authentication
+
+
 
 ## Building and Running
 
