@@ -93,11 +93,11 @@ And lastly, CanonicalizedResource is nothing more than just the "raw path" of th
 If you're using HttpClient 4.x, the "raw path" is:
 
 ```java
-final HttpRequestBase request = new HttpGet();
+final HttpGet request = new HttpGet();
 final String canonicalizedResource = request.getURI().getRawPath();
 ```
 
-Or, if you're thinking about the CanonicalizedResource in context of an `HttpServletRequest` the CanonicalizedResource is:
+Or, if you're thinking about the CanonicalizedResource in context of an `HttpServletRequest` it is:
 
 ```java
 final String canonicalizedResource = request.getRequestURI();
