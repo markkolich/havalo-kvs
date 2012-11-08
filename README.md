@@ -88,7 +88,7 @@ In SBT, run `container:start` to start the local Servlet container.  By default 
     [info] Started SelectChannelConnector@0.0.0.0:8080 STARTING
     [success] Total time: 2 s, completed Oct 27, 2012 10:41:33 AM
 
-In your nearest web-browser, visit <a href="http://localhost:8080">http://localhost:8080</a> and you should see the Havalo application homepage &mdash; it's a blank page that says *Havalo*.
+In your nearest web-browser, visit <a href="http://localhost:8080">http://localhost:8080</a> and you should see the Havalo application homepage &mdash; it's a blank page that says *Havalo*.  The Havalo API endpoint can be found at <a href="http://localhost:8080/api">http://localhost:8080/api</a>.
 
 To stop the development server, run `container:stop`.
 
