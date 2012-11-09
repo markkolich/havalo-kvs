@@ -12,17 +12,17 @@ The latest <a href="https://github.com/markkolich/havalo/downloads">stable versi
 
 * **Zero Configuration** &ndash; Drop `havalo.war` into your Servlet container, and get a local K,V store with **nothing else to install**.  For a slightly *more* secure deployment, create one `.properties` file with the right magic in it and place it in your Servlet container's default configuration directory.
 
-* **Runs in your Existing Servlet Container** &ndash; Most "enterprisy" like environments *still* deploy their business logic core in some type of Servlet container.  If you need local K,V storage without installing or configurating any additional software in your stack, chances are good Havalo will just work for you out-of-the-box.
-
 * **In-Memory Locking** &ndash; Completely avoids relying on the filesystem to manage resource locking.  As a result, Havalo manages all locks on objects and repositories in local memory.  As such, Havalo behaves the same on ext3, ext4, NTFS, NFS Plus, etc.  No matter where you deploy Havalo, you can trust it will do the right thing.
 
 * **In-Memory Indexing** &ndash; Searchable object indexes are held in memory and flushed to disk as needed.  The size of your object indexes are only limited by the amount of memory available to your Servlet container JVM.
 
 * **Trusted Stack** &ndash; Written in Java, built around Spring 3.1.3.  Deployable in any **Servlet 3.0** compatible container.  Tested and verified on Tomcat 7 and Jetty 8.
 
-* **RESTful API** &ndash; Once deployed, Havalo immeaditely provides a RESTful API that just makes perfect sense.
+* **RESTful API** &ndash; Once deployed, Havalo immeaditely provides a RESTful API that just makes perfect sense.  All API entities are pure JSON &mdash; no XML, anywhere. 
 
 * **ETag and If-Match Support** &ndash; All objects are stored with an automatically generated SHA-1 `ETag` hash of the binary object data.  As such, subsequent update operations on that object can be conditional if desired.  In slightly more technical terms, accept a `PUT` for an object only if the SHA-1 hash sent with the `If-Match` HTTP request header matches the existing object `ETag` hash.
+
+* **Havalo Client** &ndash; A Java client for the Havalo API is available off-the-shelf as provided by the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> project.  If you'd rather not use the provided Java client, it's straighforward to write a client for the Havalo API in a langugage of your choice.
 
 ## Compatibility
 
@@ -133,7 +133,56 @@ public static final Mac getHmacSHA256Instance(final KeyPair kp) {
 }
 ```
 
-See <a href="https://github.com/markkolich/havalo-client/blob/master/src/main/java/com/kolich/havalo/client/signing/algorithms/HMACSHA256Signer.java">HMACSHA256Signer.java</a> in the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> package for a complete example of wiring together real `HMAC-SHA256` signer. 
+See <a href="https://github.com/markkolich/havalo-client/blob/master/src/main/java/com/kolich/havalo/client/signing/algorithms/HMACSHA256Signer.java">HMACSHA256Signer.java</a> in the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> package for a complete example of wiring together real `HMAC-SHA256` signer.
+
+### Working with Repositories
+
+Only the default administrator of the Havalo application can create and delete repositories.
+
+#### Create a Repository
+
+Create a new repository.
+
+    POST:/api/repository
+
+#### Delete a Repository
+
+Delete a repository and its corresponding owner (user).
+
+    DELETE:/api/repository/{repoUUID}
+
+#### List Objects in Repository
+
+List all objects in repository, or list all objects in repository that start with a given prefix.
+
+    GET:/api/repository
+    GET:/api/repository?startsWith=prefix
+
+### Working with Objects
+
+#### PUT an Object
+
+Upload (`PUT`) an object.
+
+    PUT:/api/object/{key}
+    
+#### POST an Object (Multipart request)
+
+Multipart (`POST`) an object.
+
+    POST:/api/object
+
+#### GET an Object
+
+Retrieve (download) an object.
+
+    GET:/api/object/{key}
+
+#### DELETE an Object
+
+Delete an object.
+
+    DELETE:/api/object/{key}
 
 ## Building and Running
 

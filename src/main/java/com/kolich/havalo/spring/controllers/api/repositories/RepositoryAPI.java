@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kolich.bolt.ReentrantReadWriteEntityLock;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.ObjectList;
@@ -67,11 +68,16 @@ public class RepositoryAPI extends AbstractHavaloAPIController {
 			@Override
 			public ResponseEntity<byte[]> doit() throws Exception {
 				final Repository repo = getRepository(userId);
-				final ObjectList list = repo.startsWith((startsWith != null) ?
-					// Only load objects that start with the given
-					// prefix, if one was provided.
-					startsWith : "");
-				return getJsonResponseEntity(list, HttpStatus.OK);
+				return new ReentrantReadWriteEntityLock<ResponseEntity<byte[]>>(repo) {
+					@Override
+					public ResponseEntity<byte[]> transaction() throws Exception {
+						final ObjectList list = repo.startsWith((startsWith != null) ?
+							// Only load objects that start with the given
+							// prefix, if one was provided.
+							startsWith : "");
+						return getJsonResponseEntity(list, HttpStatus.OK);
+					}
+				}.read(false); // Shared read lock on repo, no wait
 			}
 		}.execute();
 	}
