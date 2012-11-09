@@ -40,7 +40,7 @@
 		<security:authentication-provider user-service-ref="HavaloUserDetailsService" />
 	</security:authentication-manager>
 	
-	<security:http auto-config="false" use-expressions="true" entry-point-ref="HavaloAuthenticationEntryPoint">
+	<security:http create-session="never" disable-url-rewriting="true" auto-config="false" use-expressions="true" entry-point-ref="HavaloAuthenticationEntryPoint">
 	
 		<!--		
 			NOTE on the paths/patterns in this file: the patterns you see below

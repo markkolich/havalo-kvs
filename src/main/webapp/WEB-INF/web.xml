@@ -17,6 +17,15 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/spring/app-context.xml</param-value>
 	</context-param>
+	
+	<!--
+		Disable the use of session cookies.  This turns off the setting
+		of the typical "JSESSIONID" session cookies.  Seems to only apply
+		to Tomcat. 
+	-->
+	<session-config>
+		<tracking-mode>URL</tracking-mode>
+	</session-config>
 
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
