@@ -67,13 +67,30 @@ There are a few fundamental constructs to be aware of when using Havalo and its 
 
 Havalo provides a completely RESTful API that lets users `PUT` objects, `GET` objects, and `DELETE` objects in their repositories.  Additionally, administrator level users can also `POST` (create) repositories and `DELETE` repositories.  Note that the user-to-repository relationship is 1:1, meaning creating a repository is equivalent to creating a user, and deleteing a repository is equivalent to deleting a user.
 
+### Credentials
+
+When you create a new repository, you're also creating a new user by default.  Again, note that the user-to-repository relationship is 1:1 &mdash; every user maps to a single repository and vice-versa.
+
+On creation, every user is given a key-pair which consists of a unique UUID, and a randomly generated base-64 URL-safe encoded secret.
+
+```java
+public final class KeyPair {
+  private final UUID key_;
+  private final String secret_;
+}
+```
+
+This key-pair is used to generate the right authentication token for the Havalo API.
+
 ### Authentication
 
-Authentication credentials are passed to the Havalo API in the `Authorization` HTTP request header.  The required format of the `Authorization` HTTP request header is as follows.
+Authentication credentials are passed to the Havalo API in the `Authorization` HTTP request header.  The required format of the `Authorization` HTTP request header is as follows:
 
     Authorization: Havalo RepositoryUUID:Signature
 
-Note the repository UUID is a randomly generated UUID that uniquely represents the user and their associated repository, their object container.
+Note the repository UUID is a randomly generated UUID that uniquely represents the user and their repository.
+
+#### Request Signing
 
 The authorization Signature is the result of the following logical function.
 
@@ -102,6 +119,21 @@ Or, if you're thinking about the CanonicalizedResource in context of an `HttpSer
 ```java
 final String canonicalizedResource = request.getRequestURI();
 ```
+
+Note your `HMAC-SHA256` signer should be initialized with the key-pair secret.  In Java, this signer is usually an instance of `javax.crypto.Mac`.
+
+```java
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+public static final Mac getHmacSHA256Instance(final KeyPair kp) {
+  final Mac mac = Mac.getInstance("HmacSHA256");
+  mac.init(new SecretKeySpec(kp.getSecret().getBytes("UTF-8")), "HmacSHA256");
+  return mac;
+}
+```
+
+See <a href="https://github.com/markkolich/havalo-client/blob/master/src/main/java/com/kolich/havalo/client/signing/algorithms/HMACSHA256Signer.java">HMACSHA256Signer.java</a> in the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> package for a complete example of wiring together real `HMAC-SHA256` signer. 
 
 ## Building and Running
 
