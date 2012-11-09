@@ -141,19 +141,19 @@ Only the default administrator of the Havalo application can create and delete r
 
 #### Create a Repository
 
-Create a new repository.
+Create a new repository, and its corresponding owner (user).
 
     POST:/api/repository
 
 #### Delete a Repository
 
-Delete a repository and its corresponding owner (user).
+Delete a repository, and its corresponding owner (user).
 
-    DELETE:/api/repository/{repoUUID}
+    DELETE:/api/repository/{uuid}
 
 #### List Objects in Repository
 
-List all objects in repository, or list all objects in repository that start with a given prefix.
+List all objects in repository, or list only objects in repository that start with a given prefix.
 
     GET:/api/repository
     GET:/api/repository?startsWith=prefix
@@ -168,13 +168,13 @@ Upload (`PUT`) an object.
     
 #### POST an Object (Multipart request)
 
-Multipart (`POST`) an object.
+Multipart `POST` an object.
 
     POST:/api/object
 
 #### GET an Object
 
-Retrieve (download) an object.
+Retrieve (`GET`) an object.
 
     GET:/api/object/{key}
 
