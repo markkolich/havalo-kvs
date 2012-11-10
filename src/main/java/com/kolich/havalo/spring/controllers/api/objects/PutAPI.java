@@ -26,13 +26,13 @@
 
 package com.kolich.havalo.spring.controllers.api.objects;
 
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
+import static com.google.common.net.HttpHeaders.IF_MATCH;
 import static com.kolich.common.util.URLEncodingUtils.urlDecode;
 import static com.kolich.common.util.secure.KolichChecksum.getSHA1HashAndCopy;
 import static com.kolich.spring.controllers.KolichControllerClosure.getJsonResponseEntity;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang3.Validate.notEmpty;
-import static org.apache.http.HttpHeaders.CONTENT_TYPE;
-import static org.apache.http.HttpHeaders.IF_MATCH;
 
 import java.io.File;
 import java.io.FileOutputStream;

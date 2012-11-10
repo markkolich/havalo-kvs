@@ -39,8 +39,8 @@ object Dependencies {
 
   // Internal dependencies
 
-  private val kolichSpring = "com.kolich" % "kolich-spring" % "0.0.3.3" % "compile"
-  private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.2" % "compile"
+  private val kolichSpring = "com.kolich" % "kolich-spring" % "0.0.4" % "compile"
+  private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.3" % "compile"
 
   // External dependencies
 
@@ -98,7 +98,7 @@ object Common extends Build {
   import Resolvers._
 
   private val aName = "havalo"
-  private val aVer = "0.0.3"
+  private val aVer = "0.0.4"
   private val aOrg = "com.kolich"
 
   lazy val havalo: Project = Project(

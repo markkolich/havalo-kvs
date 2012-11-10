@@ -27,6 +27,8 @@
 package com.kolich.havalo.spring.security.authentication;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
+import static com.google.common.net.HttpHeaders.DATE;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.codec.binary.StringUtils.getBytesUtf8;
 import static org.apache.commons.codec.binary.StringUtils.newStringUtf8;
@@ -43,7 +45,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
@@ -197,14 +198,14 @@ public class HavaloAuthenticationFilter extends GenericFilterBean
 		sb.append(request.getMethod().toUpperCase()).append(LINE_SEPARATOR_UNIX);
 		// RFC822 Date (from 'Date' request header, must exist) + "\n" +
 		final String dateHeader;
-		if((dateHeader = request.getHeader(HttpHeaders.DATE)) == null) {
+		if((dateHeader = request.getHeader(DATE)) == null) {
 			throw new BadCredentialsException("Incoming request missing " +
-				"required " + HttpHeaders.DATE + " HTTP header.");
+				"required " + DATE + " HTTP header.");
 		}
 		sb.append(dateHeader).append(LINE_SEPARATOR_UNIX);
 		// Content-Type (from 'Content-Type' request header, optional) + "\n" +
 		final String contentType;
-		if((contentType = request.getHeader(HttpHeaders.CONTENT_TYPE)) != null) {
+		if((contentType = request.getHeader(CONTENT_TYPE)) != null) {
 			sb.append(contentType);
 		}
 		sb.append(LINE_SEPARATOR_UNIX);

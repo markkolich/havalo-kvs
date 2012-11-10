@@ -26,9 +26,9 @@
 
 package com.kolich.havalo.spring.controllers.api.objects;
 
+import static com.google.common.net.HttpHeaders.IF_MATCH;
 import static com.kolich.common.util.URLEncodingUtils.urlDecode;
 import static org.apache.commons.lang3.Validate.notEmpty;
-import static org.apache.http.HttpHeaders.IF_MATCH;
 
 import javax.servlet.http.HttpServletResponse;
 
