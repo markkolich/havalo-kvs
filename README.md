@@ -18,7 +18,7 @@ The latest <a href="https://github.com/markkolich/havalo/downloads">stable versi
 
 * **Trusted Stack** &ndash; Written in Java, built around Spring 3.1.3.  Deployable in any **Servlet 3.0** compatible container.  Tested and verified on Tomcat 7 and Jetty 8.
 
-* **RESTful API** &ndash; Once deployed, Havalo immeaditely provides a RESTful API that just makes perfect sense.  All API entities are pure JSON &mdash; no XML, anywhere. 
+* **RESTful API** &ndash; Once deployed, Havalo immeaditely provides a RESTful API that just makes perfect sense.  All API responses are in pure JSON &mdash; no XML, anywhere. 
 
 * **ETag and If-Match Support** &ndash; All objects are stored with an automatically generated SHA-1 `ETag` hash of the binary object data.  As such, subsequent update operations on that object can be conditional if desired.  In slightly more technical terms, accept a `PUT` for an object only if the SHA-1 hash sent with the `If-Match` HTTP request header matches the existing object `ETag` hash.
 
