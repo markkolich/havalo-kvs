@@ -18,11 +18,11 @@ The latest <a href="https://github.com/markkolich/havalo/downloads">stable versi
 
 * **Trusted Stack** &ndash; Written in Java, built around Spring 3.1.3.  Deployable in any **Servlet 3.0** compatible container.  Tested and verified on Tomcat 7 and Jetty 8.
 
-* **RESTful API** &ndash; Once deployed, Havalo immeaditely provides a RESTful API that just makes perfect sense.  All API responses are in pure JSON &mdash; no XML, anywhere. 
+* **RESTful API** &ndash; Once deployed, Havalo immediately provides a RESTful API that just makes perfect sense.  All API responses are in pure JSON &mdash; no XML, anywhere. 
 
 * **ETag and If-Match Support** &ndash; All objects are stored with an automatically generated SHA-1 `ETag` hash of the binary object data.  As such, subsequent update operations on that object can be conditional if desired.  In slightly more technical terms, accept a `PUT` for an object only if the SHA-1 hash sent with the `If-Match` HTTP request header matches the existing object `ETag` hash.
 
-* **Havalo Client** &ndash; A Java client for the Havalo API is available off-the-shelf as provided by the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> project.  If you'd rather not use the provided Java client, it's straighforward to write a client for the Havalo API in a langugage of your choice.
+* **Havalo Client** &ndash; A Java client for the Havalo API is available off-the-shelf as provided by the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> project.  If you'd rather not use the provided Java client, it's straightforward to write a client for the Havalo API in a language of your choice.
 
 ## Compatibility
 
@@ -65,7 +65,7 @@ There are a few fundamental constructs to be aware of when using Havalo and its 
 
 ## API
 
-Havalo provides a completely RESTful API that lets users `PUT` objects, `GET` objects, and `DELETE` objects in their repositories.  Additionally, administrator level users can also `POST` (create) repositories and `DELETE` repositories.  Note that the user-to-repository relationship is 1:1, meaning creating a repository is equivalent to creating a user, and deleteing a repository is equivalent to deleting a user.
+Havalo provides a completely RESTful API that lets users `PUT` objects, `GET` objects, and `DELETE` objects in their repositories.  Additionally, administrator level users can also `POST` (create) repositories and `DELETE` repositories.  Note that the user-to-repository relationship is 1:1, meaning creating a repository is equivalent to creating a user, and deleting a repository is equivalent to deleting a user.
 
 ### Credentials
 
@@ -185,6 +185,12 @@ Delete an object.
     DELETE:/api/object/{key}
 
 ## Building and Running
+
+### Download
+
+You can download the latest version of Havalo on the <a href="https://github.com/markkolich/havalo/downloads">Havalo download page</a>.
+
+### Build from Source
 
 Havalo is built and managed using <a href="https://github.com/harrah/xsbt">SBT 0.12.1</a>.
 
