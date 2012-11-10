@@ -6,7 +6,7 @@ Sometimes you just need fast K,V storage, but don't need full redundancy and sca
 
 Havalo is perfect for testing, maintaining fast indexes of records stored "elsewhere", and almost every other deployment scenario where relational databases are just too heavy.
 
-The latest <a href="https://github.com/markkolich/havalo/downloads">stable version of Havalo is 0.0.3</a>.
+The latest <a href="https://github.com/markkolich/havalo/downloads">stable version of Havalo is 0.0.4</a>.
 
 ## Features
 
@@ -201,13 +201,13 @@ Run SBT from within your newly cloned *havalo* directory.
     #~> cd havalo
     #~/havalo> sbt
     ...
-    havalo:0.0.3>
+    havalo:0.0.4>
 
 You will see a `havalo` SBT prompt once all dependencies are resolved and the project is loaded.
 
 In SBT, run `container:start` to start the local Servlet container.  By default the server listens on **port 8080**.
 
-    havalo:0.0.3> container:start
+    havalo:0.0.4> container:start
     [info] jetty-8.0.4.v20111024
     [info] started o.e.j.w.WebAppContext{/,[file:~/havalo/src/main/webapp/]}
     [info] Initializing Spring root WebApplicationContext
@@ -225,12 +225,12 @@ See the <a href="https://github.com/siasia/xsbt-web-plugin/wiki">xsbt-web-plugin
 
 In SBT, run `package` to build a deployable WAR for your favorite Servlet container.
 
-    havalo:0.0.3> package
+    havalo:0.0.4> package
     ...
     [info] Compiling 49 Java sources to ~/havalo/target/classes...
-    [info] Packaging ~/havalo/dist/havalo-0.0.3.jar ...
+    [info] Packaging ~/havalo/dist/havalo-0.0.4.jar ...
     [info] Done packaging.
-    [info] Packaging ~/havalo/dist/havalo-0.0.3.war ...
+    [info] Packaging ~/havalo/dist/havalo-0.0.4.war ...
     [info] Done packaging.
     [success] Total time: 8 s, completed Oct 27, 2012 10:47:38 AM
 
@@ -238,7 +238,7 @@ Note the resulting WAR is placed into the **havalo/dist** directory.  Deploy and
 
 To create an Eclipse Java project for Havalo, run `eclipse` in SBT.
 
-    havalo:0.0.3> eclipse
+    havalo:0.0.4> eclipse
     ...
     [info] Successfully created Eclipse project files for project(s):
     [info] havalo
