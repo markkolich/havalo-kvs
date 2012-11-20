@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Configure class="org.eclipse.jetty.webapp.WebAppContext">
-	<Get name="sessionHandler">
-		<Get name="sessionManager">
-			<Set name="usingCookies" type="boolean">false</Set>
-			<!-- <Set name="sessionCookie">foobar</Set> -->
-		</Get>
-	</Get>
-</Configure>
