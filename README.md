@@ -36,7 +36,7 @@ Havalo is confirmed to work with the following containers:
   </tr>
   <tr>
   <td rowspan="3">Servlet 3.0</td>
-  <td>Tomcat 7</td>
+  <td>Tomcat 7*</td>
   <td><img src="http://openclipart.org/image/800px/svg_to_png/161503/OK-1.png" height="20"></td>
   </tr>
   <tr>
@@ -49,9 +49,21 @@ Havalo is confirmed to work with the following containers:
   </tr>
 </table>
 
+* if deploying Havalo inside of Tomcat 7, see note below with regards to URL encoded slashes.
+
 NOTE: may work with other containers, such as Weblogic or Websphere, but these have **not** been tested.
 
-## Deployment Considerations
+### Using Havalo with Tomcat 7
+
+By default, Tomcat 7 does **not** accept URI's that contain a URL encoded slash (`%2F`) &mdash; incoming request URI's that contain a `%2F` in them are immediately rejected with a `400 Bad Request`.  This behavior appears to be specific to Tomcat.
+
+Therefore, if you intend to use Havalo with Tomcat 7, you must add the following to your `CATALINA_OPTS` environment variable in `bin/startup.sh`:
+
+```bash
+-Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true
+```
+
+## Considerations
 
 Havalo is **not** an off-the-shelf replacement for <a href="http://aws.amazon.com/s3/">Amazon S3</a>, <a href="http://redis.io">Redis</a>, <a href="http://www.project-voldemort.com/voldemort/">Voldemort</a> or <a href="http://cassandra.apache.org/">Apache's Cassandra</a>.  If you need completely fault-tolerant, distributed K,V storage then Havalo is probably not for you.
 
