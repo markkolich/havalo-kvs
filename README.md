@@ -49,7 +49,7 @@ Havalo is confirmed to work with the following containers:
   </tr>
 </table>
 
-* if deploying Havalo inside of Tomcat 7, see note below with regards to URL encoded slashes.
+\* if deploying Havalo inside of Tomcat 7, see note below with regards to URL encoded slashes.
 
 NOTE: may work with other containers, such as Weblogic or Websphere, but these have **not** been tested.
 
