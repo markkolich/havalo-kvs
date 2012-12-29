@@ -22,7 +22,7 @@ The latest <a href="https://github.com/markkolich/havalo/downloads">stable versi
 
 * **ETag and If-Match Support** &ndash; All objects are stored with an automatically generated SHA-1 `ETag` hash of the binary object data.  As such, subsequent update operations on that object can be conditional if desired.  In slightly more technical terms, accept a `PUT` for an object only if the SHA-1 hash sent with the `If-Match` HTTP request header matches the existing object `ETag` hash.
 
-* **Havalo Client** &ndash; A Java client for the Havalo API is available off-the-shelf as provided by the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> project.  If you'd rather not use the provided Java client, it's straightforward to write a client for the Havalo API in a language of your choice.
+* **Havalo Client** &ndash; A Java client for the <a href="https://github.com/markkolich/havalo#api">Havalo API</a> is available off-the-shelf as provided by the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> project.  If you'd rather not use the provided Java client, it's straightforward to write a client for the <a href="https://github.com/markkolich/havalo#api">Havalo API</a> in a language of your choice.
 
 ## Compatibility
 
