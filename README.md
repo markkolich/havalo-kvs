@@ -6,7 +6,7 @@ Sometimes you just need fast K,V storage, but don't need full redundancy and sca
 
 Havalo is perfect for testing, maintaining fast indexes of records stored "elsewhere", and almost every other deployment scenario where relational databases are just too heavy.
 
-The latest <a href="https://github.com/markkolich/havalo/tree/master/downloads">stable version of Havalo is 0.0.4</a>.
+The latest <a href="https://github.com/markkolich/havalo/raw/master/downloads/havalo-0.0.4.war">stable version of Havalo is 0.0.4</a>.
 
 ## Features
 
