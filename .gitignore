@@ -1,14 +1,12 @@
 *.class
 
-# Package Files #
-*.jar
-*.ear
-
 .project
 .classpath
 project/target
+lib_managed
 dist
 target
 bin
+config
 
 src/main/webapp/WEB-INF/work
