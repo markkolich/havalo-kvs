@@ -67,6 +67,7 @@ import com.kolich.havalo.exceptions.repositories.RepositoryDeletionException;
 import com.kolich.havalo.exceptions.repositories.RepositoryFlushException;
 import com.kolich.havalo.exceptions.repositories.RepositoryLoadException;
 import com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException;
+import com.kolich.havalo.io.MetaStore;
 import com.kolich.havalo.io.stores.MetaObjectStore;
 import com.kolich.havalo.io.stores.ObjectStore;
 
@@ -90,7 +91,8 @@ public final class RepositoryManager extends ObjectStore
 			Reader reader = null;
 			try {
 				reader = super.getReader(ownerId.toString());
-				return getHavaloGsonInstance().fromJson(reader, Repository.class);
+				return getHavaloGsonInstance().fromJson(reader,
+					Repository.class);
 			} finally {
 				closeQuietly(reader);
 			}
@@ -102,21 +104,25 @@ public final class RepositoryManager extends ObjectStore
 		
 		private static final Logger logger__ =
 			LoggerFactory.getLogger(RepositoryMetaWriter.class);
-				
-		private final RepositoryMetaStore metaStore_;
 		
-		private final int poolSize_;
+		private static final int DEFAULT_WRITER_POOL_SIZE = 20;
+				
+		private final MetaStore metaStore_;		
 		private final ExecutorService writerPool_;
 				
-		public RepositoryMetaWriter(RepositoryMetaStore metaStore, int poolSize) {
+		public RepositoryMetaWriter(final MetaStore metaStore,
+			final int poolSize) {
 			metaStore_ = metaStore;
-			poolSize_ = poolSize;
-			writerPool_ = newFixedThreadPool(poolSize_,
+			writerPool_ = newFixedThreadPool(poolSize,
 				new ThreadFactoryBuilder()
 					.setDaemon(true)
 					.setNameFormat("havalo-meta-writer-%s")
 					.setPriority(Thread.MAX_PRIORITY)
 					.build());
+		}
+		
+		public RepositoryMetaWriter(final MetaStore metaStore) {
+			this(metaStore, DEFAULT_WRITER_POOL_SIZE);
 		}
 		
 		public void queue(final Repository repo) {
@@ -134,7 +140,7 @@ public final class RepositoryManager extends ObjectStore
 									metaStore_.save(repo);
 									return repo;
 								}
-							}.read();
+							}.read(); // Shared read, wait
 						}
 					} catch (Exception e) {
 						logger__.error("Failed to flush repository to disk.", e);
@@ -147,8 +153,6 @@ public final class RepositoryManager extends ObjectStore
 	
 	private RepositoryMetaStore metaStore_;
 	private RepositoryMetaWriter metaWriter_;
-
-	private int maxRepositoryCacheSize_;
 	
 	/**
 	 * Internal in-memory cache to cache a mapping of a {@link HavaloUUID}
@@ -156,7 +160,7 @@ public final class RepositoryManager extends ObjectStore
 	 */
 	private Cache<HavaloUUID, Repository> repositories_;
 	
-	public RepositoryManager(Resource objectStoreDir) throws IOException {
+	public RepositoryManager(final Resource objectStoreDir) throws IOException {
 		// Set the directory that will physicially store the repositories.
 		super(objectStoreDir.getFile());
 	}
@@ -168,11 +172,10 @@ public final class RepositoryManager extends ObjectStore
 		// is always the same as the repository root.
 		metaStore_ = new RepositoryMetaStore(storeDir_);
 		// Setup the meta store writer for this repository.
-		metaWriter_ = new RepositoryMetaWriter(metaStore_, maxRepositoryCacheSize_);
+		metaWriter_ = new RepositoryMetaWriter(metaStore_);
 		// Setup the in-memory repository cache.
-		repositories_ = CacheBuilder
-			.newBuilder()
-			.maximumSize(maxRepositoryCacheSize_)
+		repositories_ = CacheBuilder.newBuilder()
+			//.maximumSize(maxRepositoryCacheSize_)
 			//.expireAfterAccess(hoursTillCacheEviction_, TimeUnit.HOURS)
 			.removalListener(new RemovalListener<HavaloUUID, Repository>() {
 				// http://code.google.com/p/guava-libraries/wiki/CachesExplained#Eviction
@@ -198,18 +201,24 @@ public final class RepositoryManager extends ObjectStore
 							if(repo.getFile().exists()) {
 								// Queue the repository to be flushed to disk.
 								metaWriter_.queue(repo);
+							} else {
+								logger__.debug("Not flushing repo meta " +
+									"data, underlying repo directory is " +
+									"missing (id=" + repo.getKey() + ", " +
+									"file=" + repo.getFile().getCanonicalPath() +
+									")");
 							}
 						} else {
 							// Should really _not_ happen based on the notes
 							// provided above.
 							throw new RepositoryFlushException("Could not " +
 								"flush NULL repository -- was perhaps " +
-									"already garbage collected?");
+									"already GC'ed?");
 						}
 					} catch (Exception e) {
 						logger__.error("Failed miserably to flush repository " +
 							"(id=" + ((repo != null) ? repo.getRepoId() : "NULL") +
-								") -- this could be trouble!", e);
+								") -- could be trouble!", e);
 					}
 				}
 			}).build();
@@ -293,7 +302,7 @@ public final class RepositoryManager extends ObjectStore
 			});
 		} catch (Exception e) {
 			// Google Guava (the cache) wraps exceptions thrown from within its
-			// Callable.call() method.  When the Exception e ultimately makes it
+			// Callable.call() method.  When the Exception "e" ultimately makes it
 			// here, the real "cause" of the failure is embedded inside of
 			// e.getCause().  Not a big deal, just a detail to be aware of.
 			final Throwable cause = e.getCause();
@@ -327,7 +336,7 @@ public final class RepositoryManager extends ObjectStore
 									repoFile.getCanonicalPath() + ")");
 					}
 					// Delete the meta data associated with the repository too.
-					metaStore_.delete(repo);
+					metaStore_.delete(repo.getKey());
 					return null;
 				}
 				@Override
@@ -483,13 +492,9 @@ public final class RepositoryManager extends ObjectStore
 			getSHA256Hash(hfo.getName()),
 			makeParentDirs);
 	}
-		
+	
 	public void flushRepository(final Repository repo) {
 		metaWriter_.queue(repo);
 	}
-	
-	public void setMaxRepositoryCacheSize(int maxRepositoryCacheSize) {
-		maxRepositoryCacheSize_ = maxRepositoryCacheSize;
-	}
-	
+		
 }

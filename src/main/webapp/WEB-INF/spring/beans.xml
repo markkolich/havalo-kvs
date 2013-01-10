@@ -36,7 +36,6 @@
    		class="com.kolich.havalo.io.managers.RepositoryManager">
    		<constructor-arg value="${repository.base}"/>
    		<property name="maxFilenameLength" value="2" />
-   		<property name="maxRepositoryCacheSize" value="10" />   		
    	</bean>
    	
    	<!-- Bootstrap -->

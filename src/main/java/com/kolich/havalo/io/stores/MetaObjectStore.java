@@ -43,13 +43,12 @@ import java.util.zip.Deflater;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.io.IOUtils;
-
 import com.kolich.havalo.entities.StoreableEntity;
 import com.kolich.havalo.exceptions.objects.ObjectFlushException;
 import com.kolich.havalo.exceptions.objects.ObjectLoadException;
+import com.kolich.havalo.io.MetaStore;
 
-public abstract class MetaObjectStore extends ObjectStore {
+public abstract class MetaObjectStore extends ObjectStore implements MetaStore {
 		
 	protected static final String JSON_EXTENSION = ".json";
 	
@@ -57,6 +56,8 @@ public abstract class MetaObjectStore extends ObjectStore {
 		super(storeDir);
 	}
 	
+	/*
+	@Override
 	public String getString(final String index) {
 		// Attempt to read the file from disk into memory.
 		Reader reader = null;
@@ -70,6 +71,7 @@ public abstract class MetaObjectStore extends ObjectStore {
 			closeQuietly(reader);
 		}
 	}
+	*/
 	
 	/**
 	 * The caller is most definitely responsible for closing the
@@ -77,6 +79,7 @@ public abstract class MetaObjectStore extends ObjectStore {
 	 * @param index
 	 * @return
 	 */
+	@Override
 	public Reader getReader(final String index) {
 		Reader reader = null;
 		try {
@@ -90,6 +93,7 @@ public abstract class MetaObjectStore extends ObjectStore {
 		return reader;
 	}
 	
+	@Override
 	public void save(final StoreableEntity entity) {
 		FileOutputStream fos = null;
 		GZIPOutputStream gos = null;
@@ -116,11 +120,12 @@ public abstract class MetaObjectStore extends ObjectStore {
 		}
 	}
 	
+	@Override
 	public void delete(final String index) {
 		try {
 			// Actually attempt to delete it, or report failure.
 			if(!deleteQuietly(getCanonicalFile(index))) {
-				throw new IOException("Delete of index: " + index +
+				throw new IOException("Deletion of index " + index +
 					" failed.");
 			}
 		} catch (Exception e) {
@@ -128,11 +133,7 @@ public abstract class MetaObjectStore extends ObjectStore {
 				index, e);
 		}
 	}
-	
-	public void delete(final StoreableEntity entity) {
-		delete(entity.getKey());
-	}
-	
+		
 	private File getCanonicalFile(final StoreableEntity entity) {
 		return getCanonicalFile(entity.getKey());
 	}
