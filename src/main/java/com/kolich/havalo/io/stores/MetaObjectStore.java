@@ -84,7 +84,7 @@ public abstract class MetaObjectStore extends ObjectStore implements MetaStore {
 		Reader reader = null;
 		try {
 			final InputStream gis = new GZIPInputStream(
-				new FileInputStream(getCanonicalFile(index)));			
+				new FileInputStream(getCanonicalFile(index, false)));			
 			reader = new InputStreamReader(gis, UTF_8);
 		} catch (Exception e) {
 			throw new ObjectLoadException("Failed to read entity: " +
@@ -124,7 +124,7 @@ public abstract class MetaObjectStore extends ObjectStore implements MetaStore {
 	public void delete(final String index) {
 		try {
 			// Actually attempt to delete it, or report failure.
-			if(!deleteQuietly(getCanonicalFile(index))) {
+			if(!deleteQuietly(getCanonicalFile(index, false))) {
 				throw new IOException("Deletion of index " + index +
 					" failed.");
 			}
@@ -135,12 +135,12 @@ public abstract class MetaObjectStore extends ObjectStore implements MetaStore {
 	}
 		
 	private File getCanonicalFile(final StoreableEntity entity) {
-		return getCanonicalFile(entity.getKey());
+		return getCanonicalFile(entity.getKey(), true);
 	}
 	
-	private File getCanonicalFile(final String index) {
+	private File getCanonicalFile(final String index, final boolean create) {
 		return getCanonicalObject(storeDir_, index + JSON_EXTENSION,
-			true).getFile();
+			create).getFile();
 	}
 	
 }

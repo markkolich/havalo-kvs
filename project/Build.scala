@@ -44,15 +44,14 @@ object Dependencies {
 
   // External dependencies
 
-  private val jetty = "org.eclipse.jetty" % "jetty-server" % "8.0.4.v20111024" % "container"
-  private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % "8.0.4.v20111024" % "container"
-  private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % "8.0.4.v20111024" % "container"
-  private val jettyJsp = "org.mortbay.jetty" % "jsp-2.1-glassfish" % "2.1.v20100127" % "container"
-
-  private val jspApi = "javax.servlet.jsp" % "jsp-api" % "2.2" % "provided" // Provided by servlet container  
-  private val servlet = "org.glassfish" % "javax.servlet" % "3.0" % "provided" // Provided by servlet container
-  private val jstl = "jstl" % "jstl" % "1.2" % "compile" // Package with WAR
-  private val javaEEWebApi = "javax" % "javaee-web-api" % "6.0" % "provided" // Provided by servlet container
+  // Using Jetty 8 "stable", version 8.1.8.v20121106
+  private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % "8.1.8.v20121106" % "container"
+  private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % "8.1.8.v20121106" % "container"
+  private val jettyJsp = "org.eclipse.jetty" % "jetty-jsp" % "8.1.8.v20121106" % "container"
+  
+  private val jspApi = "javax.servlet.jsp" % "jsp-api" % "2.2" % "provided" // Provided by container  
+  private val jstl = "javax.servlet" % "jstl" % "1.2" % "compile" // Package with WAR
+  private val servlet = "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided" // Provided by container
 
   private val springTx = "org.springframework" % "spring-tx" % "3.1.3.RELEASE" % "compile"
   private val springSecurityCore = "org.springframework.security" % "spring-security-core" % "3.1.3.RELEASE" % "compile"
@@ -73,13 +72,13 @@ object Dependencies {
   private val commonsFileupload = "commons-fileupload" % "commons-fileupload" % "1.2.2" % "compile"
 
   val deps = Seq(kolichSpring, kolichBolt,
-    jetty, jettyWebApp, jettyPlus, jettyJsp,
-    jspApi, jstl, servlet, javaEEWebApi,
+    jettyWebApp, jettyPlus, jettyJsp,
+    jspApi, jstl, servlet,
     springTx, springSecurityCore, springSecurityWeb, springSecurityConfig,
     cgLibNoDep,
     ardverkTrie,
-    logback, logbackClassic, slf4j, jclOverSlf4j,
-    commonsLang, commonsCodec, commonsFileupload)
+    commonsLang, commonsCodec, commonsFileupload,
+    logback, logbackClassic, slf4j, jclOverSlf4j)
 
 }
 
