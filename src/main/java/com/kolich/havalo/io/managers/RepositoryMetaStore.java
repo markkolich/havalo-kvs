@@ -24,18 +24,37 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.io;
+package com.kolich.havalo.io.managers;
 
+import static com.kolich.havalo.entities.HavaloEntity.getHavaloGsonInstance;
+import static org.apache.commons.io.IOUtils.closeQuietly;
+
+import java.io.File;
 import java.io.Reader;
 
-import com.kolich.havalo.entities.StoreableEntity;
+import com.kolich.havalo.entities.types.HavaloUUID;
+import com.kolich.havalo.entities.types.Repository;
+import com.kolich.havalo.io.stores.MetaObjectStore;
 
-public interface MetaStore {
-		
-	public Reader getReader(final String index);
+/**
+ * The intermediary between the repository manager and the actual
+ * repository meta data sitting on disk.
+ */
+public final class RepositoryMetaStore extends MetaObjectStore {
 	
-	public void save(final StoreableEntity entity);
+	public RepositoryMetaStore(final File storeDir) {
+		super(storeDir);
+	}
 	
-	public void delete(final String index);
+	public Repository loadById(final HavaloUUID ownerId) {
+		Reader reader = null;
+		try {
+			reader = super.getReader(ownerId.toString());
+			return getHavaloGsonInstance().fromJson(reader,
+				Repository.class);
+		} finally {
+			closeQuietly(reader);
+		}
+	}
 
 }

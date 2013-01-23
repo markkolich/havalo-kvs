@@ -28,17 +28,12 @@ package com.kolich.havalo.io.managers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.kolich.common.util.secure.KolichChecksum.getSHA256Hash;
-import static com.kolich.havalo.entities.HavaloEntity.getHavaloGsonInstance;
-import static java.util.concurrent.Executors.newFixedThreadPool;
 import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.apache.commons.io.FileUtils.forceMkdir;
-import static org.apache.commons.io.IOUtils.closeQuietly;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +42,6 @@ import org.springframework.core.io.Resource;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
 import com.kolich.bolt.exceptions.LockConflictException;
 import com.kolich.havalo.entities.types.DiskObject;
@@ -64,11 +56,8 @@ import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
 import com.kolich.havalo.exceptions.repositories.DuplicateRepositoryException;
 import com.kolich.havalo.exceptions.repositories.RepositoryCreationException;
 import com.kolich.havalo.exceptions.repositories.RepositoryDeletionException;
-import com.kolich.havalo.exceptions.repositories.RepositoryFlushException;
 import com.kolich.havalo.exceptions.repositories.RepositoryLoadException;
 import com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException;
-import com.kolich.havalo.io.MetaStore;
-import com.kolich.havalo.io.stores.MetaObjectStore;
 import com.kolich.havalo.io.stores.ObjectStore;
 
 public final class RepositoryManager extends ObjectStore
@@ -77,80 +66,6 @@ public final class RepositoryManager extends ObjectStore
 	private static final Logger logger__ =
 		LoggerFactory.getLogger(RepositoryManager.class);
 		
-	/**
-	 * The intermediary between the repository manager and the actual
-	 * repository meta data sitting on disk.
-	 */
-	private final static class RepositoryMetaStore extends MetaObjectStore {
-		
-		public RepositoryMetaStore(final File storeDir) {
-			super(storeDir);
-		}
-		
-		public Repository loadById(final HavaloUUID ownerId) {
-			Reader reader = null;
-			try {
-				reader = super.getReader(ownerId.toString());
-				return getHavaloGsonInstance().fromJson(reader,
-					Repository.class);
-			} finally {
-				closeQuietly(reader);
-			}
-		}
-				
-	}
-	
-	private final static class RepositoryMetaWriter {
-		
-		private static final Logger logger__ =
-			LoggerFactory.getLogger(RepositoryMetaWriter.class);
-		
-		private static final int DEFAULT_WRITER_POOL_SIZE = 20;
-				
-		private final MetaStore metaStore_;		
-		private final ExecutorService writerPool_;
-				
-		public RepositoryMetaWriter(final MetaStore metaStore,
-			final int poolSize) {
-			metaStore_ = metaStore;
-			writerPool_ = newFixedThreadPool(poolSize,
-				new ThreadFactoryBuilder()
-					.setDaemon(true)
-					.setNameFormat("havalo-meta-writer-%s")
-					.setPriority(Thread.MAX_PRIORITY)
-					.build());
-		}
-		
-		public RepositoryMetaWriter(final MetaStore metaStore) {
-			this(metaStore, DEFAULT_WRITER_POOL_SIZE);
-		}
-		
-		public void queue(final Repository repo) {
-			writerPool_.execute(new Runnable() {
-				@Override
-				public void run() {
-					// Grab a read lock; ensures no writes will be allowed
-					// during the flush-to-disk process.
-					try {
-						if(repo != null) {
-							new ReentrantReadWriteEntityLock<Repository>(repo) {
-								@Override
-								public Repository transaction() throws Exception {
-									// Flush the repository meta data to disk.
-									metaStore_.save(repo);
-									return repo;
-								}
-							}.read(); // Shared read, wait
-						}
-					} catch (Exception e) {
-						logger__.error("Failed to flush repository to disk.", e);
-					}
-				}
-			});
-		}
-		
-	}
-	
 	private RepositoryMetaStore metaStore_;
 	private RepositoryMetaWriter metaWriter_;
 	
@@ -167,6 +82,7 @@ public final class RepositoryManager extends ObjectStore
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		logger__.info("Repository manager started...");
 		// Setup the meta store that's used to store meta data about each
 		// repository on disk.  The root of the repository meta data store
 		// is always the same as the repository root.
@@ -177,51 +93,8 @@ public final class RepositoryManager extends ObjectStore
 		repositories_ = CacheBuilder.newBuilder()
 			//.maximumSize(maxRepositoryCacheSize_)
 			//.expireAfterAccess(hoursTillCacheEviction_, TimeUnit.HOURS)
-			.removalListener(new RemovalListener<HavaloUUID, Repository>() {
-				// http://code.google.com/p/guava-libraries/wiki/CachesExplained#Eviction
-				// Warning: removal listener operations are executed
-				// __synchronously__ by default, and since cache maintenance is
-				// normally performed during normal cache operations, expensive
-				// removal listeners can slow down normal cache function!
-				@Override
-				public void onRemoval(final RemovalNotification<HavaloUUID, Repository> removed) {
-					Repository repo = null;
-					try {
-						// The repo that was "evicted" could be null if it was
-						// garbage collected between the time it was evicted
-						// and this listener was called.  This should _not_
-						// happen given that we've asked the Cache to maintain
-						// _STRONG_ references to the keys and values in the
-						// cache, but we should check just in case.
-						if((repo = removed.getValue()) != null) {
-							// If the repository directory has been deleted, we
-							// should not attempt to flush the meta data about it
-							// to disk -- the underlying repository has already
-							// been lost/removed.
-							if(repo.getFile().exists()) {
-								// Queue the repository to be flushed to disk.
-								metaWriter_.queue(repo);
-							} else {
-								logger__.debug("Not flushing repo meta " +
-									"data, underlying repo directory is " +
-									"missing (id=" + repo.getKey() + ", " +
-									"file=" + repo.getFile().getCanonicalPath() +
-									")");
-							}
-						} else {
-							// Should really _not_ happen based on the notes
-							// provided above.
-							throw new RepositoryFlushException("Could not " +
-								"flush NULL repository -- was perhaps " +
-									"already GC'ed?");
-						}
-					} catch (Exception e) {
-						logger__.error("Failed miserably to flush repository " +
-							"(id=" + ((repo != null) ? repo.getRepoId() : "NULL") +
-								") -- could be trouble!", e);
-					}
-				}
-			}).build();
+			.removalListener(new RepositoryCacheRemovalListener(metaWriter_))
+			.build();
 	}
 	
 	public Repository createRepository(final HavaloUUID id,
