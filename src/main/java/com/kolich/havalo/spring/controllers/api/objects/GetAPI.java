@@ -57,12 +57,13 @@ import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.spring.beans.HavaloProperties;
 import com.kolich.havalo.spring.controllers.HavaloControllerClosure;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
 
 @Controller
 @RequestMapping(value="/object")
-public class GetAPI extends AbstractHavaloAPIController {
+public final class GetAPI extends AbstractHavaloAPIController {
 	
 	// http://benramsey.com/blog/2008/05/206-partial-content-and-range-requests/
 	
@@ -70,8 +71,9 @@ public class GetAPI extends AbstractHavaloAPIController {
 		LoggerFactory.getLogger(GetAPI.class);
 		
 	@Autowired
-	public GetAPI(RepositoryManager repositoryManager) {
-		super(repositoryManager);
+	public GetAPI(final HavaloProperties properties,
+		final RepositoryManager repositoryManager) {
+		super(properties, repositoryManager);
 	}
 	
 	@RequestMapping(method={RequestMethod.GET}, value="{key:.*}")

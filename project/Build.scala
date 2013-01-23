@@ -39,7 +39,7 @@ object Dependencies {
 
   // Internal dependencies
 
-  private val kolichSpring = "com.kolich" % "kolich-spring" % "0.0.4" % "compile"
+  private val kolichSpring = "com.kolich" % "kolich-spring" % "0.0.6" % "compile"
   private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.3" % "compile"
 
   // External dependencies

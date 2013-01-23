@@ -111,7 +111,9 @@
 				<prop key="java.lang.IllegalArgumentException">errors/400-bad-request</prop>								
 				<!-- Repository exceptions -->
 				<prop key="com.kolich.havalo.exceptions.repositories.DuplicateRepositoryException">errors/409-conflict</prop>
-				<prop key="com.kolich.havalo.exceptions.repositories.RepositoryCreationException">errors/500-internal-server-error</prop>
+				<prop key="com.kolich.havalo.exceptions.repositories.RepositoryCreationException">errors/503-service-unavailable</prop>
+				<prop key="com.kolich.havalo.exceptions.repositories.RepositoryDeletionException">errors/503-service-unavailable</prop>
+				<prop key="com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException">errors/403-forbidden</prop>								
 				<prop key="com.kolich.havalo.exceptions.repositories.RepositoryFlushException">errors/412-precondition-failed</prop>
 				<prop key="com.kolich.havalo.exceptions.repositories.RepositoryLoadException">errors/503-service-unavailable</prop>
 				<prop key="com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException">errors/404-not-found</prop>

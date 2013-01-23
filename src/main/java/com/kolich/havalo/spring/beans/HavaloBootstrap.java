@@ -32,34 +32,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
-import com.kolich.havalo.exceptions.HavaloException;
 import com.kolich.havalo.exceptions.repositories.RepositoryCreationException;
 import com.kolich.havalo.io.managers.RepositoryManager;
 
-public class HavaloBootstrap implements InitializingBean {
+public final class HavaloBootstrap implements InitializingBean {
 	
 	private static final Logger logger__ =
 		LoggerFactory.getLogger(HavaloBootstrap.class);
 	
+	private HavaloProperties properties_;
 	private RepositoryManager manager_;
-	
-	private HavaloUUID adminApiUUID_;
-	private String adminApiSecret_;
-	
+			
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		try {
 			// Create a new keypair for the default ADMIN level user.
-			final KeyPair adminKeyPair = new KeyPair(adminApiUUID_,
-				adminApiSecret_, ADMIN);
+			final KeyPair adminKeyPair = new KeyPair(
+				properties_.getAdminApiUUID(),
+				properties_.getAdminApiSecret(),
+				ADMIN);
 			// Actually attempt to create a new Repository for the Admin user.
 			// This should work, if not, bail the whole app.
 			manager_.createRepository(adminKeyPair.getIdKey(), adminKeyPair);
 			logger__.info("Successfully created ADMIN user repository (key=" +
-				adminKeyPair.getIdKey() + ", secret=" +
-					adminKeyPair.getSecret() + ")");
+				adminKeyPair.getIdKey().getId() + ", secret=" +
+				adminKeyPair.getSecret() + ")");
 		} catch (RepositoryCreationException e) {
 			// Log in DEBUG and continue silently.  This is a normal case,
 			// when the admin repo has already been created on firstboot
@@ -74,22 +72,13 @@ public class HavaloBootstrap implements InitializingBean {
 			throw e;
 		}
 	}
+	
+	public void setAppProperties(HavaloProperties properties) {
+		properties_ = properties;
+	}
 
 	public void setRepositoryManager(RepositoryManager manager) {
 		manager_ = manager;
-	}
-	
-	public void setAdminApiUUID(String adminApiUUID) {
-		try {
-			adminApiUUID_ = new HavaloUUID(adminApiUUID);
-		} catch (IllegalArgumentException e) {
-			throw new HavaloException("Provided Admin API UUID is not " +
-				"a valid UUID.", e);
-		}
-	}
-	
-	public void setAdminApiSecret(String adminApiSecret) {
-		adminApiSecret_ = adminApiSecret;
 	}
 
 }

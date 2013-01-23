@@ -43,20 +43,23 @@ import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.ObjectList;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.entities.types.UserRole;
+import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.spring.beans.HavaloProperties;
 import com.kolich.havalo.spring.controllers.HavaloControllerClosure;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
 
 @Controller
 @RequestMapping(value="/repository")
-public class RepositoryAPI extends AbstractHavaloAPIController {
+public final class RepositoryAPI extends AbstractHavaloAPIController {
 	
 	private static final Logger logger__ =
 		LoggerFactory.getLogger(RepositoryAPI.class);
 			
 	@Autowired
-	public RepositoryAPI(RepositoryManager repositoryManager) {
-		super(repositoryManager);
+	public RepositoryAPI(final HavaloProperties properties,
+		final RepositoryManager repositoryManager) {
+		super(properties, repositoryManager);
 	}
 	
 	@RequestMapping(method={RequestMethod.GET})
@@ -110,9 +113,16 @@ public class RepositoryAPI extends AbstractHavaloAPIController {
 			"DELETE:/api/repository/" + repoId, logger__) {
 			@Override
 			public ResponseEntity<byte[]> doit() throws Exception {
+				final HavaloUUID toDelete = new HavaloUUID(repoId);
+				// Admin users cannot delete the "admin" repository.
+				if(properties_.getAdminApiUUID().equals(toDelete)) {
+					throw new RepositoryForbiddenException("Authenticated " +
+						"admin user attempted to delete admin repository: " +
+						toDelete.getId());
+				}
 				// Attempt to delete the repository, its meta data, and all
 				// objects inside of it.
-				deleteRepository(new HavaloUUID(repoId));
+				deleteRepository(toDelete);
 				return getEmptyResponseEntity(HttpStatus.NO_CONTENT);
 			}
 		}.execute();

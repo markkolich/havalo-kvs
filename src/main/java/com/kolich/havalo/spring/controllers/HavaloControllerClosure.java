@@ -13,7 +13,9 @@ import com.kolich.havalo.exceptions.objects.ObjectLoadException;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
 import com.kolich.havalo.exceptions.repositories.DuplicateRepositoryException;
 import com.kolich.havalo.exceptions.repositories.RepositoryCreationException;
+import com.kolich.havalo.exceptions.repositories.RepositoryDeletionException;
 import com.kolich.havalo.exceptions.repositories.RepositoryFlushException;
+import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.exceptions.repositories.RepositoryLoadException;
 import com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException;
 import com.kolich.spring.controllers.KolichControllerClosure;
@@ -35,6 +37,12 @@ public abstract class HavaloControllerClosure<T> extends KolichControllerClosure
 			logger_.debug(comment_, e);
 			throw e;
 		} catch (RepositoryCreationException e) {
+			logger_.debug(comment_, e);
+			throw e;
+		} catch (RepositoryDeletionException e) {
+			logger_.debug(comment_, e);
+			throw e;
+		} catch (RepositoryForbiddenException e) {
 			logger_.debug(comment_, e);
 			throw e;
 		} catch (RepositoryFlushException e) {

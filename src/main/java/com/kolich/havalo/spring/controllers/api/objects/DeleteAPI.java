@@ -45,19 +45,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.spring.beans.HavaloProperties;
 import com.kolich.havalo.spring.controllers.HavaloControllerClosure;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
 
 @Controller
 @RequestMapping(value="/object")
-public class DeleteAPI extends AbstractHavaloAPIController {
+public final class DeleteAPI extends AbstractHavaloAPIController {
 	
 	private static final Logger logger__ =
 		LoggerFactory.getLogger(DeleteAPI.class);
 		
 	@Autowired
-	public DeleteAPI(RepositoryManager repositoryManager) {
-		super(repositoryManager);
+	public DeleteAPI(final HavaloProperties properties,
+		final RepositoryManager repositoryManager) {
+		super(properties, repositoryManager);
 	}
 	
 	@RequestMapping(method={RequestMethod.DELETE}, value="{key:.*}")

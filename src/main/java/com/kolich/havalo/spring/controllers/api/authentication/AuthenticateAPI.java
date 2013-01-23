@@ -38,19 +38,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.spring.beans.HavaloProperties;
 import com.kolich.havalo.spring.controllers.HavaloControllerClosure;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
 
 @Controller
 @RequestMapping(value="/authenticate")
-public class AuthenticateAPI extends AbstractHavaloAPIController {
+public final class AuthenticateAPI extends AbstractHavaloAPIController {
 	
 	private static final Logger logger__ =
 		LoggerFactory.getLogger(AuthenticateAPI.class);
 		
 	@Autowired
-	public AuthenticateAPI(RepositoryManager repositoryManager) {
-		super(repositoryManager);
+	public AuthenticateAPI(final HavaloProperties properties,
+		final RepositoryManager repositoryManager) {
+		super(properties, repositoryManager);
 	}
 	
 	@RequestMapping(method={RequestMethod.POST})

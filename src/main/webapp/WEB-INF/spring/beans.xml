@@ -26,6 +26,23 @@
    	<!-- The default application properties (packaged with .war) -->
 	<context:property-placeholder location="classpath:havalo.default.properties"
 		ignore-unresolvable="true" order="4" />
+		
+	<bean id="HavaloProperties"
+   		class="com.kolich.havalo.spring.beans.HavaloProperties">
+   		<property name="properties">
+   			<util:map map-class="java.util.HashMap">
+   				<!-- Repository configuration -->
+   				<entry key="repository.base" value="${repository.base}" />
+   				<!-- Authentication configration -->
+   				<entry key="api.admin.uuid" value="${api.admin.uuid}" />
+   				<entry key="api.admin.secret" value="${api.admin.secret}" />
+   				<!-- File upload configuration -->
+   				<entry key="max.upload.bytes" value="${max.upload.bytes}" />
+   				<entry key="max.in-memory.bytes" value="${max.in-memory.bytes}" />
+   				<entry key="temp.upload.directory" value="${temp.upload.directory}" />
+   			</util:map>
+   		</property>
+   	</bean>
 
     <!-- Supporting beans -->
     
@@ -46,10 +63,9 @@
    	
    	<bean id="HavaloBootstrap"
    		class="com.kolich.havalo.spring.beans.HavaloBootstrap"
-   		depends-on="RepositoryManager">
+   		depends-on="HavaloProperties,RepositoryManager">
+   		<property name="appProperties" ref="HavaloProperties" />
    		<property name="repositoryManager" ref="RepositoryManager" />
-   		<property name="adminApiUUID" value="${api.admin.uuid}" />
-   		<property name="adminApiSecret" value="${api.admin.secret}" />
    	</bean>
    	
 </beans>

@@ -62,12 +62,13 @@ import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.objects.ObjectConflictException;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.spring.beans.HavaloProperties;
 import com.kolich.havalo.spring.controllers.HavaloControllerClosure;
 import com.kolich.havalo.spring.controllers.api.AbstractHavaloAPIController;
 
 @Controller
 @RequestMapping(value="/object")
-public class PutAPI extends AbstractHavaloAPIController {
+public final class PutAPI extends AbstractHavaloAPIController {
 	
 	private static final Logger logger__ =
 		LoggerFactory.getLogger(PutAPI.class);
@@ -82,8 +83,9 @@ public class PutAPI extends AbstractHavaloAPIController {
 	// http://boplicity.nl/confluence/display/spring/Using+HTTP+PUT+and+Spring+MVC+to+upload+files
 	
 	@Autowired
-	public PutAPI(RepositoryManager repositoryManager) {
-		super(repositoryManager);
+	public PutAPI(final HavaloProperties properties,
+		final RepositoryManager repositoryManager) {
+		super(properties, repositoryManager);
 	}
 	
 	@RequestMapping(method={RequestMethod.POST})

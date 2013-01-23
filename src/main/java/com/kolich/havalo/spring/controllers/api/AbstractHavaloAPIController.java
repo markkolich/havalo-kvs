@@ -32,14 +32,18 @@ import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.spring.beans.HavaloProperties;
 import com.kolich.havalo.spring.controllers.AbstractHavaloController;
 
 public abstract class AbstractHavaloAPIController extends AbstractHavaloController {
 	
-	private final RepositoryManager repositoryManager_;
+	protected final HavaloProperties properties_;
+	protected final RepositoryManager repositoryManager_;
 		
-	protected AbstractHavaloAPIController(RepositoryManager repositoryManager) {
+	protected AbstractHavaloAPIController(final HavaloProperties properties,
+		final RepositoryManager repositoryManager) {
 		super();
+		properties_ = properties;
 		repositoryManager_ = repositoryManager;
 	}
 	
