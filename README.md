@@ -204,9 +204,9 @@ You can download the latest version of Havalo on the <a href="http://markkolich.
 
 ### Build from Source
 
-Havalo is built and managed using <a href="https://github.com/harrah/xsbt">SBT 0.12.1</a>.
+Havalo is built and managed using <a href="https://github.com/harrah/xsbt">SBT 0.12.2</a>.
 
-To clone and build this project, you must have <a href="http://www.scala-sbt.org/release/docs/Getting-Started/Setup">SBT 0.12.1 installed and configured on your computer</a>.
+To clone and build this project, you must have <a href="http://www.scala-sbt.org/release/docs/Getting-Started/Setup">SBT installed and configured on your computer</a>.
 
 The Havalo <a href="https://github.com/markkolich/havalo/blob/master/project/Build.scala">Build.scala</a> file is highly customized to build and package this Java web-application.
 
