@@ -39,7 +39,7 @@ object Dependencies {
 
   // Internal dependencies
 
-  private val kolichSpring = "com.kolich" % "kolich-spring" % "0.0.6" % "compile"
+  private val kolichSpring = "com.kolich" % "kolich-spring" % "0.0.7" % "compile"
   private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.3" % "compile"
 
   // External dependencies
@@ -53,7 +53,7 @@ object Dependencies {
   private val jstl = "javax.servlet" % "jstl" % "1.2" % "compile" // Package with WAR
   private val servlet = "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided" // Provided by container
 
-  private val springTx = "org.springframework" % "spring-tx" % "3.1.3.RELEASE" % "compile"
+  private val springTx = "org.springframework" % "spring-tx" % "3.2.1.RELEASE" % "compile"
   private val springSecurityCore = "org.springframework.security" % "spring-security-core" % "3.1.3.RELEASE" % "compile"
   private val springSecurityWeb = "org.springframework.security" % "spring-security-web" % "3.1.3.RELEASE" % "compile"
   private val springSecurityConfig = "org.springframework.security" % "spring-security-config" % "3.1.3.RELEASE" % "compile"
