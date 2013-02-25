@@ -42,6 +42,7 @@
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/servlets/havalo.xml</param-value>
 		</init-param>
+		<async-supported>true</async-supported>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
@@ -53,19 +54,27 @@
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<async-supported>true</async-supported>
 	</filter>
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/api/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>ASYNC</dispatcher>
 	</filter-mapping>
 	
 	<filter>
 		<filter-name>removeJSessionIdsFilter</filter-name>
 		<filter-class>com.kolich.spring.filters.JSessionIdsSuckSoRemoveThemFilter</filter-class>
+		<async-supported>true</async-supported>
 	</filter>
 	<filter-mapping>
 		<filter-name>removeJSessionIdsFilter</filter-name>
 		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>ASYNC</dispatcher>
 	</filter-mapping>
 
 	<error-page>
