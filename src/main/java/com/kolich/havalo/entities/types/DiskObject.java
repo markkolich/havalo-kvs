@@ -80,36 +80,5 @@ public final class DiskObject extends HavaloFileEntity implements Serializable {
 			return false;
 		return true;
 	}
-
-	/*
-	// Straight from Eclipse
-	// Only uses the File object for comparision purposes
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((file_ == null) ? 0 : file_.hashCode());
-		return result;
-	}
-
-	// Straight from Eclipse
-	// Only uses the File object for comparision purposes
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DiskObject other = (DiskObject) obj;
-		if (file_ == null) {
-			if (other.file_ != null)
-				return false;
-		} else if (!file_.equals(other.file_))
-			return false;
-		return true;
-	}
-	*/
 	
 }
