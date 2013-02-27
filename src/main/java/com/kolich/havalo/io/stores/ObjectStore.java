@@ -67,14 +67,19 @@ public abstract class ObjectStore {
 	 * into multiple directories.  Default is 255 to work on most
 	 * file systems.
 	 */
-	protected int maxFileNameLength_ = DEFAULT_MAX_FILENAME_LENGTH;
+	protected final int maxFileNameLength_;
 	
 	protected final File storeDir_;
 	
-	public ObjectStore(final File storeDir) {
+	public ObjectStore(final File storeDir, final int maxFileNameLength) {
 		storeDir_ = storeDir;
+		maxFileNameLength_ = maxFileNameLength;
 	}
-		
+	
+	public ObjectStore(final File storeDir) {
+		this(storeDir, DEFAULT_MAX_FILENAME_LENGTH);
+	}
+	
 	/**
 	 * Given an index of arbitrary length, returns a {@link File} object
 	 * that points to a file system safe location on disk that won't blow
@@ -185,10 +190,6 @@ public abstract class ObjectStore {
 	
 	protected File getStoreDir() {
 		return storeDir_;
-	}
-	
-	public void setMaxFilenameLength(int maxFileNameLength) {
-		maxFileNameLength_ = maxFileNameLength;
 	}
 
 }

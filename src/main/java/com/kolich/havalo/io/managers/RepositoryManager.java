@@ -35,11 +35,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.Resource;
-
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
@@ -60,29 +55,20 @@ import com.kolich.havalo.exceptions.repositories.RepositoryLoadException;
 import com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException;
 import com.kolich.havalo.io.stores.ObjectStore;
 
-public final class RepositoryManager extends ObjectStore
-	implements InitializingBean {
-	
-	private static final Logger logger__ =
-		LoggerFactory.getLogger(RepositoryManager.class);
-		
-	private RepositoryMetaStore metaStore_;
-	private RepositoryMetaWriter metaWriter_;
+public final class RepositoryManager extends ObjectStore {
+			
+	private final RepositoryMetaStore metaStore_;
+	private final RepositoryMetaWriter metaWriter_;
 	
 	/**
 	 * Internal in-memory cache to cache a mapping of a {@link HavaloUUID}
 	 * to its corresponding {@link Repository}.
 	 */
-	private Cache<HavaloUUID, Repository> repositories_;
+	private final Cache<HavaloUUID, Repository> repositories_;
 	
-	public RepositoryManager(final Resource objectStoreDir) throws IOException {
+	public RepositoryManager(final File objectStoreDir) throws IOException {
 		// Set the directory that will physicially store the repositories.
-		super(objectStoreDir.getFile());
-	}
-	
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		logger__.info("Repository manager started...");
+		super(objectStoreDir);
 		// Setup the meta store that's used to store meta data about each
 		// repository on disk.  The root of the repository meta data store
 		// is always the same as the repository root.

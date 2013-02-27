@@ -12,69 +12,15 @@
 		<param-name>webAppRootKey</param-name>
 		<param-value>havalo.root</param-value>
 	</context-param>
-
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/app-context.xml</param-value>
-	</context-param>
 	
 	<!--
 		Disable the use of session cookies.  This turns off the setting
 		of the typical "JSESSIONID" session cookies.  Seems to only apply
-		to Tomcat. 
+		to Tomcat, does nothing in Jetty.
 	-->
 	<session-config>
 		<tracking-mode>URL</tracking-mode>
 	</session-config>
-
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-
-	<listener>
-		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-	</listener>
-
-	<servlet>
-		<servlet-name>havalo</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/servlets/havalo.xml</param-value>
-		</init-param>
-		<async-supported>true</async-supported>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>havalo</servlet-name>
-		<url-pattern>/api/*</url-pattern>
-	</servlet-mapping>
-
-	<!-- Spring Security -->
-	<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-		<async-supported>true</async-supported>
-	</filter>
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/api/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-		<dispatcher>ASYNC</dispatcher>
-	</filter-mapping>
-	
-	<filter>
-		<filter-name>removeJSessionIdsFilter</filter-name>
-		<filter-class>com.kolich.spring.filters.JSessionIdsSuckSoRemoveThemFilter</filter-class>
-		<async-supported>true</async-supported>
-	</filter>
-	<filter-mapping>
-		<filter-name>removeJSessionIdsFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-		<dispatcher>ASYNC</dispatcher>
-	</filter-mapping>
 
 	<error-page>
 		<error-code>401</error-code>

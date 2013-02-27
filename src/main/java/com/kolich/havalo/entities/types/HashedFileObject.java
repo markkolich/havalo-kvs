@@ -26,15 +26,17 @@
 
 package com.kolich.havalo.entities.types;
 
-import static org.springframework.http.MediaType.parseMediaType;
+import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
+import static com.google.common.net.HttpHeaders.ETAG;
+import static com.google.common.net.HttpHeaders.LAST_MODIFIED;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.http.HttpHeaders;
-
+import com.google.common.net.HttpHeaders;
 import com.google.gson.annotations.SerializedName;
 import com.kolich.havalo.entities.HavaloFileEntity;
 
@@ -44,15 +46,15 @@ public final class HashedFileObject extends HavaloFileEntity
 	private static final long serialVersionUID = 7496664023986725650L;
 						
 	@SerializedName("headers")
-	private HttpHeaders headers_;
+	private final Map<String,String> headers_;
 		
-	public HashedFileObject(String name, HttpHeaders headers) {
+	public HashedFileObject(final String name, final Map<String,String> headers) {
 		super(name);
 		headers_ = headers;
 	}
 	
-	public HashedFileObject(String name) {
-		this(name, new HttpHeaders());
+	public HashedFileObject(final String name) {
+		this(name, new ConcurrentHashMap<String,String>());
 	}
 		
 	// For GSON
@@ -65,22 +67,20 @@ public final class HashedFileObject extends HavaloFileEntity
 	}
 	
 	public HashedFileObject setLastModified(long lastModified) {
-		synchronized(headers_) {
-			headers_.setLastModified(lastModified);
-		}
+		return setLastModified(Long.toString(lastModified));
+	}
+	
+	public HashedFileObject setLastModified(final String lastModified) {
+		headers_.put(LAST_MODIFIED, lastModified);
 		return this;
 	}
 	
 	public String getETag() {
-		synchronized(headers_) {
-			return headers_.getETag();
-		}
+		return headers_.get(ETAG);
 	}
 	
-	public HashedFileObject setETag(String eTag, boolean quote) {
-		synchronized(headers_) {
-			headers_.setETag((quote) ? String.format("\"%s\"", eTag) : eTag);
-		}
+	public HashedFileObject setETag(final String eTag, final boolean quote) {
+		headers_.put(ETAG, (quote) ? String.format("\"%s\"", eTag) : eTag);
 		return this;
 	}
 	
@@ -93,22 +93,18 @@ public final class HashedFileObject extends HavaloFileEntity
 	 * @param contentLength
 	 * @return
 	 */
-	public HashedFileObject setContentLength(long contentLength) {
-		synchronized(headers_) {
-			headers_.setContentLength(contentLength);
-		}
+	public HashedFileObject setContentLength(final long contentLength) {
+		headers_.put(CONTENT_LENGTH, Long.toString(contentLength));
 		return this;
-	}	
+	}
 	
 	/**
 	 * Set the Content-Type of this entity.
 	 * @param contentLength
 	 * @return
 	 */
-	public HashedFileObject setContentType(String contentType) {
-		synchronized(headers_) {
-			headers_.setContentType(parseMediaType(contentType));
-		}
+	public HashedFileObject setContentType(final String contentType) {
+		headers_.put(CONTENT_TYPE, contentType);
 		return this;
 	}
 	
@@ -119,10 +115,9 @@ public final class HashedFileObject extends HavaloFileEntity
 	 * @param headerValue
 	 * @return
 	 */
-	public HashedFileObject setHeader(String headerName, String headerValue) {
-		synchronized(headers_) {
-			headers_.set(headerName, headerValue);
-		}
+	public HashedFileObject setHeader(final String headerName,
+		final String headerValue) {
+		headers_.put(headerName, headerValue);
 		return this;
 	}
 		
@@ -133,17 +128,8 @@ public final class HashedFileObject extends HavaloFileEntity
 	 * the {@link HttpHeaders} stored with this entity.
 	 * @return
 	 */
-	public HttpHeaders getHeaders() {
-		final HttpHeaders headers = new HttpHeaders();
-		synchronized(headers_) {
-			for(final Map.Entry<String, List<String>> entry : headers_.entrySet()) {
-				final String headerName = entry.getKey();
-				for(final String headerValue : entry.getValue()) {
-					headers.add(headerName, headerValue);
-				}
-			}
-		}
-		return headers;
+	public Map<String,String> getHeaders() {
+		return new ConcurrentHashMap<String,String>(headers_);
 	}
 	
 	// Straight from Eclipse

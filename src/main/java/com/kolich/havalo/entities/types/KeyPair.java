@@ -26,16 +26,12 @@
 
 package com.kolich.havalo.entities.types;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.kolich.common.util.crypt.Base64Utils.encodeBase64URLSafe;
 import static org.apache.commons.codec.binary.StringUtils.newStringUtf8;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.google.gson.annotations.SerializedName;
 import com.kolich.common.util.secure.KolichSecureRandom;
@@ -53,26 +49,26 @@ public final class KeyPair extends HavaloEntity implements Serializable {
 	@SerializedName("secret")
 	private String secret_;
 		
-	@SerializedName("role")
-	private UserRole role_;
+	@SerializedName("roles")
+	private List<UserRole> roles_;
 	
-	public KeyPair(HavaloUUID idKey, String secret, UserRole role) {
+	public KeyPair(HavaloUUID idKey, String secret, List<UserRole> roles) {
 		idKey_ = idKey;
 		secret_ = secret;
-		role_ = role;
+		roles_ = roles;
 	}
 	
-	public KeyPair(HavaloUUID idKey, UserRole role) {
-		this(idKey, generateRandomSecret(), role);
+	public KeyPair(HavaloUUID idKey, List<UserRole> roles) {
+		this(idKey, generateRandomSecret(), roles);
 	}
 	
-	public KeyPair(UserRole role) {
-		this(new HavaloUUID(), role);
+	public KeyPair(List<UserRole> roles) {
+		this(new HavaloUUID(), roles);
 	}
 	
 	// For GSON
 	public KeyPair() {
-		this(UserRole.USER);
+		this(Arrays.asList(new UserRole[]{UserRole.USER}));
 	}
 		
 	public HavaloUUID getIdKey() {
@@ -93,23 +89,25 @@ public final class KeyPair extends HavaloEntity implements Serializable {
 		return this;
 	}
 		
-	public UserRole getRole() {
-		return role_;
+	public List<UserRole> getRoles() {
+		return roles_;
 	}
 		
-	public KeyPair setRole(UserRole role) {
-		role_ = role;
+	public KeyPair setRoles(List<UserRole> roles) {
+		roles_ = roles;
 		return this;
 	}
 	
+	/*
 	public List<GrantedAuthority> getAuthorities() {
-		checkNotNull(role_);
+		checkNotNull(roles_);
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		for(final String r : role_.getRoles()) {
+		for(final String r : roles_.getRoles()) {
 			authorities.add(new SimpleGrantedAuthority(r));
 		}
 		return authorities;
 	}
+	*/
 		
 	private static final String generateRandomSecret() {
 		return newStringUtf8(encodeBase64URLSafe(random__.getRandom()));
