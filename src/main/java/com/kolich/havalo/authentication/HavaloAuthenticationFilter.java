@@ -1,18 +1,25 @@
 package com.kolich.havalo.authentication;
 
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
+import static org.apache.commons.codec.binary.StringUtils.getBytesUtf8;
+import static org.apache.commons.codec.binary.StringUtils.newStringUtf8;
+
 import java.io.IOException;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.kolich.havalo.entities.types.KeyPair;
+import com.kolich.havalo.exceptions.authentication.AuthenticationException;
 
 public class HavaloAuthenticationFilter implements Filter {
 	
@@ -38,6 +45,7 @@ public class HavaloAuthenticationFilter implements Filter {
 	public void doFilter(final ServletRequest req,
 		final ServletResponse res, final FilterChain chain)
 		throws IOException, ServletException {
+		/*
 		final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
         // Extract the Authorization header from the incoming HTTP request.
@@ -116,6 +124,35 @@ public class HavaloAuthenticationFilter implements Filter {
             			new Object[]{accessKey}, "Havalo authentication " +
             				"service unavailable for auth: {0}"), e));
         }
+        */
+	}
+	
+	/**
+	 * Computes an HMAC-SHA256 signature.
+	 */
+	private static final class HMACSHA256Signer {
+		
+		private static final String HMAC_SHA256_ALGORITHM_NAME = "HmacSHA256";
+			
+		/**
+	     * Returns a Base-64 encoded HMAC-SHA256 signature.
+	     */
+		public static final String sign(final KeyPair kp, final String input) {
+			try {
+				// Get a new instance of the HMAC-SHA256 algorithm.
+				final Mac mac = Mac.getInstance(HMAC_SHA256_ALGORITHM_NAME);
+				// Init it with our secret and the secret-key algorithm.
+				mac.init(new SecretKeySpec(getBytesUtf8(kp.getSecret()),
+					HMAC_SHA256_ALGORITHM_NAME));
+				// Actually sign the input.
+				return newStringUtf8(encodeBase64(mac.doFinal(
+					getBytesUtf8(input))));
+			} catch (Exception e) {
+				throw new AuthenticationException("Failed to SHA-256 " +
+					"sign input string: " + input, e);
+			}
+		}
+		
 	}
 
 }

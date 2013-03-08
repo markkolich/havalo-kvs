@@ -34,7 +34,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
-import com.kolich.havalo.exceptions.NullorEmptySecretException;
+import com.kolich.havalo.exceptions.authentication.NullorEmptySecretException;
 import com.kolich.havalo.io.managers.RepositoryManager;
 
 public class HavaloUserDetailsService implements UserDetailsService {

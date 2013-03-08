@@ -24,9 +24,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.exceptions;
+package com.kolich.havalo.exceptions.authentication;
 
-public class NullorEmptySecretException extends HavaloException {
+public class NullorEmptySecretException extends AuthenticationException {
 
 	private static final long serialVersionUID = 8271081711610449505L;
 	

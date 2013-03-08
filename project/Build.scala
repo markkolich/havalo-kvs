@@ -62,6 +62,8 @@ object Dependencies {
 
   private val ardverkTrie = "org.ardverk" % "patricia-trie" % "0.6" % "compile"
 
+  private val typesafeConfig = "com.typesafe" % "config" % "1.0.0" % "compile"
+
   private val logback = "ch.qos.logback" % "logback-core" % "1.0.7" % "compile"
   private val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.0.7" % "compile" // An Slf4j impl
   private val slf4j = "org.slf4j" % "slf4j-api" % "1.6.4" % "compile"
@@ -77,6 +79,7 @@ object Dependencies {
     /*springTx, springSecurityCore, springSecurityWeb, springSecurityConfig,*/
     /*cgLibNoDep,*/
     ardverkTrie,
+    typesafeConfig,
     commonsLang, commonsCodec, commonsFileupload,
     logback, logbackClassic, slf4j, jclOverSlf4j)
 
