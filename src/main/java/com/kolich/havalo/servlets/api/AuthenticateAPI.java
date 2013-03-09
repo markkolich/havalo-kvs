@@ -20,7 +20,7 @@ public final class AuthenticateAPI extends HavaloApiServlet {
 	private static final long serialVersionUID = 1087288709731427991L;
 	
 	@Override
-	public void doGet(final HttpServletRequest request,
+	public final void doGet(final HttpServletRequest request,
 		final HttpServletResponse response) {
 		Writer writer = null;
 		try {

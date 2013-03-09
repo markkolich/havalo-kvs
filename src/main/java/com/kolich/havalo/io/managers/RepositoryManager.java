@@ -32,7 +32,6 @@ import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.apache.commons.io.FileUtils.forceMkdir;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import com.google.common.cache.Cache;
@@ -65,8 +64,8 @@ public final class RepositoryManager extends ObjectStore {
 	 * to its corresponding {@link Repository}.
 	 */
 	private final Cache<HavaloUUID, Repository> repositories_;
-	
-	public RepositoryManager(final File objectStoreDir) throws IOException {
+		
+	public RepositoryManager(final File objectStoreDir) {
 		// Set the directory that will physicially store the repositories.
 		super(objectStoreDir);
 		// Setup the meta store that's used to store meta data about each

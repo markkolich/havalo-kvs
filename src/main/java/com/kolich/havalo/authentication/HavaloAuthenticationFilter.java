@@ -1,10 +1,16 @@
 package com.kolich.havalo.authentication;
 
+import static com.google.common.net.HttpHeaders.AUTHORIZATION;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
+import static com.google.common.net.HttpHeaders.DATE;
+import static com.kolich.havalo.HavaloServletContextBootstrap.HAVALO_USER_SERVICE_ATTRIBUTE;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.codec.binary.StringUtils.getBytesUtf8;
 import static org.apache.commons.codec.binary.StringUtils.newStringUtf8;
+import static org.apache.commons.io.IOUtils.LINE_SEPARATOR_UNIX;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -14,26 +20,32 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.exceptions.authentication.AuthenticationException;
+import com.kolich.havalo.exceptions.authentication.BadCredentialsException;
+import com.kolich.havalo.exceptions.authentication.UsernameNotFoundException;
 
-public class HavaloAuthenticationFilter implements Filter {
+public final class HavaloAuthenticationFilter implements Filter {
 	
 	private static final Logger logger__ =
 		LoggerFactory.getLogger(HavaloAuthenticationFilter.class);
-	
-	private static final String HTTP_AUTHORIZATION_HEADER = "Authorization";
-	
+		
 	private static final String HAVALO_AUTHORIZATION_PREFIX = "Havalo ";
 	private static final String HAVALO_AUTHORIZATION_SEPARATOR = ":";
+	
+	private HavaloUserService userService_;
 	
 	@Override
 	public void init(final FilterConfig config) throws ServletException {
 		logger__.info("In init()");
+		userService_ = (HavaloUserService)config.getServletContext()
+			.getAttribute(HAVALO_USER_SERVICE_ATTRIBUTE);
 	}
 	
 	@Override
@@ -45,11 +57,10 @@ public class HavaloAuthenticationFilter implements Filter {
 	public void doFilter(final ServletRequest req,
 		final ServletResponse res, final FilterChain chain)
 		throws IOException, ServletException {
-		/*
 		final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
         // Extract the Authorization header from the incoming HTTP request.
-        String header = request.getHeader(HTTP_AUTHORIZATION_HEADER);
+        String header = request.getHeader(AUTHORIZATION);
         // If the header does not exist or does not start with the correct
         // token, give up immeaditely.
         if(header == null || !header.startsWith(HAVALO_AUTHORIZATION_PREFIX)) {
@@ -83,17 +94,17 @@ public class HavaloAuthenticationFilter implements Filter {
         //        of the HTTP request)
         try {
             // Call the user details service to load the user data for the UUID.
-        	final UserDetails user = userDetailsService_.loadUserByUsername(
-        		accessKey);
-        	if(user == null) {
-        		throw new AuthenticationServiceException("UserDetailsService " +
-        			"returned null, which is an interface contract violation.");
+        	final KeyPair userKp = userService_.loadKeyPairById(
+        		UUID.fromString(accessKey));
+        	if(userKp == null) {
+        		throw new AuthenticationException("User service returned " +
+        			"null, which is an interface contract violation.");
         	}
         	// Get the string to sign -- will fail gracefully if the incoming
         	// request does not have the proper headers attached to it.
         	final String stringToSign = getStringToSign(request);
         	// Compute the resulting signed signature.
-        	final String computed = HMACSHA256Signer.sign(user, stringToSign);
+        	final String computed = HMACSHA256Signer.sign(userKp, stringToSign);
         	// Does the signature match what was passed to us in the
         	// Authorization request header?
         	if(!computed.equals(signature)) {
@@ -102,8 +113,7 @@ public class HavaloAuthenticationFilter implements Filter {
         				")");
         	}
         	// Successful authentication!
-            SecurityContextHolder.getContext().setAuthentication(
-            	success(request, user));
+        	request.setAttribute(arg0, arg1);
             chain.doFilter(request, response);
         } catch (UsernameNotFoundException notFound) {
             fail(request, response,
@@ -124,7 +134,28 @@ public class HavaloAuthenticationFilter implements Filter {
             			new Object[]{accessKey}, "Havalo authentication " +
             				"service unavailable for auth: {0}"), e));
         }
-        */
+	}
+	
+	private static final String getStringToSign(final HttpServletRequest request) {
+		final StringBuilder sb = new StringBuilder();
+		// HTTP-Verb (GET, PUT, POST, or DELETE) + "\n"
+		sb.append(request.getMethod().toUpperCase()).append(LINE_SEPARATOR_UNIX);
+		// RFC822 Date (from 'Date' request header, must exist) + "\n" +
+		final String dateHeader;
+		if((dateHeader = request.getHeader(DATE)) == null) {
+			throw new BadCredentialsException("Incoming request missing " +
+				"required " + DATE + " HTTP header.");
+		}
+		sb.append(dateHeader).append(LINE_SEPARATOR_UNIX);
+		// Content-Type (from 'Content-Type' request header, optional) + "\n" +
+		final String contentType;
+		if((contentType = request.getHeader(CONTENT_TYPE)) != null) {
+			sb.append(contentType);
+		}
+		sb.append(LINE_SEPARATOR_UNIX);
+		// CanonicalizedResource
+		sb.append(request.getRequestURI());
+		return sb.toString();
 	}
 	
 	/**

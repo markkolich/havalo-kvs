@@ -62,6 +62,8 @@ object Dependencies {
 
   private val ardverkTrie = "org.ardverk" % "patricia-trie" % "0.6" % "compile"
 
+  //private val akkaActor = "com.typesafe.akka" % "akka-actor" % "2.0.5" % "compile"
+  //private val akkaSlf4j = "com.typesafe.akka" % "akka-slf4j" % "2.0.5" % "compile"
   private val typesafeConfig = "com.typesafe" % "config" % "1.0.0" % "compile"
 
   private val logback = "ch.qos.logback" % "logback-core" % "1.0.7" % "compile"

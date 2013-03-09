@@ -24,34 +24,18 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.authentication;
+package com.kolich.havalo.exceptions.authentication;
 
-public final class HavaloUserDetailsService {
-		
-	/*
-	private RepositoryManager repoManager_;
+public final class BadCredentialsException extends AuthenticationException {
+
+	private static final long serialVersionUID = 8271081711610449505L;
 	
-	@Override
-	public UserDetails loadUserByUsername(final String username)
-    	throws UsernameNotFoundException, DataAccessException {
-		try {
-			final HavaloUUID ownerId = new HavaloUUID(username);
-			final KeyPair kp = repoManager_.getRepository(ownerId).getKeyPair();
-			if(kp.getSecret() == null) {
-				throw new NullorEmptySecretException("Oops, KeyPair secret " +
-					"for user (" + ownerId + ") was null.");
-			}
-			return new User(kp.getIdKey().toString(), kp.getSecret(),
-				true, true, true, true, kp.getAuthorities());
-		} catch (Exception e) {
-			throw new UsernameNotFoundException("Failed to load required " +
-				"user details for username: " + username, e);
-		}
+	public BadCredentialsException(String message, Throwable cause) {
+		super(message, cause);
 	}
 	
-	public void setRepositoryManager(RepositoryManager repoManager) {
-		repoManager_ = repoManager;
+	public BadCredentialsException(String message) {
+		super(message);
 	}
-	*/
 
 }

@@ -19,7 +19,7 @@ public abstract class HavaloApiServlet extends HttpServlet {
 		appConfig_ = (Config)config.getServletContext()
 			.getAttribute(HAVALO_CONFIG_ATTRIBUTE);
 	}
-	
+		
 	protected final Config getAppConfig() {
 		return appConfig_;
 	}

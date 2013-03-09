@@ -24,14 +24,37 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.exceptions.authentication;
+package com.kolich.havalo.authentication;
 
-public final class NullorEmptySecretException extends AuthenticationException {
+import java.util.UUID;
 
-	private static final long serialVersionUID = 8271081711610449505L;
+import com.kolich.havalo.entities.types.HavaloUUID;
+import com.kolich.havalo.entities.types.KeyPair;
+import com.kolich.havalo.exceptions.authentication.NullorEmptySecretException;
+import com.kolich.havalo.exceptions.authentication.UsernameNotFoundException;
+import com.kolich.havalo.io.managers.RepositoryManager;
+
+public final class HavaloUserService {
 	
-	public NullorEmptySecretException(String message) {
-		super(message);
+	private final RepositoryManager repoManager_;
+	
+	public HavaloUserService(final RepositoryManager repoManager) {
+		repoManager_ = repoManager;
 	}
-
+	
+	public KeyPair loadKeyPairById(final UUID id) {
+		try {
+			final KeyPair kp = repoManager_.getRepository(
+				new HavaloUUID(id)).getKeyPair();
+			if(kp.getSecret() == null) {
+				throw new NullorEmptySecretException("Oops, KeyPair secret " +
+					"for user (" + id + ") was null or unknown.");
+			}
+			return kp;
+		} catch (Exception e) {
+			throw new UsernameNotFoundException("Failed to load required " +
+				"user details for ID: " + id, e);
+		}
+	}
+		
 }
