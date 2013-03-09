@@ -48,6 +48,8 @@ public final class HavaloServletContextBootstrap implements ServletContextListen
 		    logger__.debug("Loaded config (key=" + entry.getKey() + ", value=" +
 		    	entry.getValue() + ")");
 		}
+		// Attach the underlying configuration to the servlet context too.
+		context_.setAttribute(HAVALO_CONFIG_ATTRIBUTE, config);
 		// Create a new repository manager based on the desired
 		// underlying repository root directory on disk.
 		final RepositoryManager repoManager = createInitialAdminRepository(context_, config);
@@ -89,7 +91,7 @@ public final class HavaloServletContextBootstrap implements ServletContextListen
 				adminSecret, Arrays.asList(new UserRole[]{ADMIN}));
 			// Actually attempt to create a new Repository for the Admin user.
 			// This should work, if not, bail the whole app.
-			repoManager.createRepository(adminKeyPair.getIdKey(), adminKeyPair);			
+			repoManager.createRepository(adminKeyPair.getIdKey(), adminKeyPair);
 			return repoManager;
 		} catch (RepositoryCreationException e) {
 			// Log in TRACE and continue silently.  This is a normal case,

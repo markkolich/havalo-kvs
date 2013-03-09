@@ -25,17 +25,30 @@
 	<listener>
 		<listener-class>com.kolich.havalo.HavaloServletContextBootstrap</listener-class>
 	</listener>
-	
+		
 	<servlet>
-		<servlet-name>authenticate</servlet-name>
+		<servlet-name>AuthenticateAPI</servlet-name>
 		<servlet-class>com.kolich.havalo.servlets.api.AuthenticateAPI</servlet-class>
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>authenticate</servlet-name>
-		<url-pattern>/authenticate</url-pattern>
+		<servlet-name>AuthenticateAPI</servlet-name>
+		<url-pattern>/api/authenticate</url-pattern>
 	</servlet-mapping>
+	
+	<filter>
+		<filter-name>HavaloAuthenticationFilter</filter-name>
+		<filter-class>com.kolich.havalo.authentication.HavaloAuthenticationFilter</filter-class>
+		<async-supported>true</async-supported>
+	</filter>
+    <filter-mapping>
+		<filter-name>HavaloAuthenticationFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>ASYNC</dispatcher>
+	</filter-mapping>
 
 	<error-page>
 		<error-code>400</error-code>
