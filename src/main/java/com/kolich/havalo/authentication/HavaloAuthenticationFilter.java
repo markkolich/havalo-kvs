@@ -24,6 +24,7 @@ import javax.servlet.AsyncListener;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -57,10 +58,11 @@ public final class HavaloAuthenticationFilter implements Filter {
 	@Override
 	public void init(final FilterConfig fConfig) throws ServletException {
 		logger__.info("In init()");
-		config_ = (Config)fConfig.getServletContext()
-			.getAttribute(HAVALO_CONFIG_ATTRIBUTE);
-		userService_ = (HavaloUserService)fConfig.getServletContext()
-			.getAttribute(HAVALO_USER_SERVICE_ATTRIBUTE);
+		final ServletContext context = fConfig.getServletContext();		
+		config_ = (Config)context.getAttribute(HAVALO_CONFIG_ATTRIBUTE);
+		userService_ = (HavaloUserService)context.getAttribute(HAVALO_USER_SERVICE_ATTRIBUTE);
+		// The size of the authentication thread pool should match the
+		// size of the total number of allowed concurrent requests.
 		pool_ = Executors.newFixedThreadPool(config_.getInt("havalo.api.max.concurrent.requests"));
 	}
 	
@@ -85,7 +87,7 @@ public final class HavaloAuthenticationFilter implements Filter {
 		
 		private final AsyncContext context_;
 		private final HttpServletRequest request_;
-		private final HttpServletResponse response_;		
+		private final HttpServletResponse response_;
 		private final FilterChain chain_;
 		
 		private final HavaloUserService userService_;

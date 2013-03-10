@@ -31,17 +31,22 @@ import com.kolich.common.KolichCommonException;
 public class HavaloException extends KolichCommonException {
 	
 	private static final long serialVersionUID = -7889750833064607753L;
+	
+	protected final int statusCode_;
 
-	public HavaloException(String message, Throwable cause) {
+	public HavaloException(String message, Throwable cause, int statusCode) {
 		super(message, cause);
+		statusCode_ = statusCode;
 	}
 	
-	public HavaloException(Throwable cause) {
+	public HavaloException(Throwable cause, int statusCode) {
 		super(cause);
+		statusCode_ = statusCode;
 	}
 	
-	public HavaloException(String message) {
+	public HavaloException(String message, int statusCode) {
 		super(message);
+		statusCode_ = statusCode;
 	}
 	
 }

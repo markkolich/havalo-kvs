@@ -31,11 +31,11 @@ public class BadHavaloUUIDException extends HavaloException {
 	private static final long serialVersionUID = -7473419765855248861L;
 	
 	public BadHavaloUUIDException(String message, Throwable cause) {
-		super(message, cause);
+		super(message, cause, 400);
 	}
 
 	public BadHavaloUUIDException(String message) {
-		super(message);
+		super(message, 400);
 	}
 	
 }

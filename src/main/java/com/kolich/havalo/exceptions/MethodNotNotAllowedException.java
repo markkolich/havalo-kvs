@@ -26,12 +26,12 @@
 
 package com.kolich.havalo.exceptions;
 
-public class InvalidResourceException extends HavaloException {
+public class MethodNotNotAllowedException extends HavaloException {
 
 	private static final long serialVersionUID = -7863924412834952274L;
 
-	public InvalidResourceException(String resource) {
-		super("Invalid API extension: " + resource, 404);
+	public MethodNotNotAllowedException() {
+		super("Request method not allowed or supported.", 405);
 	}
 	
 }
