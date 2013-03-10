@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 
 import com.kolich.bolt.exceptions.LockConflictException;
+import com.kolich.common.either.Either;
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.exceptions.BadHavaloUUIDException;
+import com.kolich.havalo.exceptions.HavaloException;
 import com.kolich.havalo.exceptions.InvalidResourceException;
 import com.kolich.havalo.exceptions.objects.ObjectConflictException;
 import com.kolich.havalo.exceptions.objects.ObjectDeletionException;
@@ -23,7 +25,7 @@ import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.exceptions.repositories.RepositoryLoadException;
 import com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException;
 
-public abstract class HavaloApiServletClosure<T extends HavaloEntity> {
+public abstract class HavaloApiServletClosure<F extends HavaloException,S extends HavaloEntity> {
 	
 	protected final String comment_;
 	protected final Logger logger_;
@@ -34,20 +36,19 @@ public abstract class HavaloApiServletClosure<T extends HavaloEntity> {
 	protected final HttpServletResponse response_;
 	
 	public HavaloApiServletClosure(final String comment, final Logger logger,
-		final AsyncContext context, final HttpServletRequest request,
-		final HttpServletResponse response) {
+		final AsyncContext context) {
 		comment_ = comment;
 		logger_ = logger;
 		context_ = context;
-		request_ = request;
-		response_ = response;
+		request_ = (HttpServletRequest)context_.getRequest();
+		response_ = (HttpServletResponse)context_.getResponse();
 	}
 	
-	public abstract T doit() throws Exception;
+	public abstract Either<F,S> doit() throws Exception;
 	
-	public final T execute() {
+	public final void execute() {
 		try {
-			return doit();
+			doit();
 		} catch (IllegalArgumentException e) {
 			logger_.debug(comment_, e);
 			throw e;
@@ -98,7 +99,6 @@ public abstract class HavaloApiServletClosure<T extends HavaloEntity> {
 			throw e;
 		} catch (Exception e) {
 			logger_.debug(comment_, e);
-			return null;
 		}
 	}
 	

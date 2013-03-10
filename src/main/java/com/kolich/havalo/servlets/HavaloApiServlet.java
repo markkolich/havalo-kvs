@@ -17,8 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kolich.common.either.Either;
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.KeyPair;
+import com.kolich.havalo.exceptions.HavaloException;
 import com.kolich.havalo.exceptions.MethodNotNotAllowedException;
 import com.typesafe.config.Config;
 
@@ -92,10 +94,7 @@ public abstract class HavaloApiServlet extends HttpServlet {
 			@Override
 			public void run() {
 				try {
-					final HavaloEntity result;
-					if((result = get(context, request, response)) != null) {
-						
-					}
+					get(context);
 				} catch (Exception e) {
 					logger__.warn("Uncaught exception, falling back to " +
 						"global error handler to render error response.", e);
@@ -107,12 +106,11 @@ public abstract class HavaloApiServlet extends HttpServlet {
 		});
 	}
 	
-	public HavaloEntity get(final AsyncContext context,
-		final HttpServletRequest request, final HttpServletResponse response) {
-		return new HavaloApiServletClosure<HavaloEntity>(
-			"GET:default", logger__, context, request, response) {
+	public void get(final AsyncContext context) {
+		new HavaloApiServletClosure<HavaloException,HavaloEntity>(
+			"GET:default", logger__, context) {
 			@Override
-			public HavaloEntity doit() throws Exception {
+			public Either<HavaloException,HavaloEntity> doit() throws Exception {
 				throw new MethodNotNotAllowedException();
 			}
 		}.execute();
