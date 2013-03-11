@@ -4,6 +4,7 @@ import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.omg.CORBA.Request;
 import org.slf4j.Logger;
 
 import com.kolich.bolt.exceptions.LockConflictException;
@@ -27,7 +28,6 @@ import com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException;
 
 public abstract class HavaloApiServletClosure<F extends HavaloException,S extends HavaloEntity> {
 	
-	protected final String comment_;
 	protected final Logger logger_;
 	
 	protected final AsyncContext context_;
@@ -35,71 +35,81 @@ public abstract class HavaloApiServletClosure<F extends HavaloException,S extend
 	protected final HttpServletRequest request_;
 	protected final HttpServletResponse response_;
 	
-	public HavaloApiServletClosure(final String comment, final Logger logger,
+	protected final String method_;
+	protected final String requestUri_;
+	
+	public HavaloApiServletClosure(final Logger logger,
 		final AsyncContext context) {
-		comment_ = comment;
 		logger_ = logger;
 		context_ = context;
 		request_ = (HttpServletRequest)context_.getRequest();
 		response_ = (HttpServletResponse)context_.getResponse();
+		method_ = request_.getMethod();
+		requestUri_ = request_.getRequestURI();
 	}
 	
 	public abstract Either<F,S> doit() throws Exception;
 	
 	public final void execute() {
+		final String comment = getComment();
 		try {
-			doit();
+			final Either<F,S> result = doit();
+			
 		} catch (IllegalArgumentException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (DuplicateRepositoryException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (RepositoryCreationException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (RepositoryDeletionException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (RepositoryForbiddenException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (RepositoryFlushException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (RepositoryLoadException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (RepositoryNotFoundException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (ObjectConflictException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (ObjectDeletionException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (ObjectFlushException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (ObjectLoadException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (ObjectNotFoundException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (LockConflictException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (BadHavaloUUIDException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (InvalidResourceException e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 			throw e;
 		} catch (Exception e) {
-			logger_.debug(comment_, e);
+			logger_.debug(comment, e);
 		}
+	}
+	
+	private final String getComment() {
+		return String.format("%s:%s", method_, requestUri_);
 	}
 	
 }

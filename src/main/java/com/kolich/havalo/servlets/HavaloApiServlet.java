@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kolich.common.either.Either;
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.KeyPair;
@@ -39,11 +40,14 @@ public abstract class HavaloApiServlet extends HttpServlet {
 	public final void init(final ServletConfig config) throws ServletException {
 		final ServletContext context = config.getServletContext();		
 		config_ = (Config)context.getAttribute(HAVALO_CONFIG_ATTRIBUTE);
-		// The size of the authentication thread pool should match the
-		// size of the total number of allowed concurrent requests.
-		pool_ = Executors.newFixedThreadPool(config_.getInt("havalo.api.max.concurrent.requests"));
+		pool_ = Executors.newCachedThreadPool(
+			new ThreadFactoryBuilder()
+				.setDaemon(true)
+				.setPriority(Thread.MAX_PRIORITY)
+				.setNameFormat("havalo-async-servlet-%d")
+				.build());
 	}
-		
+	
 	protected final Config getAppConfig() {
 		return config_;
 	}

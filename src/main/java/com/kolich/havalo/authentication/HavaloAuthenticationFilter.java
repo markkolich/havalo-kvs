@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.exceptions.authentication.AuthenticationException;
 import com.kolich.havalo.exceptions.authentication.BadCredentialsException;
@@ -61,9 +62,12 @@ public final class HavaloAuthenticationFilter implements Filter {
 		final ServletContext context = fConfig.getServletContext();		
 		config_ = (Config)context.getAttribute(HAVALO_CONFIG_ATTRIBUTE);
 		userService_ = (HavaloUserService)context.getAttribute(HAVALO_USER_SERVICE_ATTRIBUTE);
-		// The size of the authentication thread pool should match the
-		// size of the total number of allowed concurrent requests.
-		pool_ = Executors.newFixedThreadPool(config_.getInt("havalo.api.max.concurrent.requests"));
+		pool_ = Executors.newCachedThreadPool(
+			new ThreadFactoryBuilder()
+				.setDaemon(true)
+				.setPriority(Thread.MAX_PRIORITY)
+				.setNameFormat("havalo-async-auth-filter-%d")
+				.build());
 	}
 	
 	@Override
