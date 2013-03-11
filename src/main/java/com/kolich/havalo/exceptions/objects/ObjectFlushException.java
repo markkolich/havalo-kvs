@@ -33,15 +33,15 @@ public class ObjectFlushException extends HavaloException {
 	private static final long serialVersionUID = 3980139747975745999L;
 
 	public ObjectFlushException(String message, Throwable cause) {
-		super(message, cause);
+		super(message, cause, 412);
 	}
 	
 	public ObjectFlushException(Throwable cause) {
-		super(cause);
+		super(cause, 412);
 	}
 	
 	public ObjectFlushException(String message) {
-		super(message);
+		super(message, 412);
 	}
 	
 }

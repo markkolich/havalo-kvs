@@ -3,7 +3,6 @@ package com.kolich.havalo.authentication;
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.HttpHeaders.DATE;
-import static com.kolich.havalo.HavaloServletContextBootstrap.HAVALO_CONFIG_ATTRIBUTE;
 import static com.kolich.havalo.HavaloServletContextBootstrap.HAVALO_USER_SERVICE_ATTRIBUTE;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.codec.binary.StringUtils.getBytesUtf8;
@@ -39,7 +38,6 @@ import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.exceptions.authentication.AuthenticationException;
 import com.kolich.havalo.exceptions.authentication.BadCredentialsException;
 import com.kolich.havalo.exceptions.authentication.UsernameNotFoundException;
-import com.typesafe.config.Config;
 
 public final class HavaloAuthenticationFilter implements Filter {
 	
@@ -51,7 +49,6 @@ public final class HavaloAuthenticationFilter implements Filter {
 	private static final String HAVALO_AUTHORIZATION_PREFIX = "Havalo ";
 	private static final String HAVALO_AUTHORIZATION_SEPARATOR = ":";
 	
-	private Config config_;
 	private HavaloUserService userService_;
 	
 	private ExecutorService pool_;
@@ -60,7 +57,6 @@ public final class HavaloAuthenticationFilter implements Filter {
 	public void init(final FilterConfig fConfig) throws ServletException {
 		logger__.info("In init()");
 		final ServletContext context = fConfig.getServletContext();		
-		config_ = (Config)context.getAttribute(HAVALO_CONFIG_ATTRIBUTE);
 		userService_ = (HavaloUserService)context.getAttribute(HAVALO_USER_SERVICE_ATTRIBUTE);
 		pool_ = Executors.newCachedThreadPool(
 			new ThreadFactoryBuilder()

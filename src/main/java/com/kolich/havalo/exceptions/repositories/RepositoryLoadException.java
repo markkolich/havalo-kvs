@@ -33,15 +33,15 @@ public class RepositoryLoadException extends HavaloException {
 	private static final long serialVersionUID = -4077239638178895875L;
 
 	public RepositoryLoadException(String message, Throwable cause) {
-		super(message, cause);
+		super(message, cause, 503);
 	}
 	
 	public RepositoryLoadException(Throwable cause) {
-		super(cause);
+		super(cause, 503);
 	}
 	
 	public RepositoryLoadException(String message) {
-		super(message);
+		super(message, 503);
 	}
 	
 }

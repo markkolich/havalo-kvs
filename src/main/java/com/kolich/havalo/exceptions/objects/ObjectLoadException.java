@@ -33,15 +33,15 @@ public class ObjectLoadException extends HavaloException {
 	private static final long serialVersionUID = 4875646775404503031L;
 
 	public ObjectLoadException(String message, Throwable cause) {
-		super(message, cause);
+		super(message, cause, 503);
 	}
 	
 	public ObjectLoadException(Throwable cause) {
-		super(cause);
+		super(cause, 503);
 	}
 	
 	public ObjectLoadException(String message) {
-		super(message);
+		super(message, 503);
 	}
 	
 }

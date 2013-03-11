@@ -18,10 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.kolich.common.either.Either;
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.KeyPair;
-import com.kolich.havalo.exceptions.HavaloException;
 import com.kolich.havalo.exceptions.MethodNotNotAllowedException;
 import com.typesafe.config.Config;
 
@@ -51,11 +49,7 @@ public abstract class HavaloApiServlet extends HttpServlet {
 	protected final Config getAppConfig() {
 		return config_;
 	}
-	
-	protected static final KeyPair getUserKeyPair(final HttpServletRequest request) {
-		return (KeyPair)request.getAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE);
-	}
-	
+		
 	@Override
 	public final void doTrace(final HttpServletRequest request,
 		final HttpServletResponse response) {
@@ -111,10 +105,9 @@ public abstract class HavaloApiServlet extends HttpServlet {
 	}
 	
 	public void get(final AsyncContext context) {
-		new HavaloApiServletClosure<HavaloException,HavaloEntity>(
-			"GET:default", logger__, context) {
+		new HavaloApiServletClosure<HavaloEntity>(logger__, context) {
 			@Override
-			public Either<HavaloException,HavaloEntity> doit() throws Exception {
+			public HavaloEntity doit() throws Exception {
 				throw new MethodNotNotAllowedException();
 			}
 		}.execute();

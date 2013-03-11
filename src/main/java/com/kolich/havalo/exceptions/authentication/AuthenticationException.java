@@ -33,15 +33,15 @@ public class AuthenticationException extends HavaloException {
 	private static final long serialVersionUID = -3112819251217503077L;
 	
 	public AuthenticationException(String message, Throwable cause) {
-		super(message, cause);
+		super(message, cause, 401);
 	}
 
 	public AuthenticationException(String message) {
-		super(message);
+		super(message, 401);
 	}
 	
 	public AuthenticationException(Throwable cause) {
-		super(cause);
+		super(cause, 401);
 	}
 
 }

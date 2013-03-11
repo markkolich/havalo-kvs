@@ -27,13 +27,13 @@
 	</listener>
 		
 	<servlet>
-		<servlet-name>AuthenticateAPI</servlet-name>
-		<servlet-class>com.kolich.havalo.servlets.api.AuthenticateAPI</servlet-class>
+		<servlet-name>AuthenticateApi</servlet-name>
+		<servlet-class>com.kolich.havalo.servlets.api.AuthenticateApi</servlet-class>
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>AuthenticateAPI</servlet-name>
+		<servlet-name>AuthenticateApi</servlet-name>
 		<url-pattern>/api/authenticate</url-pattern>
 	</servlet-mapping>
 	

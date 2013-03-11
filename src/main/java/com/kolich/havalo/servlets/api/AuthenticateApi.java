@@ -6,25 +6,22 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kolich.common.either.Either;
 import com.kolich.havalo.entities.types.KeyPair;
-import com.kolich.havalo.exceptions.HavaloException;
 import com.kolich.havalo.servlets.HavaloApiServlet;
 import com.kolich.havalo.servlets.HavaloApiServletClosure;
 
-public final class AuthenticateAPI extends HavaloApiServlet {
+public final class AuthenticateApi extends HavaloApiServlet {
 	
 	private static final Logger logger__ =
-		LoggerFactory.getLogger(AuthenticateAPI.class);
+		LoggerFactory.getLogger(AuthenticateApi.class);
 
 	private static final long serialVersionUID = 1087288709731427991L;
 	
 	@Override
 	public void get(final AsyncContext context) {
-		new HavaloApiServletClosure<HavaloException,KeyPair>(
-			"GET:/api/authenticate", logger__, context) {
+		new HavaloApiServletClosure<KeyPair>(logger__, context) {
 			@Override
-			public Either<HavaloException,KeyPair> doit() throws Exception {
+			public KeyPair doit() throws Exception {
 				response_.setStatus(HttpServletResponse.SC_NO_CONTENT);
 				return null;
 			}

@@ -32,7 +32,7 @@ public class HavaloException extends KolichCommonException {
 	
 	private static final long serialVersionUID = -7889750833064607753L;
 	
-	protected final int statusCode_;
+	private final int statusCode_;
 
 	public HavaloException(String message, Throwable cause, int statusCode) {
 		super(message, cause);
@@ -47,6 +47,10 @@ public class HavaloException extends KolichCommonException {
 	public HavaloException(String message, int statusCode) {
 		super(message);
 		statusCode_ = statusCode;
+	}
+	
+	public int getStatusCode() {
+		return statusCode_;
 	}
 	
 }

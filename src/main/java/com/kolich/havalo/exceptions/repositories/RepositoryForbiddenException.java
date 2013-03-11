@@ -33,15 +33,15 @@ public class RepositoryForbiddenException extends HavaloException {
 	private static final long serialVersionUID = -133550392596790326L;
 
 	public RepositoryForbiddenException(String message, Throwable cause) {
-		super(message, cause);
+		super(message, cause, 403);
 	}
 	
 	public RepositoryForbiddenException(Throwable cause) {
-		super(cause);
+		super(cause, 403);
 	}
 	
 	public RepositoryForbiddenException(String message) {
-		super(message);
+		super(message, 403);
 	}
 
 }

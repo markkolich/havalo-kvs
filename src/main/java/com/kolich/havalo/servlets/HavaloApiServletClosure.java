@@ -1,17 +1,17 @@
 package com.kolich.havalo.servlets;
 
+import static com.kolich.havalo.authentication.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
+
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.omg.CORBA.Request;
 import org.slf4j.Logger;
 
 import com.kolich.bolt.exceptions.LockConflictException;
-import com.kolich.common.either.Either;
 import com.kolich.havalo.entities.HavaloEntity;
+import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.exceptions.BadHavaloUUIDException;
-import com.kolich.havalo.exceptions.HavaloException;
 import com.kolich.havalo.exceptions.InvalidResourceException;
 import com.kolich.havalo.exceptions.objects.ObjectConflictException;
 import com.kolich.havalo.exceptions.objects.ObjectDeletionException;
@@ -26,7 +26,7 @@ import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.exceptions.repositories.RepositoryLoadException;
 import com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException;
 
-public abstract class HavaloApiServletClosure<F extends HavaloException,S extends HavaloEntity> {
+public abstract class HavaloApiServletClosure<T extends HavaloEntity> {
 	
 	protected final Logger logger_;
 	
@@ -38,6 +38,8 @@ public abstract class HavaloApiServletClosure<F extends HavaloException,S extend
 	protected final String method_;
 	protected final String requestUri_;
 	
+	protected final KeyPair userKeyPair_;
+	
 	public HavaloApiServletClosure(final Logger logger,
 		final AsyncContext context) {
 		logger_ = logger;
@@ -46,14 +48,15 @@ public abstract class HavaloApiServletClosure<F extends HavaloException,S extend
 		response_ = (HttpServletResponse)context_.getResponse();
 		method_ = request_.getMethod();
 		requestUri_ = request_.getRequestURI();
+		userKeyPair_ = getUserFromRequest(request_);
 	}
 	
-	public abstract Either<F,S> doit() throws Exception;
+	public abstract T doit() throws Exception;
 	
 	public final void execute() {
 		final String comment = getComment();
 		try {
-			final Either<F,S> result = doit();
+			final T result = doit();
 			
 		} catch (IllegalArgumentException e) {
 			logger_.debug(comment, e);
@@ -110,6 +113,10 @@ public abstract class HavaloApiServletClosure<F extends HavaloException,S extend
 	
 	private final String getComment() {
 		return String.format("%s:%s", method_, requestUri_);
+	}
+	
+	protected static final KeyPair getUserFromRequest(final HttpServletRequest request) {
+		return (KeyPair)request.getAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE);
 	}
 	
 }

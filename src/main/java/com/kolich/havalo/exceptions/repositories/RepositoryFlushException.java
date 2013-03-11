@@ -33,15 +33,15 @@ public class RepositoryFlushException extends HavaloException {
 	private static final long serialVersionUID = 8823937804053430912L;
 
 	public RepositoryFlushException(String message, Throwable cause) {
-		super(message, cause);
+		super(message, cause, 412);
 	}
 	
 	public RepositoryFlushException(Throwable cause) {
-		super(cause);
+		super(cause, 412);
 	}
 	
 	public RepositoryFlushException(String message) {
-		super(message);
+		super(message, 412);
 	}
 	
 }

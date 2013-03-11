@@ -33,15 +33,15 @@ public class ObjectConflictException extends HavaloException {
 	private static final long serialVersionUID = -7951798714052960609L;
 
 	public ObjectConflictException(String message, Throwable cause) {
-		super(message, cause);
+		super(message, cause, 409);
 	}
 	
 	public ObjectConflictException(Throwable cause) {
-		super(cause);
+		super(cause, 409);
 	}
 	
 	public ObjectConflictException(String message) {
-		super(message);
+		super(message, 409);
 	}
 	
 }

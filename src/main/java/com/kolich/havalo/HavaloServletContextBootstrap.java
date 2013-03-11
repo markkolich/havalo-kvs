@@ -104,7 +104,7 @@ public final class HavaloServletContextBootstrap implements ServletContextListen
 			// and then bail.  The application cannot continue at this point.
 			logger__.error("Failed to create ADMIN user repository -- " +
 				"cannot continue, giving up.", e);
-			throw new HavaloException(e);
+			throw new HavaloException(e, 500);
 		}
 		return repoManager;
 	}

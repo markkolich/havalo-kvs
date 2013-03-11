@@ -33,15 +33,15 @@ public class RepositoryDeletionException extends HavaloException {
 	private static final long serialVersionUID = -4222949293048174571L;
 	
 	public RepositoryDeletionException(String message, Throwable cause) {
-		super(message, cause);
+		super(message, cause, 503);
 	}
 	
 	public RepositoryDeletionException(Throwable cause) {
-		super(cause);
+		super(cause, 503);
 	}
 	
 	public RepositoryDeletionException(String message) {
-		super(message);
+		super(message, 503);
 	}
 
 }
