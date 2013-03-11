@@ -40,6 +40,7 @@ import com.google.gson.reflect.TypeToken;
 import com.kolich.common.date.ISO8601DateFormat;
 import com.kolich.common.entities.KolichCommonEntity;
 import com.kolich.common.entities.gson.KolichDefaultDateTypeAdapter;
+import com.kolich.havalo.entities.errors.HavaloError;
 import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
@@ -70,6 +71,8 @@ public abstract class HavaloEntity extends KolichCommonEntity {
 			new Repository.FileTypeAdapter());
 		builderBuilder.registerTypeAdapter(new TypeToken<Trie<String, HashedFileObject>>(){}.getType(), 
 			new Repository.TrieTypeAdapter());
+		builderBuilder.registerTypeAdapter(new TypeToken<Exception>(){}.getType(), 
+			new HavaloError.ExceptionTypeAdapter());
 		return builderBuilder;
 	}
 	

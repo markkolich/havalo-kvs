@@ -1,11 +1,13 @@
 package com.kolich.havalo.servlets.api;
 
 import javax.servlet.AsyncContext;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kolich.common.either.Either;
+import com.kolich.common.either.Left;
+import com.kolich.havalo.entities.errors.HavaloError;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.servlets.HavaloApiServlet;
 import com.kolich.havalo.servlets.HavaloApiServletClosure;
@@ -18,31 +20,13 @@ public final class AuthenticateApi extends HavaloApiServlet {
 	private static final long serialVersionUID = 1087288709731427991L;
 	
 	@Override
-	public HavaloApiServletClosure<KeyPair> get(final AsyncContext context) {
-		return new HavaloApiServletClosure<KeyPair>(logger__, context) {
+	public final HavaloApiServletClosure<KeyPair,Either<HavaloError,KeyPair>> get(final AsyncContext context) {
+		return new HavaloApiServletClosure<KeyPair,Either<HavaloError,KeyPair>>(logger__, context) {
 			@Override
-			public KeyPair doit() throws Exception {
-				response_.setStatus(HttpServletResponse.SC_NO_CONTENT);
-				return null;
+			public Either<HavaloError,KeyPair> doit() throws Exception {
+				return Left.left(new HavaloError("Yay it kinda works!"));
 			}
 		};
 	}
 	
-	/*
-	@Override
-	public final void doPost(final HttpServletRequest request,
-		final HttpServletResponse response) {
-		final KeyPair kp = getUserKeyPair(request);
-		Writer writer = null;
-		try {
-			writer = response.getWriter();
-			writer.append(kp.toString());
-		} catch (IOException e) {
-			logger__.error("failed", e);
-		} finally {
-			IOUtils.closeQuietly(writer);
-		}
-	}
-	*/
-
 }

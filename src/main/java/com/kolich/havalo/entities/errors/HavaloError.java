@@ -24,31 +24,67 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.entities.types;
+package com.kolich.havalo.entities.errors;
+
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.SerializedName;
 import com.kolich.havalo.entities.HavaloEntity;
+import com.kolich.havalo.exceptions.HavaloException;
 
 public final class HavaloError extends HavaloEntity implements Serializable {
 
 	private static final long serialVersionUID = -8338248355189878855L;
 	
+	@SerializedName("status")
+	private final int status_;
+	
 	@SerializedName("message")
 	private final String message_;
+	
+	@SerializedName("cause")
+	private final Exception cause_;
 
-	public HavaloError(String message) {
+	public HavaloError(int status, String message, Exception cause) {
+		status_ = status;
 		message_ = message;
+		cause_ = cause;
 	}
 	
+	public HavaloError(int status, String message) {
+		this(status, message, null);
+	}
+	
+	public HavaloError(String message) {
+		this(SC_INTERNAL_SERVER_ERROR, message, null);
+	}
+		
 	// For GSON
 	public HavaloError() {
 		this(null);
 	}
 	
+	public int getStatus() {
+		return status_;
+	}
+	
 	public String getMessage() {
 		return message_;
+	}
+	
+	public Exception getCause() {
+		return cause_;
 	}
 
 	@Override
@@ -76,5 +112,26 @@ public final class HavaloError extends HavaloEntity implements Serializable {
 			return false;
 		return true;
 	}
+	
+	public static final HavaloError exceptionToError(final HavaloException e) {
+		return new HavaloError(e.getStatusCode(), e.getMessage(), e);
+	}
+	
+	public static final class ExceptionTypeAdapter
+		implements JsonSerializer<Exception>, JsonDeserializer<Exception> {
 		
+		@Override
+		public JsonElement serialize(final Exception src, final Type typeOfSrc, 
+			final JsonSerializationContext context) {
+			return new JsonPrimitive(ExceptionUtils.getStackTrace(src));
+		}
+	
+		@Override
+		public Exception deserialize(final JsonElement json, final Type typeOfT, 
+			final JsonDeserializationContext context) {
+			return new Exception(json.getAsString());
+		}
+		
+	}
+			
 }
