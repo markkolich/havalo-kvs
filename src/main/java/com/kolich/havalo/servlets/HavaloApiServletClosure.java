@@ -26,7 +26,7 @@ import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.exceptions.repositories.RepositoryLoadException;
 import com.kolich.havalo.exceptions.repositories.RepositoryNotFoundException;
 
-public abstract class HavaloApiServletClosure<T extends HavaloEntity> {
+public abstract class HavaloApiServletClosure<T extends HavaloEntity> implements Runnable {
 	
 	protected final Logger logger_;
 	
@@ -53,7 +53,8 @@ public abstract class HavaloApiServletClosure<T extends HavaloEntity> {
 	
 	public abstract T doit() throws Exception;
 	
-	public final void execute() {
+	@Override
+	public final void run() {
 		final String comment = getComment();
 		try {
 			final T result = doit();
@@ -108,6 +109,8 @@ public abstract class HavaloApiServletClosure<T extends HavaloEntity> {
 			throw e;
 		} catch (Exception e) {
 			logger_.debug(comment, e);
+		} finally {
+			context_.complete();
 		}
 	}
 	

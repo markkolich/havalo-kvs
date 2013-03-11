@@ -1,7 +1,6 @@
 package com.kolich.havalo.servlets;
 
 import static com.kolich.havalo.HavaloServletContextBootstrap.HAVALO_CONFIG_ATTRIBUTE;
-import static com.kolich.havalo.authentication.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kolich.havalo.entities.HavaloEntity;
-import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.exceptions.MethodNotNotAllowedException;
 import com.typesafe.config.Config;
 
@@ -88,29 +86,17 @@ public abstract class HavaloApiServlet extends HttpServlet {
 			}
 		});
 		*/
-		pool_.submit(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					get(context);
-				} catch (Exception e) {
-					logger__.warn("Uncaught exception, falling back to " +
-						"global error handler to render error response.", e);
-					// TODO
-				} finally {
-					context.complete();
-				}
-			}
-		});
+		pool_.submit(get(context));
 	}
 	
-	public void get(final AsyncContext context) {
-		new HavaloApiServletClosure<HavaloEntity>(logger__, context) {
+	public <T extends HavaloEntity> HavaloApiServletClosure<T> get(
+		final AsyncContext context) {
+		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
-			public HavaloEntity doit() throws Exception {
+			public T doit() throws Exception {
 				throw new MethodNotNotAllowedException();
 			}
-		}.execute();
+		};
 	}
 	
 	@Override

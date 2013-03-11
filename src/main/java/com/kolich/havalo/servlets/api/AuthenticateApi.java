@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.servlets.HavaloApiServlet;
 import com.kolich.havalo.servlets.HavaloApiServletClosure;
@@ -16,17 +17,33 @@ public final class AuthenticateApi extends HavaloApiServlet {
 		LoggerFactory.getLogger(AuthenticateApi.class);
 
 	private static final long serialVersionUID = 1087288709731427991L;
-	
+
 	@Override
-	public void get(final AsyncContext context) {
-		new HavaloApiServletClosure<KeyPair>(logger__, context) {
+	public <T extends HavaloEntity> HavaloApiServletClosure<T> get(
+		final AsyncContext context) {
+		return new HavaloApiServletClosure<T>(logger__, context) {
+			@Override
+			public T doit() throws Exception {
+				response_.setStatus(HttpServletResponse.SC_NO_CONTENT);
+				return new KeyPair();
+			}
+		};
+	}
+	
+	
+	
+	/*
+	@Override
+	public HavaloApiServletClosure<KeyPair> get(final AsyncContext context) {
+		return new HavaloApiServletClosure<KeyPair>(logger__, context) {
 			@Override
 			public KeyPair doit() throws Exception {
 				response_.setStatus(HttpServletResponse.SC_NO_CONTENT);
 				return null;
 			}
-		}.execute();
+		};
 	}
+	*/
 	
 	/*
 	@Override
