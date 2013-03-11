@@ -1,4 +1,4 @@
-package com.kolich.havalo.servlets.api;
+package com.kolich.havalo.servlets.api.handlers;
 
 import javax.servlet.AsyncContext;
 
@@ -9,13 +9,13 @@ import com.kolich.common.either.Either;
 import com.kolich.common.either.Left;
 import com.kolich.havalo.entities.errors.HavaloError;
 import com.kolich.havalo.entities.types.KeyPair;
-import com.kolich.havalo.servlets.HavaloApiServlet;
-import com.kolich.havalo.servlets.HavaloApiServletClosure;
+import com.kolich.havalo.servlets.api.HavaloApiServlet;
+import com.kolich.havalo.servlets.api.HavaloApiServletClosure;
 
-public final class AuthenticateApi extends HavaloApiServlet {
+public final class Authenticate extends HavaloApiServlet {
 	
 	private static final Logger logger__ =
-		LoggerFactory.getLogger(AuthenticateApi.class);
+		LoggerFactory.getLogger(Authenticate.class);
 
 	private static final long serialVersionUID = 1087288709731427991L;
 	

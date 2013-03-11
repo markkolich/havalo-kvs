@@ -17,6 +17,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kolich.common.either.Either;
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.errors.HavaloError;
+import com.kolich.havalo.servlets.api.HavaloApiServletClosure;
 import com.typesafe.config.Config;
 
 public abstract class HavaloServlet extends HttpServlet {

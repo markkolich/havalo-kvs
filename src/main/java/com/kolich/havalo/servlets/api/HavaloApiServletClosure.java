@@ -1,4 +1,4 @@
-package com.kolich.havalo.servlets;
+package com.kolich.havalo.servlets.api;
 
 import static com.kolich.havalo.authentication.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
 

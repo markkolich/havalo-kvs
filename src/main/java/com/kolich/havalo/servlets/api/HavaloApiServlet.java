@@ -1,4 +1,4 @@
-package com.kolich.havalo.servlets;
+package com.kolich.havalo.servlets.api;
 
 import javax.servlet.AsyncContext;
 
@@ -9,6 +9,7 @@ import com.kolich.common.either.Either;
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.errors.HavaloError;
 import com.kolich.havalo.exceptions.MethodNotNotSupportedException;
+import com.kolich.havalo.servlets.HavaloServlet;
 
 public abstract class HavaloApiServlet extends HavaloServlet {
 

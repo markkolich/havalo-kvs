@@ -27,8 +27,8 @@
 	</listener>
 		
 	<servlet>
-		<servlet-name>AuthenticateApi</servlet-name>
-		<servlet-class>com.kolich.havalo.servlets.api.AuthenticateApi</servlet-class>
+		<servlet-name>Authenticate</servlet-name>
+		<servlet-class>com.kolich.havalo.servlets.api.handlers.Authenticate</servlet-class>
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>
