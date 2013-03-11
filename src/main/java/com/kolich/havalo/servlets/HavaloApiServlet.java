@@ -89,7 +89,7 @@ public abstract class HavaloApiServlet extends HttpServlet {
 		pool_.submit(get(context));
 	}
 	
-	public <T extends HavaloEntity> HavaloApiServletClosure<T> get(
+	public <T extends HavaloEntity> HavaloApiServletClosure<? extends HavaloEntity> get(
 		final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override

@@ -118,7 +118,7 @@ public abstract class HavaloApiServletClosure<T extends HavaloEntity> implements
 		return String.format("%s:%s", method_, requestUri_);
 	}
 	
-	protected static final KeyPair getUserFromRequest(final HttpServletRequest request) {
+	private static final KeyPair getUserFromRequest(final HttpServletRequest request) {
 		return (KeyPair)request.getAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE);
 	}
 	
