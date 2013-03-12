@@ -1,13 +1,12 @@
 package com.kolich.havalo.servlets.api.handlers;
 
-import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
-
 import javax.servlet.AsyncContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kolich.havalo.entities.types.KeyPair;
+import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.servlets.api.HavaloApiServlet;
 import com.kolich.havalo.servlets.api.HavaloApiServletClosure;
 
@@ -19,12 +18,12 @@ public final class Authenticate extends HavaloApiServlet {
 	private static final long serialVersionUID = 1087288709731427991L;
 	
 	@Override
-	public final HavaloApiServletClosure<KeyPair> get(final AsyncContext context) {
+	public final HavaloApiServletClosure<KeyPair> post(final AsyncContext context) {
 		return new HavaloApiServletClosure<KeyPair>(logger__, context) {
 			@Override
-			public KeyPair doit() throws Exception {
-				response_.setStatus(SC_NO_CONTENT);
-				return null;
+			public KeyPair doit(final KeyPair userKp) throws Exception {
+				final Repository repo = getRepository(userKp.getIdKey());
+				return repo.getKeyPair();
 			}
 		};
 	}

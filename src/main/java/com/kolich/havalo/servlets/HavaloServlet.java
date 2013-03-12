@@ -27,7 +27,7 @@ public abstract class HavaloServlet extends HttpServlet {
 	private long asyncTimeout_;
 	
 	@Override
-	public final void init(final ServletConfig config) throws ServletException {
+	public void init(final ServletConfig config) throws ServletException {
 		final ServletContext context = config.getServletContext();		
 		config_ = (Config)context.getAttribute(HAVALO_CONFIG_ATTRIBUTE);
 		asyncTimeout_ = config_.getLong("havalo.api.request.timeout");

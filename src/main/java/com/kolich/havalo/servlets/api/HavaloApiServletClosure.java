@@ -24,19 +24,18 @@ import com.kolich.havalo.servlets.HavaloServletClosure;
 public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 	extends HavaloServletClosure<S> {
 		
-	protected final KeyPair userKeyPair_;
-	
 	public HavaloApiServletClosure(final Logger logger,
 		final AsyncContext context) {
 		super(logger, context);
-		userKeyPair_ = getUserFromRequest();
 	}
+	
+	public abstract S doit(final KeyPair userKp) throws Exception;
 	
 	@Override
 	public final void run() {
 		final String comment = getComment();
 		try {
-			final S result = doit();
+			final S result = doit(getUserFromRequest());
 			// If the extending closure implementation did not return a
 			// result, it returned null, that means it handled+rendered the
 			// response directly and does not need the super closure to

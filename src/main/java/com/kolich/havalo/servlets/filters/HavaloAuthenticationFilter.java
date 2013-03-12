@@ -128,7 +128,7 @@ public final class HavaloAuthenticationFilter implements Filter {
         } catch (BadCredentialsException e) {
         	logger__.info("The request or request credentials were invalid.", e);
         } catch (Exception e) {
-        	logger__.info("Authencation filter failure; service failed " +
+        	logger__.info("Authentication filter failure; service failed " +
         		"to authenticate request.", e);
         } finally {
         	if(authSuccess) {
