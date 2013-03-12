@@ -1,43 +1,35 @@
 package com.kolich.havalo.servlets.api;
 
+import static com.kolich.common.DefaultCharacterEncoding.UTF_8;
 import static com.kolich.havalo.authentication.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
+import static com.kolich.havalo.entities.types.HavaloError.exceptionToErrorType;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import javax.servlet.AsyncContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
 import com.kolich.havalo.entities.HavaloEntity;
+import com.kolich.havalo.entities.types.HavaloError;
 import com.kolich.havalo.entities.types.KeyPair;
+import com.kolich.havalo.exceptions.HavaloException;
+import com.kolich.havalo.servlets.HavaloServletClosure;
 
-public abstract class HavaloApiServletClosure<S extends HavaloEntity> implements Runnable {
-	
-	protected final Logger logger_;
-	
-	protected final AsyncContext context_;
-	
-	protected final HttpServletRequest request_;
-	protected final HttpServletResponse response_;
-	
-	protected final String method_;
-	protected final String requestUri_;
-	
+public abstract class HavaloApiServletClosure<S extends HavaloEntity>
+	extends HavaloServletClosure<S> {
+		
 	protected final KeyPair userKeyPair_;
 	
 	public HavaloApiServletClosure(final Logger logger,
 		final AsyncContext context) {
-		logger_ = logger;
-		context_ = context;
-		request_ = (HttpServletRequest)context_.getRequest();
-		response_ = (HttpServletResponse)context_.getResponse();
-		method_ = request_.getMethod();
-		requestUri_ = request_.getRequestURI();
-		userKeyPair_ = getUserFromRequest(request_);
+		super(logger, context);
+		userKeyPair_ = getUserFromRequest();
 	}
-	
-	public abstract S doit() throws Exception;
-	
+		
 	@Override
 	public final void run() {
 		final String comment = getComment();
@@ -45,19 +37,38 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity> implements
 			logger_.info(comment);
 			final S result = doit();
 			
+		} catch (HavaloException e) {
+			final HavaloError error = exceptionToErrorType(e);
+			renderError(error);
 		} catch (Exception e) {
-			logger_.debug(comment, e);
+			final HavaloError error = new HavaloError(SC_INTERNAL_SERVER_ERROR,
+				e.getMessage(), e);
+			renderError(error);
 		} finally {
 			context_.complete();
 		}
 	}
 	
-	private final String getComment() {
-		return String.format("%s:%s", method_, requestUri_);
+	private final KeyPair getUserFromRequest() {
+		return (KeyPair)request_.getAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE);
 	}
 	
-	private static final KeyPair getUserFromRequest(final HttpServletRequest request) {
-		return (KeyPair)request.getAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE);
+	private final void renderError(final HavaloError error) {
+		OutputStream os = null;
+		OutputStreamWriter writer = null;
+		try {
+			response_.setStatus(error.getStatus());
+			os = response_.getOutputStream();
+			writer = new OutputStreamWriter(os, UTF_8);
+			error.toWriter(writer);
+			writer.flush();
+		} catch (Exception e) {
+			logger_.error("Failed to send proper error type to servlet " +
+				"output stream.", e);
+		} finally {
+			IOUtils.closeQuietly(os);
+			IOUtils.closeQuietly(writer);
+		}
 	}
 	
 }

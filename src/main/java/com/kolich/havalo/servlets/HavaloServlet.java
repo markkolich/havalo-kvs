@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kolich.havalo.entities.HavaloEntity;
-import com.kolich.havalo.servlets.api.HavaloApiServletClosure;
 import com.typesafe.config.Config;
 
 public abstract class HavaloServlet extends HttpServlet {
@@ -92,22 +91,22 @@ public abstract class HavaloServlet extends HttpServlet {
 		pool_.submit(delete(context));
 	}
 	
-	public abstract <T extends HavaloEntity> HavaloApiServletClosure
+	public abstract <T extends HavaloEntity> HavaloServletClosure
 		<? extends HavaloEntity> trace(final AsyncContext context);
 	
-	public abstract <T extends HavaloEntity> HavaloApiServletClosure
+	public abstract <T extends HavaloEntity> HavaloServletClosure
 		<? extends HavaloEntity> head(final AsyncContext context);
 	
-	public abstract <T extends HavaloEntity> HavaloApiServletClosure
+	public abstract <T extends HavaloEntity> HavaloServletClosure
 		<? extends HavaloEntity> get(final AsyncContext context);
 	
-	public abstract <T extends HavaloEntity> HavaloApiServletClosure
+	public abstract <T extends HavaloEntity> HavaloServletClosure
 		<? extends HavaloEntity> post(final AsyncContext context);
 	
-	public abstract <T extends HavaloEntity> HavaloApiServletClosure
+	public abstract <T extends HavaloEntity> HavaloServletClosure
 		<? extends HavaloEntity> put(final AsyncContext context);
 	
-	public abstract <T extends HavaloEntity> HavaloApiServletClosure
+	public abstract <T extends HavaloEntity> HavaloServletClosure
 		<? extends HavaloEntity> delete(final AsyncContext context);
 	
 }

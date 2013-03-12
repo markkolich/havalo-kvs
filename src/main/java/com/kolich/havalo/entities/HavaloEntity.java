@@ -40,8 +40,8 @@ import com.google.gson.reflect.TypeToken;
 import com.kolich.common.date.ISO8601DateFormat;
 import com.kolich.common.entities.KolichCommonEntity;
 import com.kolich.common.entities.gson.KolichDefaultDateTypeAdapter;
-import com.kolich.havalo.entities.errors.HavaloError;
 import com.kolich.havalo.entities.types.HashedFileObject;
+import com.kolich.havalo.entities.types.HavaloError;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
 

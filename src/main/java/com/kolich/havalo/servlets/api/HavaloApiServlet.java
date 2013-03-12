@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.exceptions.MethodNotNotSupportedException;
 import com.kolich.havalo.servlets.HavaloServlet;
+import com.kolich.havalo.servlets.HavaloServletClosure;
 
 public abstract class HavaloApiServlet extends HavaloServlet {
 
@@ -17,7 +18,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 		LoggerFactory.getLogger(HavaloApiServlet.class);
 				
 	@Override
-	public <T extends HavaloEntity> HavaloApiServletClosure<? extends HavaloEntity>
+	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
 		trace(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
@@ -28,7 +29,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 	}
 	
 	@Override
-	public <T extends HavaloEntity> HavaloApiServletClosure<? extends HavaloEntity>
+	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
 		head(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
@@ -39,7 +40,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 	}
 	
 	@Override
-	public <T extends HavaloEntity> HavaloApiServletClosure<? extends HavaloEntity>
+	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
 		get(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
@@ -50,7 +51,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 	}
 	
 	@Override
-	public <T extends HavaloEntity> HavaloApiServletClosure<? extends HavaloEntity>
+	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
 		post(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
@@ -61,7 +62,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 	}
 	
 	@Override
-	public <T extends HavaloEntity> HavaloApiServletClosure<? extends HavaloEntity>
+	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
 		put(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
@@ -72,7 +73,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 	}
 	
 	@Override
-	public <T extends HavaloEntity> HavaloApiServletClosure<? extends HavaloEntity>
+	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
 		delete(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override

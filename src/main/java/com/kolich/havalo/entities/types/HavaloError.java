@@ -24,14 +24,13 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.entities.errors;
+package com.kolich.havalo.entities.types;
 
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -113,7 +112,7 @@ public final class HavaloError extends HavaloEntity implements Serializable {
 		return true;
 	}
 	
-	public static final HavaloError exceptionToError(final HavaloException e) {
+	public static final HavaloError exceptionToErrorType(final HavaloException e) {
 		return new HavaloError(e.getStatusCode(), e.getMessage(), e);
 	}
 	
@@ -123,7 +122,7 @@ public final class HavaloError extends HavaloEntity implements Serializable {
 		@Override
 		public JsonElement serialize(final Exception src, final Type typeOfSrc, 
 			final JsonSerializationContext context) {
-			return new JsonPrimitive(ExceptionUtils.getStackTrace(src));
+			return new JsonPrimitive(getStackTrace(src));
 		}
 	
 		@Override
