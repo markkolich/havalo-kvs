@@ -24,13 +24,13 @@ public abstract class HavaloServlet extends HttpServlet {
 	private Config config_;
 	private ExecutorService pool_;
 	
-	private long defaultAsyncTimeout_;
+	private long asyncTimeout_;
 	
 	@Override
 	public final void init(final ServletConfig config) throws ServletException {
 		final ServletContext context = config.getServletContext();		
 		config_ = (Config)context.getAttribute(HAVALO_CONFIG_ATTRIBUTE);
-		defaultAsyncTimeout_ = config_.getLong("havalo.api.request.timeout");
+		asyncTimeout_ = config_.getLong("havalo.api.request.timeout");
 		pool_ = Executors.newCachedThreadPool(
 			new ThreadFactoryBuilder()
 				.setDaemon(true)
@@ -47,7 +47,7 @@ public abstract class HavaloServlet extends HttpServlet {
 	public final void doTrace(final HttpServletRequest request,
 		final HttpServletResponse response) {
 		final AsyncContext context = request.startAsync(request, response);
-		context.setTimeout(defaultAsyncTimeout_);
+		context.setTimeout(asyncTimeout_);
 		pool_.submit(trace(context));
 	}
 			
@@ -55,7 +55,7 @@ public abstract class HavaloServlet extends HttpServlet {
 	public final void doHead(final HttpServletRequest request,
 		final HttpServletResponse response) {
 		final AsyncContext context = request.startAsync(request, response);
-		context.setTimeout(defaultAsyncTimeout_);
+		context.setTimeout(asyncTimeout_);
 		pool_.submit(head(context));
 	}
 		
@@ -63,7 +63,7 @@ public abstract class HavaloServlet extends HttpServlet {
 	public final void doGet(final HttpServletRequest request,
 		final HttpServletResponse response) {
 		final AsyncContext context = request.startAsync(request, response);
-		context.setTimeout(defaultAsyncTimeout_);
+		context.setTimeout(asyncTimeout_);
 		pool_.submit(get(context));
 	}
 		
@@ -71,7 +71,7 @@ public abstract class HavaloServlet extends HttpServlet {
 	public final void doPost(final HttpServletRequest request,
 		final HttpServletResponse response) {
 		final AsyncContext context = request.startAsync(request, response);
-		context.setTimeout(defaultAsyncTimeout_);
+		context.setTimeout(asyncTimeout_);
 		pool_.submit(post(context));
 	}
 		
@@ -79,7 +79,7 @@ public abstract class HavaloServlet extends HttpServlet {
 	public final void doPut(final HttpServletRequest request,
 		final HttpServletResponse response) {
 		final AsyncContext context = request.startAsync(request, response);
-		context.setTimeout(defaultAsyncTimeout_);
+		context.setTimeout(asyncTimeout_);
 		pool_.submit(put(context));
 	}
 		
@@ -87,7 +87,7 @@ public abstract class HavaloServlet extends HttpServlet {
 	public final void doDelete(final HttpServletRequest request,
 		final HttpServletResponse response) {
 		final AsyncContext context = request.startAsync(request, response);
-		context.setTimeout(defaultAsyncTimeout_);
+		context.setTimeout(asyncTimeout_);
 		pool_.submit(delete(context));
 	}
 	

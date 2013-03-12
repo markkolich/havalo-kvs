@@ -10,7 +10,8 @@ import org.slf4j.Logger;
 
 import com.kolich.havalo.entities.HavaloEntity;
 
-public abstract class HavaloServletClosure<S extends HavaloEntity> implements Runnable {
+public abstract class HavaloServletClosure<S extends HavaloEntity>
+	implements Runnable {
 	
 	protected final Logger logger_;
 	

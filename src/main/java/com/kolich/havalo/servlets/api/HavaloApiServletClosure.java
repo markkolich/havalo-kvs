@@ -2,7 +2,7 @@ package com.kolich.havalo.servlets.api;
 
 import static com.google.common.net.MediaType.JSON_UTF_8;
 import static com.kolich.common.DefaultCharacterEncoding.UTF_8;
-import static com.kolich.havalo.authentication.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
+import static com.kolich.havalo.servlets.filters.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
@@ -31,7 +31,7 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 		super(logger, context);
 		userKeyPair_ = getUserFromRequest();
 	}
-		
+	
 	@Override
 	public final void run() {
 		final String comment = getComment();

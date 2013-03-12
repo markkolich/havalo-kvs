@@ -39,7 +39,7 @@
 	
 	<filter>
 		<filter-name>HavaloAuthenticationFilter</filter-name>
-		<filter-class>com.kolich.havalo.authentication.HavaloAuthenticationFilter</filter-class>
+		<filter-class>com.kolich.havalo.servlets.filters.HavaloAuthenticationFilter</filter-class>
 		<async-supported>true</async-supported>
 	</filter>
     <filter-mapping>

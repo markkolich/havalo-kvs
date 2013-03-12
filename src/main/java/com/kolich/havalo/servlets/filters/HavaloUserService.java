@@ -24,7 +24,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.authentication;
+package com.kolich.havalo.servlets.filters;
 
 import java.util.UUID;
 

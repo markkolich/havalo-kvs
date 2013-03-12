@@ -1,4 +1,4 @@
-package com.kolich.havalo.authentication;
+package com.kolich.havalo.servlets.filters;
 
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
@@ -51,7 +51,8 @@ public final class HavaloAuthenticationFilter implements Filter {
 	public void init(final FilterConfig fConfig) throws ServletException {
 		logger__.info("In init()");
 		final ServletContext context = fConfig.getServletContext();		
-		userService_ = (HavaloUserService)context.getAttribute(HAVALO_USER_SERVICE_ATTRIBUTE);
+		userService_ = (HavaloUserService)context
+			.getAttribute(HAVALO_USER_SERVICE_ATTRIBUTE);
 	}
 	
 	@Override
@@ -72,16 +73,16 @@ public final class HavaloAuthenticationFilter implements Filter {
             // If the header does not exist or does not start with the correct
             // token, give up immeaditely.
             if(header == null || !header.startsWith(HAVALO_AUTHORIZATION_PREFIX)) {
-            	logger__.info("no authorization header");
-                return;
+            	throw new AuthenticationException("Request did not contain " +
+            		"a valid '" + AUTHORIZATION + "' header.");
             }
             // Extract just the part of the Authorization header that follows
             // the Havalo authorization prefix.
             header = header.substring(HAVALO_AUTHORIZATION_PREFIX.length());
             final String[] tokens = header.split(HAVALO_AUTHORIZATION_SEPARATOR, 2);
             if(tokens == null || tokens.length != 2) {
-            	logger__.info("no tokens or token length didn't match.");
-            	return;
+            	throw new AuthenticationException("Failed to extract correct " +
+            		"number of tokens from '" + AUTHORIZATION + "' header.");
             }
             // If we get here, then we must have had some valid input
         	// Authorization header with a real access key and signature.
@@ -107,7 +108,6 @@ public final class HavaloAuthenticationFilter implements Filter {
         		throw new AuthenticationException("User service returned " +
         			"null, which is an interface contract violation.");
         	}
-        	/*
         	// Get the string to sign -- will fail gracefully if the incoming
         	// request does not have the proper headers attached to it.
         	final String stringToSign = getStringToSign(req);
@@ -120,14 +120,13 @@ public final class HavaloAuthenticationFilter implements Filter {
         			"match (request=" + signature + ", computed=" + computed +
         				")");
         	}
-        	*/
         	// Successful authentication!
         	req.setAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE, userKp);
         	authSuccess = true;
         } catch (UsernameNotFoundException e) {
         	logger__.info("The provided user UUID was not found.", e);
         } catch (BadCredentialsException e) {
-        	logger__.info("The provided credentials were invalid.", e);
+        	logger__.info("The request or request credentials were invalid.", e);
         } catch (Exception e) {
         	logger__.info("Authencation filter failure; service failed " +
         		"to authenticate request.", e);
