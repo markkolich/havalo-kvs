@@ -1,14 +1,16 @@
 package com.kolich.havalo.servlets.api;
 
+import static com.google.common.net.MediaType.JSON_UTF_8;
 import static com.kolich.common.DefaultCharacterEncoding.UTF_8;
 import static com.kolich.havalo.authentication.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
-import static com.kolich.havalo.entities.types.HavaloError.exceptionToErrorType;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import javax.servlet.AsyncContext;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -34,17 +36,22 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 	public final void run() {
 		final String comment = getComment();
 		try {
-			logger_.info(comment);
 			final S result = doit();
-			
+			// If the extending closure implementation did not return a
+			// result, it returned null, that means it handled+rendered the
+			// response directly and does not need the super closure to
+			// attempt to render a response.
+			if(result != null) {
+				renderEntity(logger_, response_, result);
+			}
 		} catch (HavaloException e) {
-			final HavaloError error = exceptionToErrorType(e);
-			renderError(error);
+			logger_.info(comment, e);
+			renderHavaloException(logger_, response_, e);
 		} catch (Exception e) {
-			final HavaloError error = new HavaloError(SC_INTERNAL_SERVER_ERROR,
-				e.getMessage(), e);
-			renderError(error);
+			logger_.info(comment, e);
+			renderError(logger_, response_, e);
 		} finally {
+			// Always finish the context.
 			context_.complete();
 		}
 	}
@@ -53,17 +60,42 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 		return (KeyPair)request_.getAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE);
 	}
 	
-	private final void renderError(final HavaloError error) {
+	public static final void renderHavaloException(final Logger logger,
+		final HttpServletResponse response, final HavaloException e) {
+		renderError(logger, response, new HavaloError(e.getStatusCode(),
+			e.getMessage(), e));
+	}
+	
+	public static final void renderError(final Logger logger,
+		final HttpServletResponse response, final Exception e) {
+		renderError(logger, response, new HavaloError(SC_INTERNAL_SERVER_ERROR,
+			e.getMessage(), e));
+	}
+	
+	public static final void renderError(final Logger logger,
+		final HttpServletResponse response, final HavaloError error) {
+		renderEntity(logger, response, error.getStatus(), error);
+	}
+	
+	public static final void renderEntity(final Logger logger,
+		final HttpServletResponse response, final HavaloEntity entity) {
+		renderEntity(logger, response, SC_OK, entity);
+	}
+	
+	public static final void renderEntity(final Logger logger,
+		final HttpServletResponse response, final int status,
+		final HavaloEntity entity) {
 		OutputStream os = null;
 		OutputStreamWriter writer = null;
 		try {
-			response_.setStatus(error.getStatus());
-			os = response_.getOutputStream();
+			response.setStatus(status);
+			response.setContentType(JSON_UTF_8.toString());
+			os = response.getOutputStream();
 			writer = new OutputStreamWriter(os, UTF_8);
-			error.toWriter(writer);
+			entity.toWriter(writer);
 			writer.flush();
 		} catch (Exception e) {
-			logger_.error("Failed to send proper error type to servlet " +
+			logger.error("Failed to render entity to servlet " +
 				"output stream.", e);
 		} finally {
 			IOUtils.closeQuietly(os);

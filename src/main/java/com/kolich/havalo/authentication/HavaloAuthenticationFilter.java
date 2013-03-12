@@ -4,6 +4,7 @@ import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.HttpHeaders.DATE;
 import static com.kolich.havalo.HavaloServletContextBootstrap.HAVALO_USER_SERVICE_ATTRIBUTE;
+import static com.kolich.havalo.servlets.api.HavaloApiServletClosure.renderError;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.codec.binary.StringUtils.getBytesUtf8;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kolich.havalo.entities.types.HavaloError;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.exceptions.authentication.AuthenticationException;
 import com.kolich.havalo.exceptions.authentication.BadCredentialsException;
@@ -105,6 +107,7 @@ public final class HavaloAuthenticationFilter implements Filter {
         		throw new AuthenticationException("User service returned " +
         			"null, which is an interface contract violation.");
         	}
+        	/*
         	// Get the string to sign -- will fail gracefully if the incoming
         	// request does not have the proper headers attached to it.
         	final String stringToSign = getStringToSign(req);
@@ -117,23 +120,25 @@ public final class HavaloAuthenticationFilter implements Filter {
         			"match (request=" + signature + ", computed=" + computed +
         				")");
         	}
+        	*/
         	// Successful authentication!
         	req.setAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE, userKp);
         	authSuccess = true;
         } catch (UsernameNotFoundException e) {
-        	logger__.info("username not found", e);
-        	// TODO need to do something better
+        	logger__.info("The provided user UUID was not found.", e);
         } catch (BadCredentialsException e) {
-        	logger__.info("bad credentials", e);
-        	// TODO need to do something better
+        	logger__.info("The provided credentials were invalid.", e);
         } catch (Exception e) {
-        	logger__.info("auth service failure", e);
-        	// TODO need to do something better      	
+        	logger__.info("Authencation filter failure; service failed " +
+        		"to authenticate request.", e);
         } finally {
         	if(authSuccess) {
         		chain.doFilter(req, resp);
         	} else {
-        		resp.sendError(SC_UNAUTHORIZED);
+        		renderError(logger__, resp, new HavaloError(SC_UNAUTHORIZED,
+        			"Authorization failed; either the provided signature " +
+        			"did not match or you do not have permission to access " +
+        			"the requested resource."));
         	}
         }
 	}

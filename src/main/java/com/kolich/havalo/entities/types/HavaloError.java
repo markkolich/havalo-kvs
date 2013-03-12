@@ -40,7 +40,6 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.SerializedName;
 import com.kolich.havalo.entities.HavaloEntity;
-import com.kolich.havalo.exceptions.HavaloException;
 
 public final class HavaloError extends HavaloEntity implements Serializable {
 
@@ -111,11 +110,7 @@ public final class HavaloError extends HavaloEntity implements Serializable {
 			return false;
 		return true;
 	}
-	
-	public static final HavaloError exceptionToErrorType(final HavaloException e) {
-		return new HavaloError(e.getStatusCode(), e.getMessage(), e);
-	}
-	
+		
 	public static final class ExceptionTypeAdapter
 		implements JsonSerializer<Exception>, JsonDeserializer<Exception> {
 		
