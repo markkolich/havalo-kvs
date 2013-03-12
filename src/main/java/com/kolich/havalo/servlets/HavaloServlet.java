@@ -14,9 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.kolich.common.either.Either;
 import com.kolich.havalo.entities.HavaloEntity;
-import com.kolich.havalo.entities.errors.HavaloError;
 import com.kolich.havalo.servlets.api.HavaloApiServletClosure;
 import com.typesafe.config.Config;
 
@@ -94,28 +92,21 @@ public abstract class HavaloServlet extends HttpServlet {
 		pool_.submit(delete(context));
 	}
 	
-	public abstract <T extends HavaloEntity> HavaloApiServletClosure
-		<? extends HavaloEntity,? extends Either<HavaloError,T>> trace(
-			final AsyncContext context);
+	public abstract Runnable trace(final AsyncContext context);
 	
 	public abstract <T extends HavaloEntity> HavaloApiServletClosure
-		<? extends HavaloEntity,? extends Either<HavaloError,T>> head(
-			final AsyncContext context);
+		<? extends HavaloEntity> head(final AsyncContext context);
 	
 	public abstract <T extends HavaloEntity> HavaloApiServletClosure
-		<? extends HavaloEntity,? extends Either<HavaloError,T>> get(
-			final AsyncContext context);
+		<? extends HavaloEntity> get(final AsyncContext context);
 	
 	public abstract <T extends HavaloEntity> HavaloApiServletClosure
-		<? extends HavaloEntity,? extends Either<HavaloError,T>> post(
-			final AsyncContext context);
+		<? extends HavaloEntity> post(final AsyncContext context);
 	
 	public abstract <T extends HavaloEntity> HavaloApiServletClosure
-		<? extends HavaloEntity,? extends Either<HavaloError,T>> put(
-			final AsyncContext context);
+		<? extends HavaloEntity> put(final AsyncContext context);
 	
 	public abstract <T extends HavaloEntity> HavaloApiServletClosure
-		<? extends HavaloEntity,? extends Either<HavaloError,T>> delete(
-			final AsyncContext context);
+		<? extends HavaloEntity> delete(final AsyncContext context);
 	
 }

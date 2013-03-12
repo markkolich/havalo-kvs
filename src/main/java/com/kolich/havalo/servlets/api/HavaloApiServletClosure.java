@@ -8,14 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 
-import com.kolich.common.either.Either;
 import com.kolich.havalo.entities.HavaloEntity;
-import com.kolich.havalo.entities.errors.HavaloError;
 import com.kolich.havalo.entities.types.KeyPair;
 
-public abstract
-	class HavaloApiServletClosure<S extends HavaloEntity,E extends Either<HavaloError,S>>
-	implements Runnable {
+public abstract class HavaloApiServletClosure<S extends HavaloEntity> implements Runnable {
 	
 	protected final Logger logger_;
 	
@@ -40,13 +36,13 @@ public abstract
 		userKeyPair_ = getUserFromRequest(request_);
 	}
 	
-	public abstract E doit() throws Exception;
+	public abstract S doit() throws Exception;
 	
 	@Override
 	public final void run() {
 		final String comment = getComment();
 		try {
-			final E either = doit();
+			final S result = doit();
 			
 		} catch (Exception e) {
 			logger_.debug(comment, e);
