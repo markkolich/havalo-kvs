@@ -42,6 +42,7 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity> implements
 	public final void run() {
 		final String comment = getComment();
 		try {
+			logger_.info(comment);
 			final S result = doit();
 			
 		} catch (Exception e) {

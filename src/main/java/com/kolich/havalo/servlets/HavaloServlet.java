@@ -92,7 +92,8 @@ public abstract class HavaloServlet extends HttpServlet {
 		pool_.submit(delete(context));
 	}
 	
-	public abstract Runnable trace(final AsyncContext context);
+	public abstract <T extends HavaloEntity> HavaloApiServletClosure
+		<? extends HavaloEntity> trace(final AsyncContext context);
 	
 	public abstract <T extends HavaloEntity> HavaloApiServletClosure
 		<? extends HavaloEntity> head(final AsyncContext context);

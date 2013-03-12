@@ -33,7 +33,7 @@
 		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>AuthenticateApi</servlet-name>
+		<servlet-name>Authenticate</servlet-name>
 		<url-pattern>/api/authenticate</url-pattern>
 	</servlet-mapping>
 	

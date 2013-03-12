@@ -1,5 +1,7 @@
 package com.kolich.havalo.servlets.api.handlers;
 
+import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
+
 import javax.servlet.AsyncContext;
 
 import org.slf4j.Logger;
@@ -21,6 +23,7 @@ public final class Authenticate extends HavaloApiServlet {
 		return new HavaloApiServletClosure<KeyPair>(logger__, context) {
 			@Override
 			public KeyPair doit() throws Exception {
+				response_.setStatus(SC_NO_CONTENT);
 				return null;
 			}
 		};
