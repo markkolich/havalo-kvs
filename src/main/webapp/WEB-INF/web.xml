@@ -27,14 +27,36 @@
 	</listener>
 		
 	<servlet>
-		<servlet-name>Authenticate</servlet-name>
-		<servlet-class>com.kolich.havalo.servlets.api.handlers.Authenticate</servlet-class>
+		<servlet-name>AuthenticateApi</servlet-name>
+		<servlet-class>com.kolich.havalo.servlets.api.handlers.AuthenticateApi</servlet-class>
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Authenticate</servlet-name>
+		<servlet-name>AuthenticateApi</servlet-name>
 		<url-pattern>/api/authenticate</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ObjectApi</servlet-name>
+		<servlet-class>com.kolich.havalo.servlets.api.handlers.ObjectApi</servlet-class>
+		<load-on-startup>1</load-on-startup>
+		<async-supported>true</async-supported>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ObjectApi</servlet-name>
+		<url-pattern>/api/object/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>RepositoryApi</servlet-name>
+		<servlet-class>com.kolich.havalo.servlets.api.handlers.RepositoryApi</servlet-class>
+		<load-on-startup>1</load-on-startup>
+		<async-supported>true</async-supported>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RepositoryApi</servlet-name>
+		<url-pattern>/api/repository/*</url-pattern>
 	</servlet-mapping>
 	
 	<filter>
@@ -50,14 +72,6 @@
 		<dispatcher>ASYNC</dispatcher>
 	</filter-mapping>
 
-	<error-page>
-		<error-code>400</error-code>
-		<location>/WEB-INF/jsp/errors/400-bad-request.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>401</error-code>
-		<location>/WEB-INF/jsp/errors/401-unauthorized.jsp</location>
-	</error-page>
 	<error-page>
 		<error-code>404</error-code>
 		<location>/WEB-INF/jsp/errors/404-not-found.jsp</location>

@@ -34,6 +34,8 @@ public abstract class HavaloServletClosure<S extends HavaloEntity>
 		method_ = request_.getMethod();
 		requestUri_ = request_.getRequestURI();
 	}
+	
+	public abstract S doit() throws Exception;
 			
 	protected final String getComment() {
 		return String.format("%s:%s", method_, requestUri_);

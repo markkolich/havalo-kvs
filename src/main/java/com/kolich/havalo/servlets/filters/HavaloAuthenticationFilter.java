@@ -41,7 +41,7 @@ public final class HavaloAuthenticationFilter implements Filter {
 		LoggerFactory.getLogger(HavaloAuthenticationFilter.class);
 	
 	public static final String HAVALO_AUTHENTICATION_ATTRIBUTE = "havalo.authentication";
-		
+	
 	private static final String HAVALO_AUTHORIZATION_PREFIX = "Havalo ";
 	private static final String HAVALO_AUTHORIZATION_SEPARATOR = ":";
 	
@@ -120,7 +120,7 @@ public final class HavaloAuthenticationFilter implements Filter {
         			"match (request=" + signature + ", computed=" + computed +
         				")");
         	}
-        	// Successful authentication!
+        	// Success!
         	req.setAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE, userKp);
         	authSuccess = true;
         } catch (UsernameNotFoundException e) {
@@ -131,11 +131,16 @@ public final class HavaloAuthenticationFilter implements Filter {
         	logger__.info("Authentication filter failure; service failed " +
         		"to authenticate request.", e);
         } finally {
+        	// Validate if the request was authenticated successfully.
+        	// If so, then call doFilter() to let the next filter in the chain
+        	// (if any) access to the request.  If authentication failed, then
+        	// immeaditely reject the request and stop processing any other
+        	// filters.
         	if(authSuccess) {
         		chain.doFilter(req, resp);
         	} else {
         		renderError(logger__, resp, new HavaloError(SC_UNAUTHORIZED,
-        			"Authorization failed; either the provided signature " +
+        			"Authentication failed; either the provided signature " +
         			"did not match or you do not have permission to access " +
         			"the requested resource."));
         	}
@@ -150,7 +155,7 @@ public final class HavaloAuthenticationFilter implements Filter {
 		final String dateHeader;
 		if((dateHeader = request.getHeader(DATE)) == null) {
 			throw new BadCredentialsException("Incoming request missing " +
-				"required " + DATE + " HTTP header.");
+				"required '" + DATE + "' request header.");
 		}
 		sb.append(dateHeader).append(LINE_SEPARATOR_UNIX);
 		// Content-Type (from 'Content-Type' request header, optional) + "\n" +

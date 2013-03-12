@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.HavaloError;
+import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.exceptions.HavaloException;
 import com.kolich.havalo.servlets.HavaloServletClosure;
@@ -29,13 +30,18 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 		super(logger, context);
 	}
 	
-	public abstract S doit(final KeyPair userKp) throws Exception;
+	@Override
+	public final S doit() throws Exception {		
+		return execute(getUserFromRequest().getIdKey());
+	}
+	
+	public abstract S execute(final HavaloUUID userId) throws Exception;
 	
 	@Override
 	public final void run() {
 		final String comment = getComment();
 		try {
-			final S result = doit(getUserFromRequest());
+			final S result = doit();
 			// If the extending closure implementation did not return a
 			// result, it returned null, that means it handled+rendered the
 			// response directly and does not need the super closure to
@@ -50,13 +56,17 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 			logger_.info(comment, e);
 			renderError(logger_, response_, e);
 		} finally {
-			// Always finish the context.
+			// Important, always finish the context.
 			context_.complete();
 		}
 	}
 	
-	private final KeyPair getUserFromRequest() {
+	protected final KeyPair getUserFromRequest() {
 		return (KeyPair)request_.getAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE);
+	}
+	
+	protected final String getEndOfRequestURI() {
+		return requestUri_.substring(requestUri_.lastIndexOf("/")+1);
 	}
 	
 	public static final void renderHavaloException(final Logger logger,
