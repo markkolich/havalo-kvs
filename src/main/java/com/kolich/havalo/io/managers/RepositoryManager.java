@@ -27,6 +27,7 @@
 package com.kolich.havalo.io.managers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.net.HttpHeaders.ETAG;
 import static com.kolich.common.util.secure.KolichChecksum.getSHA256Hash;
 import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.apache.commons.io.FileUtils.forceMkdir;
@@ -280,19 +281,19 @@ public final class RepositoryManager extends ObjectStore {
 					return new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
 						@Override
 						public HashedFileObject transaction() throws Exception {
+							final String eTag = hfo.getFirstHeader(ETAG);
 							// If we have an incoming If-Match, we need to
 							// compare that against the current HFO before we
 							// attempt to delete.  If the If-Match ETag does not
 							// match, fail.
-							if(ifMatch != null && hfo.getETag() != null) {
+							if(ifMatch != null && eTag != null) {
 								// OK, we have an incoming If-Match ETag, use it.
-								if(!ifMatch.equals(hfo.getETag())) {
+								if(!ifMatch.equals(eTag)) {
 									throw new ObjectConflictException("Failed " +
 										"to delete HFO; incoming If-Match " +
-											"ETag does not match (hfo=" +
-												hfo.getName() + ", etag=" +
-													hfo.getETag() + ", if-match=" +
-														ifMatch + ")");
+										"ETag does not match (hfo=" +
+										hfo.getName() + ", etag=" +
+										eTag + ", if-match=" + ifMatch + ")");
 								}
 							}
 							// OK, we either didn't have an incoming If-Match

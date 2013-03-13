@@ -154,21 +154,22 @@ public final class ObjectApi extends HavaloApiServlet {
 						return new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
 							@Override
 							public HashedFileObject transaction() throws Exception {
+								final String eTag = hfo.getFirstHeader(ETAG);
 								// If we have an incoming If-Match, we need to compare
 								// that against the current HFO before we attempt to
 								// update.  If the If-Match ETag does not match, fail.
-								if(ifMatch != null && hfo.getETag() != null) {
+								if(ifMatch != null && eTag != null) {
 									// OK, we have an incoming If-Match ETag, use it.
 									// NOTE: HFO's will _always_ have an ETag attached
 									// to their meta-data.  ETag's are always computed
 									// for HFO's upload. But new HFO's (one's the repo
 									// have never seen before) may not yet have an ETag.
-									if(!ifMatch.equals(hfo.getETag())) {
+									if(!ifMatch.equals(eTag)) {
 										throw new ObjectConflictException("Failed " +
 											"to update HFO; incoming If-Match ETag " +
-												"does not match (hfo=" + hfo.getName() +
-													", etag=" + hfo.getETag() +
-														", if-match=" + ifMatch + ")");
+											"does not match (hfo=" + hfo.getName() +
+											", etag=" + eTag + ", if-match=" +
+											ifMatch + ")");
 									}
 								}
 								final DiskObject object = getCanonicalObject(

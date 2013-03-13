@@ -76,10 +76,6 @@ public final class HashedFileObject extends HavaloFileEntity
 		return setHeader(LAST_MODIFIED, lastModified);
 	}
 	
-	public List<String> getETag() {
-		return headers_.get(ETAG);
-	}
-	
 	public HashedFileObject setETag(final String eTag, final boolean quote) {
 		return setHeader(ETAG, (quote) ? String.format("\"%s\"", eTag) : eTag);
 	}
