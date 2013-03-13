@@ -1,6 +1,6 @@
 package com.kolich.havalo.servlets.api;
 
-import static com.kolich.havalo.HavaloServletContextBootstrap.HAVALO_REPO_MANAGER_ATTRIBUTE;
+import static com.kolich.havalo.HavaloServletContext.HAVALO_REPO_MANAGER_ATTRIBUTE;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletConfig;

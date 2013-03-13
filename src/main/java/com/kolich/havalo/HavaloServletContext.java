@@ -24,10 +24,10 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigValue;
 
-public final class HavaloServletContextBootstrap implements ServletContextListener {
+public final class HavaloServletContext implements ServletContextListener {
 	
 	private static final Logger logger__ =
-		LoggerFactory.getLogger(HavaloServletContextBootstrap.class);
+		LoggerFactory.getLogger(HavaloServletContext.class);
 	
 	public static final String HAVALO_CONFIG_ATTRIBUTE = "havalo.config";
 	public static final String HAVALO_REPO_MANAGER_ATTRIBUTE = "havalo.repomanager";

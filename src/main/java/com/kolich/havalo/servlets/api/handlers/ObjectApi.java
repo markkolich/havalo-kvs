@@ -11,12 +11,15 @@ import static com.kolich.common.util.secure.KolichChecksum.getSHA1HashAndCopy;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.io.IOUtils.copyLarge;
+import static org.apache.commons.lang3.Validate.notEmpty;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.AsyncContext;
@@ -43,6 +46,8 @@ public final class ObjectApi extends HavaloApiServlet {
 	private static final Logger logger__ =
 		LoggerFactory.getLogger(ObjectApi.class);
 	
+	private static final String OCTET_STREAM_HEADER = OCTET_STREAM.toString();
+	
 	@Override
 	public final <S extends HavaloEntity> HavaloApiServletClosure<S>
 		head(final AsyncContext context) {
@@ -53,9 +58,12 @@ public final class ObjectApi extends HavaloApiServlet {
 				new ReentrantReadWriteEntityLock<Void>(repo) {
 					@Override
 					public Void transaction() throws Exception {
+						// URL-decode the incoming key (the name of the object)
+						final String key = urlDecode(getEndOfRequestURI());							
+						notEmpty(key, "Key cannot be null or empty.");
 						final HashedFileObject hfo = getHashedFileObject(repo,
-							// URL-decode the incoming key on the path.
-							urlDecode(getEndOfRequestURI()),
+							// The URL-decoded key of the object to delete.
+							key,
 							// Fail if not found.
 							true);
 						new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
@@ -86,9 +94,12 @@ public final class ObjectApi extends HavaloApiServlet {
 				new ReentrantReadWriteEntityLock<Void>(repo) {
 					@Override
 					public Void transaction() throws Exception {
+						// URL-decode the incoming key (the name of the object)
+						final String key = urlDecode(getEndOfRequestURI());							
+						notEmpty(key, "Key cannot be null or empty.");
 						final HashedFileObject hfo = getHashedFileObject(repo,
-							// URL-decode the incoming key on the path.
-							urlDecode(getEndOfRequestURI()),
+							// The URL-decoded key of the object to delete.
+							key,
 							// Fail if not found.
 							true);
 						new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
@@ -134,11 +145,12 @@ public final class ObjectApi extends HavaloApiServlet {
 				return new ReentrantReadWriteEntityLock<HashedFileObject>(repo) {
 					@Override
 					public HashedFileObject transaction() throws Exception {
+						// URL-decode the incoming key (the name of the object)
+						final String key = urlDecode(getEndOfRequestURI());							
+						notEmpty(key, "Key cannot be null or empty.");
 						final String contentType = request_.getHeader(CONTENT_TYPE);
 						final String ifMatch = request_.getHeader(IF_MATCH);
-						final HashedFileObject hfo = getHashedFileObject(repo,
-							// URL-decode the incoming key (the name of the object)
-							urlDecode(getEndOfRequestURI()));
+						final HashedFileObject hfo = getHashedFileObject(repo, key);
 						return new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
 							@Override
 							public HashedFileObject transaction() throws Exception {
@@ -194,7 +206,7 @@ public final class ObjectApi extends HavaloApiServlet {
 								}
 								// Append an ETag header to the response for the
 								// PUT'ed object.
-								response_.addHeader(ETAG, hfo.getETag());
+								response_.addHeader(ETAG, hfo.getFirstHeader(ETAG));
 								return hfo;
 							}
 							@Override
@@ -217,13 +229,16 @@ public final class ObjectApi extends HavaloApiServlet {
 		return new HavaloApiServletClosure<S>(logger__, context) {
 			@Override
 			public S execute(final HavaloUUID userId) throws Exception {
+				// URL-decode the incoming key (the name of the object)
+				final String key = urlDecode(getEndOfRequestURI());							
+				notEmpty(key, "Key cannot be null or empty.");
 				final String ifMatch = request_.getHeader(IF_MATCH);
 				// The delete operation does return a pointer to the "deleted"
 				// HFO, but we're not using it, we're just dropping it on the
 				// floor (intentionally not returning it to the caller).
 				deleteHashedFileObject(userId,
-					// URL-decode the incoming key on the path.
-					urlDecode(getEndOfRequestURI()),
+					// The URL-decoded key of the object to delete.
+					key,
 					// Only delete the object if the provided ETag via the
 					// If-Match header matches the object on disk.
 					ifMatch);
@@ -247,19 +262,24 @@ public final class ObjectApi extends HavaloApiServlet {
 					", key=" + hfo.getName() + ")");
 		}
 		// Extract any response headers from this objects' meta data.
-		final Map<String,String> headers = hfo.getHeaders();
+		final Map<String,List<String>> headers = hfo.getHeaders();
 		// Always set the Content-Length header to the actual length of the
 		// file on disk -- effectively overriding any "Content-Length" meta
 		// data header set by the user in the PUT request.
-		headers.put(CONTENT_LENGTH, Long.toString(object.getFile().length()));
+		headers.put(CONTENT_LENGTH, Arrays.asList(new String[]{
+			Long.toString(object.getFile().length())}));
 		// Set the Content-Type header to a default if one was not set by
 		// the consumer in the meta data.
 		if(headers.get(CONTENT_TYPE) == null) {
-			headers.put(CONTENT_TYPE, OCTET_STREAM.toString());
+			headers.put(CONTENT_TYPE, Arrays.asList(new String[]{
+				OCTET_STREAM_HEADER}));
 		}
 		// Now, send all headers to the response stream.
-		for(final Map.Entry<String, String> entry : headers.entrySet()) {
-			response.addHeader(entry.getKey(), entry.getValue());
+		for(final Map.Entry<String, List<String>> entry : headers.entrySet()) {
+			final String key = entry.getKey();
+			for(final String value : entry.getValue()) {
+				response.addHeader(key, value);
+			}
 		}
 	}
 	

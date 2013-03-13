@@ -1,6 +1,6 @@
 package com.kolich.havalo.servlets;
 
-import static com.kolich.havalo.HavaloServletContextBootstrap.HAVALO_CONFIG_ATTRIBUTE;
+import static com.kolich.havalo.HavaloServletContext.HAVALO_CONFIG_ATTRIBUTE;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

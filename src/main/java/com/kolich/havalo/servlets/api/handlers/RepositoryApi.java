@@ -1,6 +1,8 @@
 package com.kolich.havalo.servlets.api.handlers;
 
+import static com.kolich.common.util.URLEncodingUtils.urlDecode;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
+import static org.apache.commons.lang3.Validate.notEmpty;
 
 import java.util.Arrays;
 
@@ -16,6 +18,7 @@ import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.ObjectList;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.entities.types.UserRole;
+import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.servlets.api.HavaloApiServlet;
 import com.kolich.havalo.servlets.api.HavaloApiServletClosure;
 
@@ -76,17 +79,18 @@ public final class RepositoryApi extends HavaloApiServlet {
 		return new HavaloApiServletClosure<S>(logger__, context) {
 			@Override
 			public S execute(final HavaloUUID userId) throws Exception {
-				final HavaloUUID toDelete = new HavaloUUID(getEndOfRequestURI());
-				// TODO need to get the admin repo UUID here and prevent
-				// deletion of that UUID
-				/*
+				// URL-decode the incoming key (the UUID of the repo)
+				final String key = urlDecode(getEndOfRequestURI());							
+				notEmpty(key, "Key cannot be null or empty.");
+				final HavaloUUID toDelete = new HavaloUUID(key);
+				final HavaloUUID adminId = new HavaloUUID(
+					getAppConfig().getString("havalo.api.admin.uuid"));
 				// Admin users cannot delete the "admin" repository.
-				if(properties_.getAdminApiUUID().equals(toDelete)) {
+				if(adminId.equals(toDelete)) {
 					throw new RepositoryForbiddenException("Authenticated " +
 						"admin user attempted to delete admin repository: " +
 						toDelete.getId());
 				}
-				*/
 				// Attempt to delete the repository, its meta data, and all
 				// objects inside of it.
 				deleteRepository(toDelete);

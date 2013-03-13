@@ -23,7 +23,7 @@
 	</session-config>
 	
 	<listener>
-		<listener-class>com.kolich.havalo.HavaloServletContextBootstrap</listener-class>
+		<listener-class>com.kolich.havalo.HavaloServletContext</listener-class>
 	</listener>
 		
 	<servlet>

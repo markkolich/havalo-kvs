@@ -3,7 +3,7 @@ package com.kolich.havalo.servlets.filters;
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.HttpHeaders.DATE;
-import static com.kolich.havalo.HavaloServletContextBootstrap.HAVALO_USER_SERVICE_ATTRIBUTE;
+import static com.kolich.havalo.HavaloServletContext.HAVALO_USER_SERVICE_ATTRIBUTE;
 import static com.kolich.havalo.servlets.api.HavaloApiServletClosure.renderError;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;

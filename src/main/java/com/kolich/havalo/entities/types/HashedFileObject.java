@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Mark S. Kolich
+ * Copyright (c) 2013 Mark S. Kolich
  * http://mark.koli.ch
  *
  * Permission is hereby granted, free of charge, to any person
@@ -32,7 +32,9 @@ import static com.google.common.net.HttpHeaders.ETAG;
 import static com.google.common.net.HttpHeaders.LAST_MODIFIED;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -46,15 +48,15 @@ public final class HashedFileObject extends HavaloFileEntity
 	private static final long serialVersionUID = 7496664023986725650L;
 						
 	@SerializedName("headers")
-	private final Map<String,String> headers_;
+	private final Map<String,List<String>> headers_;
 		
-	public HashedFileObject(final String name, final Map<String,String> headers) {
+	public HashedFileObject(final String name, final Map<String,List<String>> headers) {
 		super(name);
 		headers_ = headers;
 	}
 	
 	public HashedFileObject(final String name) {
-		this(name, new ConcurrentHashMap<String,String>());
+		this(name, new ConcurrentHashMap<String,List<String>>());
 	}
 		
 	// For GSON
@@ -71,17 +73,15 @@ public final class HashedFileObject extends HavaloFileEntity
 	}
 	
 	public HashedFileObject setLastModified(final String lastModified) {
-		headers_.put(LAST_MODIFIED, lastModified);
-		return this;
+		return setHeader(LAST_MODIFIED, lastModified);
 	}
 	
-	public String getETag() {
+	public List<String> getETag() {
 		return headers_.get(ETAG);
 	}
 	
 	public HashedFileObject setETag(final String eTag, final boolean quote) {
-		headers_.put(ETAG, (quote) ? String.format("\"%s\"", eTag) : eTag);
-		return this;
+		return setHeader(ETAG, (quote) ? String.format("\"%s\"", eTag) : eTag);
 	}
 	
 	public HashedFileObject setETag(String eTag) {
@@ -94,8 +94,7 @@ public final class HashedFileObject extends HavaloFileEntity
 	 * @return
 	 */
 	public HashedFileObject setContentLength(final long contentLength) {
-		headers_.put(CONTENT_LENGTH, Long.toString(contentLength));
-		return this;
+		return setHeader(CONTENT_LENGTH, Long.toString(contentLength));
 	}
 	
 	/**
@@ -104,8 +103,7 @@ public final class HashedFileObject extends HavaloFileEntity
 	 * @return
 	 */
 	public HashedFileObject setContentType(final String contentType) {
-		headers_.put(CONTENT_TYPE, contentType);
-		return this;
+		return setHeader(CONTENT_TYPE, contentType);
 	}
 	
 	/**
@@ -117,10 +115,27 @@ public final class HashedFileObject extends HavaloFileEntity
 	 */
 	public HashedFileObject setHeader(final String headerName,
 		final String headerValue) {
-		headers_.put(headerName, headerValue);
+		List<String> list = null;
+		if((list = headers_.get(headerName)) == null) {
+			list = new ArrayList<String>();
+		}
+		list.add(headerValue);
+		headers_.put(headerName, list);
 		return this;
 	}
-		
+	
+	public List<String> getHeader(String name) {
+		return headers_.get(name);
+	}
+	
+	public String getFirstHeader(String name) {
+		final List<String> headers;
+		if((headers = getHeader(name)) != null) {
+			return headers.get(0);
+		}
+		return null;
+	}
+	
 	/**
 	 * Returns a thread-safe (deep) copy of the underlying {@link HttpHeaders}
 	 * object associated with this {@link HashedFileObject} entity.  Any
@@ -128,8 +143,8 @@ public final class HashedFileObject extends HavaloFileEntity
 	 * the {@link HttpHeaders} stored with this entity.
 	 * @return
 	 */
-	public Map<String,String> getHeaders() {
-		return new ConcurrentHashMap<String,String>(headers_);
+	public Map<String,List<String>> getHeaders() {
+		return new ConcurrentHashMap<String,List<String>>(headers_);
 	}
 	
 	// Straight from Eclipse
