@@ -26,16 +26,18 @@
 
 package com.kolich.havalo.exceptions;
 
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+
 public class BadHavaloUUIDException extends HavaloException {
 
 	private static final long serialVersionUID = -7473419765855248861L;
 	
 	public BadHavaloUUIDException(String message, Throwable cause) {
-		super(message, cause, 400);
+		super(message, cause, SC_BAD_REQUEST);
 	}
 
 	public BadHavaloUUIDException(String message) {
-		super(message, 400);
+		super(message, SC_BAD_REQUEST);
 	}
 	
 }

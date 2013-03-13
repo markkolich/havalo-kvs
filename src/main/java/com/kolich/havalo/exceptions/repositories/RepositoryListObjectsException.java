@@ -26,6 +26,8 @@
 
 package com.kolich.havalo.exceptions.repositories;
 
+import static javax.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
+
 import com.kolich.havalo.exceptions.HavaloException;
 
 public class RepositoryListObjectsException extends HavaloException {
@@ -33,15 +35,15 @@ public class RepositoryListObjectsException extends HavaloException {
 	private static final long serialVersionUID = -5411964989988723917L;
 
 	public RepositoryListObjectsException(String message, Throwable cause) {
-		super(message, cause, 503);
+		super(message, cause, SC_SERVICE_UNAVAILABLE);
 	}
 	
 	public RepositoryListObjectsException(Throwable cause) {
-		super(cause, 503);
+		super(cause, SC_SERVICE_UNAVAILABLE);
 	}
 	
 	public RepositoryListObjectsException(String message) {
-		super(message, 503);
+		super(message, SC_SERVICE_UNAVAILABLE);
 	}
 	
 }

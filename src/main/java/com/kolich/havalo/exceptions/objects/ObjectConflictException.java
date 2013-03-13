@@ -26,6 +26,8 @@
 
 package com.kolich.havalo.exceptions.objects;
 
+import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
+
 import com.kolich.havalo.exceptions.HavaloException;
 
 public class ObjectConflictException extends HavaloException {
@@ -33,15 +35,15 @@ public class ObjectConflictException extends HavaloException {
 	private static final long serialVersionUID = -7951798714052960609L;
 
 	public ObjectConflictException(String message, Throwable cause) {
-		super(message, cause, 409);
+		super(message, cause, SC_CONFLICT);
 	}
 	
 	public ObjectConflictException(Throwable cause) {
-		super(cause, 409);
+		super(cause, SC_CONFLICT);
 	}
 	
 	public ObjectConflictException(String message) {
-		super(message, 409);
+		super(message, SC_CONFLICT);
 	}
 	
 }

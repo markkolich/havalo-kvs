@@ -26,6 +26,8 @@
 
 package com.kolich.havalo.exceptions.repositories;
 
+import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
+
 import com.kolich.havalo.exceptions.HavaloException;
 
 public class DuplicateRepositoryException extends HavaloException {
@@ -33,15 +35,15 @@ public class DuplicateRepositoryException extends HavaloException {
 	private static final long serialVersionUID = 1010104860922675369L;
 
 	public DuplicateRepositoryException(String message, Throwable cause) {
-		super(message, cause, 409);
+		super(message, cause, SC_CONFLICT);
 	}
 	
 	public DuplicateRepositoryException(Throwable cause) {
-		super(cause, 409);
+		super(cause, SC_CONFLICT);
 	}
 	
 	public DuplicateRepositoryException(String message) {
-		super(message, 409);
+		super(message, SC_CONFLICT);
 	}
 	
 }

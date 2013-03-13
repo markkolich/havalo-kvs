@@ -26,6 +26,8 @@
 
 package com.kolich.havalo.exceptions.repositories;
 
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+
 import com.kolich.havalo.exceptions.HavaloException;
 
 public class RepositoryForbiddenException extends HavaloException {
@@ -33,15 +35,15 @@ public class RepositoryForbiddenException extends HavaloException {
 	private static final long serialVersionUID = -133550392596790326L;
 
 	public RepositoryForbiddenException(String message, Throwable cause) {
-		super(message, cause, 403);
+		super(message, cause, SC_FORBIDDEN);
 	}
 	
 	public RepositoryForbiddenException(Throwable cause) {
-		super(cause, 403);
+		super(cause, SC_FORBIDDEN);
 	}
 	
 	public RepositoryForbiddenException(String message) {
-		super(message, 403);
+		super(message, SC_FORBIDDEN);
 	}
 
 }

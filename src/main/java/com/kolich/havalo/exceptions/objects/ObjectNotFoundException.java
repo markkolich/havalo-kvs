@@ -26,6 +26,8 @@
 
 package com.kolich.havalo.exceptions.objects;
 
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+
 import com.kolich.havalo.exceptions.HavaloException;
 
 public class ObjectNotFoundException extends HavaloException {
@@ -33,15 +35,15 @@ public class ObjectNotFoundException extends HavaloException {
 	private static final long serialVersionUID = 5686431043127205040L;
 
 	public ObjectNotFoundException(String message, Throwable cause) {
-		super(message, cause, 404);
+		super(message, cause, SC_NOT_FOUND);
 	}
 	
 	public ObjectNotFoundException(Throwable cause) {
-		super(cause, 404);
+		super(cause, SC_NOT_FOUND);
 	}
 	
 	public ObjectNotFoundException(String message) {
-		super(message, 404);
+		super(message, SC_NOT_FOUND);
 	}
 	
 }

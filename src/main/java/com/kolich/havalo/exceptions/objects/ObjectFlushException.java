@@ -26,6 +26,8 @@
 
 package com.kolich.havalo.exceptions.objects;
 
+import static javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED;
+
 import com.kolich.havalo.exceptions.HavaloException;
 
 public class ObjectFlushException extends HavaloException {
@@ -33,15 +35,15 @@ public class ObjectFlushException extends HavaloException {
 	private static final long serialVersionUID = 3980139747975745999L;
 
 	public ObjectFlushException(String message, Throwable cause) {
-		super(message, cause, 412);
+		super(message, cause, SC_PRECONDITION_FAILED);
 	}
 	
 	public ObjectFlushException(Throwable cause) {
-		super(cause, 412);
+		super(cause, SC_PRECONDITION_FAILED);
 	}
 	
 	public ObjectFlushException(String message) {
-		super(message, 412);
+		super(message, SC_PRECONDITION_FAILED);
 	}
 	
 }

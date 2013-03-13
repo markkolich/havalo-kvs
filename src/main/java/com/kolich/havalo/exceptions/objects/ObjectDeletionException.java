@@ -26,6 +26,8 @@
 
 package com.kolich.havalo.exceptions.objects;
 
+import static javax.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
+
 import com.kolich.havalo.exceptions.HavaloException;
 
 public class ObjectDeletionException extends HavaloException {
@@ -33,15 +35,15 @@ public class ObjectDeletionException extends HavaloException {
 	private static final long serialVersionUID = 4875646775404503031L;
 
 	public ObjectDeletionException(String message, Throwable cause) {
-		super(message, cause, 503);
+		super(message, cause, SC_SERVICE_UNAVAILABLE);
 	}
 	
 	public ObjectDeletionException(Throwable cause) {
-		super(cause, 503);
+		super(cause, SC_SERVICE_UNAVAILABLE);
 	}
 	
 	public ObjectDeletionException(String message) {
-		super(message, 503);
+		super(message, SC_SERVICE_UNAVAILABLE);
 	}
 	
 }

@@ -26,6 +26,8 @@
 
 package com.kolich.havalo.exceptions.repositories;
 
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+
 import com.kolich.havalo.exceptions.HavaloException;
 
 public class RepositoryNotFoundException extends HavaloException {
@@ -33,15 +35,15 @@ public class RepositoryNotFoundException extends HavaloException {
 	private static final long serialVersionUID = -1714010225115461107L;
 
 	public RepositoryNotFoundException(String message, Throwable cause) {
-		super(message, cause, 404);
+		super(message, cause, SC_NOT_FOUND);
 	}
 	
 	public RepositoryNotFoundException(Throwable cause) {
-		super(cause, 404);
+		super(cause, SC_NOT_FOUND);
 	}
 	
 	public RepositoryNotFoundException(String message) {
-		super(message, 404);
+		super(message, SC_NOT_FOUND);
 	}
 	
 }

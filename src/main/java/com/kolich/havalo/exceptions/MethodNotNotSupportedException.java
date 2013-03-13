@@ -26,12 +26,14 @@
 
 package com.kolich.havalo.exceptions;
 
+import static javax.servlet.http.HttpServletResponse.SC_METHOD_NOT_ALLOWED;
+
 public class MethodNotNotSupportedException extends HavaloException {
 
 	private static final long serialVersionUID = -7863924412834952274L;
 
 	public MethodNotNotSupportedException() {
-		super("Request method not allowed or supported.", 405);
+		super("Request method not allowed or supported.", SC_METHOD_NOT_ALLOWED);
 	}
 	
 }

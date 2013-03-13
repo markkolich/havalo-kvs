@@ -26,6 +26,8 @@
 
 package com.kolich.havalo.exceptions.repositories;
 
+import static javax.servlet.http.HttpServletResponse.SC_PRECONDITION_FAILED;
+
 import com.kolich.havalo.exceptions.HavaloException;
 
 public class RepositoryFlushException extends HavaloException {
@@ -33,15 +35,15 @@ public class RepositoryFlushException extends HavaloException {
 	private static final long serialVersionUID = 8823937804053430912L;
 
 	public RepositoryFlushException(String message, Throwable cause) {
-		super(message, cause, 412);
+		super(message, cause, SC_PRECONDITION_FAILED);
 	}
 	
 	public RepositoryFlushException(Throwable cause) {
-		super(cause, 412);
+		super(cause, SC_PRECONDITION_FAILED);
 	}
 	
 	public RepositoryFlushException(String message) {
-		super(message, 412);
+		super(message, SC_PRECONDITION_FAILED);
 	}
 	
 }

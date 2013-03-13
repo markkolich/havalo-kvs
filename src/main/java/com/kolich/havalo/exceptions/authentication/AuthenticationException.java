@@ -26,6 +26,8 @@
 
 package com.kolich.havalo.exceptions.authentication;
 
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+
 import com.kolich.havalo.exceptions.HavaloException;
 
 public class AuthenticationException extends HavaloException {
@@ -33,15 +35,15 @@ public class AuthenticationException extends HavaloException {
 	private static final long serialVersionUID = -3112819251217503077L;
 	
 	public AuthenticationException(String message, Throwable cause) {
-		super(message, cause, 401);
+		super(message, cause, SC_UNAUTHORIZED);
 	}
 
 	public AuthenticationException(String message) {
-		super(message, 401);
+		super(message, SC_UNAUTHORIZED);
 	}
 	
 	public AuthenticationException(Throwable cause) {
-		super(cause, 401);
+		super(cause, SC_UNAUTHORIZED);
 	}
 
 }
