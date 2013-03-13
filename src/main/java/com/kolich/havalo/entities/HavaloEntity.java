@@ -27,7 +27,6 @@
 package com.kolich.havalo.entities;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 import java.io.File;
 import java.util.Date;
@@ -94,9 +93,5 @@ public abstract class HavaloEntity extends KolichCommonEntity {
 	public final String toString() {
 		return getHavaloGsonInstance().toJson(this);
 	}
-	
-	public int getStatusCode() {
-		return SC_OK;
-	}
-		
+			
 }
