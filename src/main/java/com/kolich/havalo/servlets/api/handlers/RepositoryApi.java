@@ -68,7 +68,7 @@ public final class RepositoryApi extends HavaloApiServlet {
 				// the resources associated with this access key will sit
 				// under this base repository (some directory on disk).
 				createRepository(kp.getIdKey(), kp);
-				return kp; 
+				return kp;
 			}
 		};
 	}

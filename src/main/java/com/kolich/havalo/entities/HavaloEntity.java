@@ -27,9 +27,9 @@
 package com.kolich.havalo.entities;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.ardverk.collection.Trie;
@@ -49,15 +49,9 @@ import com.kolich.havalo.entities.types.Repository;
  * Any entity should extend this abstract class, {@link HavaloEntity}.
  */
 public abstract class HavaloEntity extends KolichCommonEntity {
-			
+				
 	/**
 	 * Get a new {@link GsonBuilder} instance, configured accordingly.
-	 * @param prettyPrint pretty do you want the JSON to be pretty printed?
-	 * @param serializeNulls should null values be included in the serialized
-	 * json?
-	 * @param dateFormat the format to use when serializing and deserializing
-	 * Date objects. Note that this pattern must abide by the convention
-	 * provided by the {@link SimpleDateFormat} class.  
 	 * @return
 	 */
 	public static final GsonBuilder getHavaloGsonBuilder() {
@@ -99,6 +93,10 @@ public abstract class HavaloEntity extends KolichCommonEntity {
 	@Override
 	public final String toString() {
 		return getHavaloGsonInstance().toJson(this);
+	}
+	
+	public int getStatusCode() {
+		return SC_OK;
 	}
 		
 }
