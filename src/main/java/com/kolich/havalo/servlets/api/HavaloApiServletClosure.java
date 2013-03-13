@@ -3,6 +3,7 @@ package com.kolich.havalo.servlets.api;
 import static com.google.common.net.MediaType.JSON_UTF_8;
 import static com.kolich.common.DefaultCharacterEncoding.UTF_8;
 import static com.kolich.havalo.servlets.filters.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
@@ -52,6 +53,9 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 		} catch (HavaloException e) {
 			logger_.info(comment, e);
 			renderHavaloException(logger_, response_, e);
+		} catch (IllegalArgumentException e) {
+			logger_.info(comment, e);
+			renderError(logger_, response_, SC_BAD_REQUEST, e);
 		} catch (Exception e) {
 			logger_.info(comment, e);
 			renderError(logger_, response_, e);
@@ -77,8 +81,13 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 	
 	public static final void renderError(final Logger logger,
 		final HttpServletResponse response, final Exception e) {
-		renderError(logger, response, new HavaloError(SC_INTERNAL_SERVER_ERROR,
-			e.getMessage(), e));
+		renderError(logger, response, SC_INTERNAL_SERVER_ERROR, e);
+	}
+	
+	public static final void renderError(final Logger logger,
+		final HttpServletResponse response, final int status,
+		final Exception e) {
+		renderError(logger, response, new HavaloError(status, e.getMessage(), e));
 	}
 	
 	public static final void renderError(final Logger logger,
