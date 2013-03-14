@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Mark S. Kolich
+ * Copyright (c) 2013 Mark S. Kolich
  * http://mark.koli.ch
  *
  * Permission is hereby granted, free of charge, to any person
@@ -27,6 +27,7 @@
 package com.kolich.havalo.io.stores;
 
 import static com.kolich.common.DefaultCharacterEncoding.UTF_8;
+import static java.util.zip.Deflater.BEST_COMPRESSION;
 import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 
@@ -39,7 +40,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.zip.Deflater;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -55,24 +55,7 @@ public abstract class MetaObjectStore extends ObjectStore implements MetaStore {
 	public MetaObjectStore(final File storeDir) {
 		super(storeDir);
 	}
-	
-	/*
-	@Override
-	public String getString(final String index) {
-		// Attempt to read the file from disk into memory.
-		Reader reader = null;
-		try {
-			reader = getReader(index);
-			return IOUtils.toString(reader);
-		} catch (Exception e) {
-			throw new ObjectLoadException("Failed to read entity: " +
-				index, e);
-		} finally {
-			closeQuietly(reader);
-		}
-	}
-	*/
-	
+		
 	/**
 	 * The caller is most definitely responsible for closing the
 	 * returned {@link Reader} when finished with it.
@@ -103,7 +86,7 @@ public abstract class MetaObjectStore extends ObjectStore implements MetaStore {
 			gos = new GZIPOutputStream(fos) {
 				// Ugly anonymous constructor hack to set the compression
 				// level on the underlying Deflater to "max compression".
-				{ def.setLevel(Deflater.BEST_COMPRESSION); }
+				{ def.setLevel(BEST_COMPRESSION); }
 			};
 			writer = new OutputStreamWriter(gos, UTF_8);
 			// Call the entity to write itself to the output stream.

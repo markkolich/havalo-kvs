@@ -26,36 +26,22 @@
 
 package com.kolich.havalo.exceptions;
 
-import com.kolich.common.KolichCommonException;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
-public class HavaloException extends KolichCommonException {
-	
-	private static final long serialVersionUID = -7889750833064607753L;
-	
-	private final int statusCode_;
+public class BootstrapException extends HavaloException {
 
-	public HavaloException(String message, Throwable cause, int statusCode) {
-		super(message, cause);
-		statusCode_ = statusCode;
+	private static final long serialVersionUID = -7473419765855248861L;
+	
+	public BootstrapException(String message, Throwable cause) {
+		super(message, cause, SC_INTERNAL_SERVER_ERROR);
+	}
+
+	public BootstrapException(String message) {
+		super(message, SC_INTERNAL_SERVER_ERROR);
 	}
 	
-	public HavaloException(Throwable cause, int statusCode) {
-		super(cause);
-		statusCode_ = statusCode;
-	}
-	
-	public HavaloException(String message, int statusCode) {
-		super(message);
-		statusCode_ = statusCode;
-	}
-	
-	public HavaloException(int statusCode) {
-		super();
-		statusCode_ = statusCode;
+	public BootstrapException() {
+		super(SC_INTERNAL_SERVER_ERROR);
 	}
 		
-	public int getStatusCode() {
-		return statusCode_;
-	}
-	
 }

@@ -1,9 +1,35 @@
+/**
+ * Copyright (c) 2013 Mark S. Kolich
+ * http://mark.koli.ch
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.kolich.havalo.servlets.filters;
 
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.HttpHeaders.DATE;
-import static com.kolich.havalo.HavaloServletContext.HAVALO_USER_SERVICE_ATTRIBUTE;
+import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE;
 import static com.kolich.havalo.servlets.api.HavaloApiServletClosure.renderError;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
@@ -52,7 +78,7 @@ public final class HavaloAuthenticationFilter implements Filter {
 		logger__.info("In init()");
 		final ServletContext context = fConfig.getServletContext();		
 		userService_ = (HavaloUserService)context
-			.getAttribute(HAVALO_USER_SERVICE_ATTRIBUTE);
+			.getAttribute(HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE);
 	}
 	
 	@Override

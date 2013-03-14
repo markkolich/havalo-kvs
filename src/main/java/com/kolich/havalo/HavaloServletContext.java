@@ -1,3 +1,29 @@
+/**
+ * Copyright (c) 2013 Mark S. Kolich
+ * http://mark.koli.ch
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.kolich.havalo;
 
 import static com.kolich.havalo.entities.types.UserRole.ADMIN;
@@ -5,6 +31,7 @@ import static com.kolich.havalo.entities.types.UserRole.ADMIN;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -16,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.UserRole;
+import com.kolich.havalo.exceptions.BootstrapException;
 import com.kolich.havalo.exceptions.HavaloException;
 import com.kolich.havalo.exceptions.repositories.RepositoryCreationException;
 import com.kolich.havalo.io.managers.RepositoryManager;
@@ -29,9 +57,15 @@ public final class HavaloServletContext implements ServletContextListener {
 	private static final Logger logger__ =
 		LoggerFactory.getLogger(HavaloServletContext.class);
 	
-	public static final String HAVALO_CONFIG_ATTRIBUTE = "havalo.config";
-	public static final String HAVALO_REPO_MANAGER_ATTRIBUTE = "havalo.repomanager";
-	public static final String HAVALO_USER_SERVICE_ATTRIBUTE = "havalo.userservice";
+	public static final String HAVALO_CONTEXT_CONFIG_ATTRIBUTE = "havalo.config";
+	public static final String HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE = "havalo.repomanager";
+	public static final String HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE = "havalo.userservice";
+	
+	public static final String HAVALO_REPO_BASE_CONFIG_PROPERTY = "havalo.repository.base";
+	public static final String HAVALO_ADMIN_API_UUID_PROPERTY = "havalo.api.admin.uuid";
+	public static final String HAVALO_ADMIN_API_SECRET_PROPERTY = "havalo.api.admin.secret";
+	
+	private static final String REPO_BASE_DEFAULT = "WEB-INF/work";
 	
 	private ServletContext context_;
 			
@@ -43,38 +77,47 @@ public final class HavaloServletContext implements ServletContextListener {
 		// Load and build the application configuration, then attach the
 		// loaded immutable config to the servlet context. 
 		final Config config = ConfigFactory.load();
-		context_.setAttribute(HAVALO_REPO_MANAGER_ATTRIBUTE, config);
+		context_.setAttribute(HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE, config);
 		for(final Map.Entry<String,ConfigValue> entry : config.entrySet()) {
-		    logger__.debug("Loaded config (key=" + entry.getKey() + ", value=" +
-		    	entry.getValue() + ")");
+		    logger__.trace("Loaded config (key=" + entry.getKey() +
+		    	", value=" + entry.getValue() + ")");
 		}
 		// Attach the underlying configuration to the servlet context too.
-		context_.setAttribute(HAVALO_CONFIG_ATTRIBUTE, config);
+		context_.setAttribute(HAVALO_CONTEXT_CONFIG_ATTRIBUTE, config);
 		// Create a new repository manager based on the desired
 		// underlying repository root directory on disk.
 		final RepositoryManager repoManager = createInitialAdminRepository(context_, config);
-		context_.setAttribute(HAVALO_REPO_MANAGER_ATTRIBUTE, repoManager);
+		context_.setAttribute(HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE, repoManager);
 		// Create a new user lookup (auth) service.
 		final HavaloUserService userService = createUserService(repoManager);
-		context_.setAttribute(HAVALO_USER_SERVICE_ATTRIBUTE, userService);
+		context_.setAttribute(HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE, userService);
 	}
 
 	@Override
 	public void contextDestroyed(final ServletContextEvent event) {
-		logger__.debug("Servlet context destroyed.");
-		// TODO anything?
+		logger__.info("Servlet context destroyed.");
 	}
 	
 	private static final RepositoryManager getRepositoryManager(
 		final ServletContext context, final Config config) {
-		final String repositoryBase = config.getString("havalo.repository.base");
+		String repositoryBase = config.getString(HAVALO_REPO_BASE_CONFIG_PROPERTY);
 		if(repositoryBase == null) {
-			// TODO throw exception
+			logger__.warn("Config property '" + HAVALO_REPO_BASE_CONFIG_PROPERTY +
+				"' was not set, using default repository base: " +
+				REPO_BASE_DEFAULT);
+			repositoryBase = REPO_BASE_DEFAULT;
 		}
-		// Interpret location as relative to the web application root directory.
-		final File realPath = new File(context.getRealPath(
-			(!repositoryBase.startsWith("/")) ? "/" + repositoryBase :
-				repositoryBase));
+		// If the provided repository base path starts with a slash, then
+		// interpret the location as an absolute path on disk.  Otherwise,
+		// no preceding slash indicates a path relative to the web application
+		// root directory.		
+		final File realPath;
+		if(repositoryBase.startsWith("/")) {
+			realPath = new File(repositoryBase);
+		} else {
+			realPath = new File(context.getRealPath("/" + repositoryBase));
+		}
+		logger__.info("Using repository root at: " + realPath.getAbsolutePath());
 		return new RepositoryManager(realPath);
 	}
 	
@@ -83,9 +126,33 @@ public final class HavaloServletContext implements ServletContextListener {
 		RepositoryManager repoManager = null;
 		try {
 			repoManager = getRepositoryManager(context, config);
-			final String adminUUID = config.getString("havalo.api.admin.uuid");
-			final String adminSecret = config.getString("havalo.api.admin.secret");
-			// TODO log admin UUID and admin secret
+			final String adminUUID = config.getString(HAVALO_ADMIN_API_UUID_PROPERTY);
+			if(adminUUID == null) {
+				logger__.error("Config property '" +
+					HAVALO_ADMIN_API_UUID_PROPERTY + "' not set. Cannot " +
+					"start until this property contains a valid UUID.");
+				throw new BootstrapException();
+			} else {
+				try {
+					UUID.fromString(adminUUID);
+				} catch (Exception e) {
+					logger__.error("Config property '" +
+						HAVALO_ADMIN_API_UUID_PROPERTY + "' was set, but " +
+						"did not contain a valid UUID. Cannot " +
+						"start until this property contains a valid UUID.", e);
+					throw new BootstrapException();
+				}
+			}
+			// Verify a proper admin API accout secret is set.			
+			final String adminSecret = config.getString(HAVALO_ADMIN_API_SECRET_PROPERTY);
+			if(adminSecret == null) {
+				logger__.error("Config property '" +
+					HAVALO_ADMIN_API_SECRET_PROPERTY + "' not set. Cannot " +
+					"start until this property contains a valid secret.");
+				throw new BootstrapException();
+			}
+			logger__.debug("Admin API account initialized (uuid=" + adminUUID +
+				", secret=" + adminSecret + ")");
 			// Create a new keypair for the default ADMIN level user.
 			final KeyPair adminKeyPair = new KeyPair(new HavaloUUID(adminUUID),
 				adminSecret, Arrays.asList(new UserRole[]{ADMIN}));
