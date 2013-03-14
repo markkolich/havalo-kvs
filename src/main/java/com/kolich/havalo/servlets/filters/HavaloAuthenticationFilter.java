@@ -75,7 +75,7 @@ public final class HavaloAuthenticationFilter implements Filter {
 		
 	@Override
 	public void init(final FilterConfig fConfig) throws ServletException {
-		logger__.info("In init()");
+		logger__.info("Initializing authentication filter.");
 		final ServletContext context = fConfig.getServletContext();		
 		userService_ = (HavaloUserService)context
 			.getAttribute(HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE);
@@ -83,7 +83,7 @@ public final class HavaloAuthenticationFilter implements Filter {
 	
 	@Override
 	public void destroy() {
-		logger__.info("In destroy()");
+		logger__.info("Destroying authentication filter.");
 	}
 	
 	@Override
@@ -146,7 +146,9 @@ public final class HavaloAuthenticationFilter implements Filter {
         			"match (request=" + signature + ", computed=" + computed +
         				")");
         	}
-        	// Success!
+        	// Success!  Attach the authenticated user "key pair" to the
+        	// request context as an attribute.  This is picked up later by
+        	// the right servlet if needed.
         	req.setAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE, userKp);
         	authSuccess = true;
         } catch (UsernameNotFoundException e) {

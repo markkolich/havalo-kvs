@@ -39,26 +39,18 @@ object Dependencies {
 
   // Internal dependencies
 
-  //private val kolichSpring = "com.kolich" % "kolich-spring" % "0.0.7" % "compile"
   private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.4" % "compile"
 
   // External dependencies
 
   // Using Jetty 8 "stable", version 8.1.8.v20121106
-  private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % "8.1.8.v20121106" % "container"
-  private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % "8.1.8.v20121106" % "container"
-  private val jettyJsp = "org.eclipse.jetty" % "jetty-jsp" % "8.1.8.v20121106" % "container"
+  private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % "8.1.10.v20130312" % "container"
+  private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % "8.1.10.v20130312" % "container"
+  private val jettyJsp = "org.eclipse.jetty" % "jetty-jsp" % "8.1.10.v20130312" % "container"
   
   private val jspApi = "javax.servlet.jsp" % "jsp-api" % "2.2" % "provided" // Provided by container  
   private val jstl = "javax.servlet" % "jstl" % "1.2" % "compile" // Package with WAR
   private val servlet = "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided" // Provided by container
-
-  //private val springTx = "org.springframework" % "spring-tx" % "3.2.1.RELEASE" % "compile"
-  //private val springSecurityCore = "org.springframework.security" % "spring-security-core" % "3.1.3.RELEASE" % "compile"
-  //private val springSecurityWeb = "org.springframework.security" % "spring-security-web" % "3.1.3.RELEASE" % "compile"
-  //private val springSecurityConfig = "org.springframework.security" % "spring-security-config" % "3.1.3.RELEASE" % "compile"
-
-  //private val cgLibNoDep = "cglib" % "cglib-nodep" % "2.2.2" % "compile"
 
   private val ardverkTrie = "org.ardverk" % "patricia-trie" % "0.6" % "compile"
 
@@ -75,11 +67,9 @@ object Dependencies {
   private val commonsCodec = "commons-codec" % "commons-codec" % "1.6" % "compile"
   private val commonsFileupload = "commons-fileupload" % "commons-fileupload" % "1.2.2" % "compile"
 
-  val deps = Seq(/*kolichSpring,*/ kolichBolt,
+  val deps = Seq(kolichBolt,
     jettyWebApp, jettyPlus, jettyJsp,
     jspApi, jstl, servlet,
-    /*springTx, springSecurityCore, springSecurityWeb, springSecurityConfig,*/
-    /*cgLibNoDep,*/
     ardverkTrie,
     typesafeConfig,
     commonsLang, commonsCodec, commonsFileupload,
