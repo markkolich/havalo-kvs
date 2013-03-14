@@ -4,6 +4,7 @@ import static com.google.common.net.MediaType.JSON_UTF_8;
 import static com.kolich.common.DefaultCharacterEncoding.UTF_8;
 import static com.kolich.havalo.servlets.filters.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.apache.commons.io.IOUtils.closeQuietly;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 
+import com.kolich.bolt.exceptions.LockConflictException;
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.HavaloError;
 import com.kolich.havalo.entities.types.HavaloUUID;
@@ -44,6 +46,7 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 	public final void run() {
 		final String comment = getComment();
 		try {
+			logger_.debug("Starting handle of " + comment);
 			final S result = doit();
 			// If the extending closure implementation did not return a
 			// result, it returned null, that means it handled+rendered the
@@ -53,15 +56,19 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 				renderEntity(logger_, response_, result);
 			}
 		} catch (HavaloException e) {
-			logger_.info(comment, e);
+			logger_.debug(comment, e);
 			renderHavaloException(logger_, response_, e);
+		} catch (LockConflictException e) {
+			logger_.debug(comment, e);
+			renderError(logger_, response_, SC_CONFLICT, e);
 		} catch (IllegalArgumentException e) {
-			logger_.info(comment, e);
+			logger_.debug(comment, e);
 			renderError(logger_, response_, SC_BAD_REQUEST, e);
 		} catch (Exception e) {
-			logger_.info(comment, e);
+			logger_.debug(comment, e);
 			renderError(logger_, response_, e);
 		} finally {
+			logger_.debug("Finishing handle of " + comment);
 			// Important, always finish the context.
 			context_.complete();
 		}

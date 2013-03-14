@@ -30,6 +30,7 @@ import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.HttpHeaders.ETAG;
 import static com.google.common.net.HttpHeaders.LAST_MODIFIED;
+import static com.kolich.common.date.RFC822DateFormat.format;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -64,12 +65,12 @@ public final class HashedFileObject extends HavaloFileEntity
 		this(null, null);
 	}
 	
-	public HashedFileObject setLastModified(Date lastModified) {
-		return setLastModified(lastModified.getTime());
+	public HashedFileObject setLastModified(Date lastModified) {		
+		return setLastModified(format(lastModified));
 	}
 	
 	public HashedFileObject setLastModified(long lastModified) {
-		return setLastModified(Long.toString(lastModified));
+		return setLastModified(format(new Date(lastModified)));
 	}
 	
 	public HashedFileObject setLastModified(final String lastModified) {

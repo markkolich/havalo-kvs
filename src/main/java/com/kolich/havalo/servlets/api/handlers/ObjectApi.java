@@ -46,7 +46,7 @@ public final class ObjectApi extends HavaloApiServlet {
 	private static final Logger logger__ =
 		LoggerFactory.getLogger(ObjectApi.class);
 	
-	private static final String OCTET_STREAM_HEADER = OCTET_STREAM.toString();
+	private static final String OCTET_STREAM_TYPE = OCTET_STREAM.toString();
 	
 	@Override
 	public final <S extends HavaloEntity> HavaloApiServletClosure<S>
@@ -260,7 +260,7 @@ public final class ObjectApi extends HavaloApiServlet {
 		if(!object.getFile().exists()) {
 			throw new ObjectNotFoundException("Object not " +
 				"found (file=" + object.getFile().getAbsolutePath() +
-					", key=" + hfo.getName() + ")");
+				", key=" + hfo.getName() + ")");
 		}
 		// Extract any response headers from this objects' meta data.
 		final Map<String,List<String>> headers = hfo.getHeaders();
@@ -273,7 +273,7 @@ public final class ObjectApi extends HavaloApiServlet {
 		// the consumer in the meta data.
 		if(headers.get(CONTENT_TYPE) == null) {
 			headers.put(CONTENT_TYPE, Arrays.asList(new String[]{
-				OCTET_STREAM_HEADER}));
+				OCTET_STREAM_TYPE}));
 		}
 		// Now, send all headers to the response stream.
 		for(final Map.Entry<String, List<String>> entry : headers.entrySet()) {
