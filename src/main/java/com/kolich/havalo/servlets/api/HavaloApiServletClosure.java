@@ -6,6 +6,7 @@ import static com.kolich.havalo.servlets.filters.HavaloAuthenticationFilter.HAVA
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static org.apache.commons.io.IOUtils.closeQuietly;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -13,7 +14,6 @@ import java.io.OutputStreamWriter;
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
 import com.kolich.havalo.entities.HavaloEntity;
@@ -25,6 +25,8 @@ import com.kolich.havalo.servlets.HavaloServletClosure;
 
 public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 	extends HavaloServletClosure<S> {
+	
+	private static final String JSON_UTF_8_TYPE = JSON_UTF_8.toString();
 		
 	public HavaloApiServletClosure(final Logger logger,
 		final AsyncContext context) {
@@ -107,7 +109,7 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 		OutputStreamWriter writer = null;
 		try {
 			response.setStatus(status);
-			response.setContentType(JSON_UTF_8.toString());
+			response.setContentType(JSON_UTF_8_TYPE);
 			os = response.getOutputStream();
 			writer = new OutputStreamWriter(os, UTF_8);
 			entity.toWriter(writer);
@@ -116,8 +118,8 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 			logger.error("Failed to render entity to servlet " +
 				"output stream.", e);
 		} finally {
-			IOUtils.closeQuietly(os);
-			IOUtils.closeQuietly(writer);
+			closeQuietly(os);
+			closeQuietly(writer);
 		}
 	}
 	

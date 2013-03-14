@@ -141,7 +141,7 @@ public final class HavaloAuthenticationFilter implements Filter {
         	} else {
         		renderError(logger__, resp, new HavaloError(SC_UNAUTHORIZED,
         			"Authentication failed; either the provided signature " +
-        			"did not match or you do not have permission to access " +
+        			"did not match, or you do not have permission to access " +
         			"the requested resource."));
         	}
         }

@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
-import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.servlets.api.HavaloApiServlet;
 import com.kolich.havalo.servlets.api.HavaloApiServletClosure;
 
@@ -23,8 +22,7 @@ public final class AuthenticateApi extends HavaloApiServlet {
 		return new HavaloApiServletClosure<KeyPair>(logger__, context) {
 			@Override
 			public KeyPair execute(final HavaloUUID userId) throws Exception {
-				final Repository repo = getRepository(userId);
-				return repo.getKeyPair();
+				return getRepository(userId).getKeyPair();
 			}
 		};
 	}
