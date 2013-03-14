@@ -74,9 +74,9 @@ public final class HavaloAuthenticationFilter implements Filter {
 	private HavaloUserService userService_;
 		
 	@Override
-	public void init(final FilterConfig fConfig) throws ServletException {
+	public void init(final FilterConfig config) throws ServletException {
 		logger__.info("Initializing authentication filter.");
-		final ServletContext context = fConfig.getServletContext();		
+		final ServletContext context = config.getServletContext();		
 		userService_ = (HavaloUserService)context
 			.getAttribute(HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE);
 	}
