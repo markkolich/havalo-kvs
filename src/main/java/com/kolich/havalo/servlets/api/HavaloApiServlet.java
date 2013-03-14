@@ -67,7 +67,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 		trace(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
-			public T execute(final HavaloUUID userId) throws Exception {
+			public T execute(final KeyPair userKp) throws Exception {
 				throw new MethodNotNotSupportedException();
 			}
 		};
@@ -78,7 +78,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 		head(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
-			public T execute(final HavaloUUID userId) throws Exception {
+			public T execute(final KeyPair userKp) throws Exception {
 				throw new MethodNotNotSupportedException();
 			}
 		};
@@ -89,7 +89,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 		get(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
-			public T execute(final HavaloUUID userId) throws Exception {
+			public T execute(final KeyPair userKp) throws Exception {
 				throw new MethodNotNotSupportedException();
 			}
 		};
@@ -100,7 +100,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 		post(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
-			public T execute(final HavaloUUID userId) throws Exception {
+			public T execute(final KeyPair userKp) throws Exception {
 				throw new MethodNotNotSupportedException();
 			}
 		};
@@ -111,7 +111,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 		put(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
-			public T execute(final HavaloUUID userId) throws Exception {
+			public T execute(final KeyPair userKp) throws Exception {
 				throw new MethodNotNotSupportedException();
 			}
 		};
@@ -122,7 +122,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 		delete(final AsyncContext context) {
 		return new HavaloApiServletClosure<T>(logger__, context) {
 			@Override
-			public T execute(final HavaloUUID userId) throws Exception {
+			public T execute(final KeyPair userKp) throws Exception {
 				throw new MethodNotNotSupportedException();
 			}
 		};

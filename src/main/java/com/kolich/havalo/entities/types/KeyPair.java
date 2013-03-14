@@ -71,11 +71,11 @@ public final class KeyPair extends HavaloEntity implements Serializable {
 		this(Arrays.asList(new UserRole[]{UserRole.USER}));
 	}
 		
-	public HavaloUUID getIdKey() {
+	public HavaloUUID getKey() {
 		return idKey_;
 	}
 	
-	public KeyPair setIdKey(HavaloUUID id) {
+	public KeyPair setKey(HavaloUUID id) {
 		idKey_ = id;
 		return this;
 	}

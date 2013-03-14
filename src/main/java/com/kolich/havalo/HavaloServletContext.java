@@ -44,7 +44,6 @@ import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.UserRole;
 import com.kolich.havalo.exceptions.BootstrapException;
-import com.kolich.havalo.exceptions.HavaloException;
 import com.kolich.havalo.exceptions.repositories.RepositoryCreationException;
 import com.kolich.havalo.io.managers.RepositoryManager;
 import com.kolich.havalo.servlets.filters.HavaloUserService;
@@ -64,6 +63,8 @@ public final class HavaloServletContext implements ServletContextListener {
 	public static final String HAVALO_REPO_BASE_CONFIG_PROPERTY = "havalo.repository.base";
 	public static final String HAVALO_ADMIN_API_UUID_PROPERTY = "havalo.api.admin.uuid";
 	public static final String HAVALO_ADMIN_API_SECRET_PROPERTY = "havalo.api.admin.secret";
+	
+	public static final String HAVALO_API_REQUEST_TIMEOUT_PROPERTY = "havalo.api.request.timeout";
 	
 	private static final String REPO_BASE_DEFAULT = "WEB-INF/work";
 	
@@ -86,11 +87,14 @@ public final class HavaloServletContext implements ServletContextListener {
 		context_.setAttribute(HAVALO_CONTEXT_CONFIG_ATTRIBUTE, config);
 		// Create a new repository manager based on the desired
 		// underlying repository root directory on disk.
-		final RepositoryManager repoManager = createInitialAdminRepository(context_, config);
-		context_.setAttribute(HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE, repoManager);
+		final RepositoryManager repoManager =
+			createInitialAdminRepository(context_, config);
+		context_.setAttribute(HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE,
+			repoManager);
 		// Create a new user lookup (auth) service.
 		final HavaloUserService userService = createUserService(repoManager);
-		context_.setAttribute(HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE, userService);
+		context_.setAttribute(HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE,
+			userService);
 	}
 
 	@Override
@@ -110,7 +114,7 @@ public final class HavaloServletContext implements ServletContextListener {
 		// If the provided repository base path starts with a slash, then
 		// interpret the location as an absolute path on disk.  Otherwise,
 		// no preceding slash indicates a path relative to the web application
-		// root directory.		
+		// root directory.
 		final File realPath;
 		if(repositoryBase.startsWith("/")) {
 			realPath = new File(repositoryBase);
@@ -140,7 +144,7 @@ public final class HavaloServletContext implements ServletContextListener {
 						HAVALO_ADMIN_API_UUID_PROPERTY + "' was set, but " +
 						"did not contain a valid UUID. Cannot " +
 						"start until this property contains a valid UUID.", e);
-					throw new BootstrapException();
+					throw new BootstrapException(e);
 				}
 			}
 			// Verify a proper admin API accout secret is set.			
@@ -158,7 +162,7 @@ public final class HavaloServletContext implements ServletContextListener {
 				adminSecret, Arrays.asList(new UserRole[]{ADMIN}));
 			// Actually attempt to create a new Repository for the Admin user.
 			// This should work, if not, bail the whole app.
-			repoManager.createRepository(adminKeyPair.getIdKey(), adminKeyPair);
+			repoManager.createRepository(adminKeyPair.getKey(), adminKeyPair);
 			return repoManager;
 		} catch (RepositoryCreationException e) {
 			// Log in TRACE and continue silently.  This is a normal case,
@@ -171,7 +175,7 @@ public final class HavaloServletContext implements ServletContextListener {
 			// and then bail.  The application cannot continue at this point.
 			logger__.error("Failed to create ADMIN user repository -- " +
 				"cannot continue, giving up.", e);
-			throw new HavaloException(e, 500);
+			throw new BootstrapException(e);
 		}
 		return repoManager;
 	}

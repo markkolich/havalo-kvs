@@ -40,6 +40,10 @@ public class BootstrapException extends HavaloException {
 		super(message, SC_INTERNAL_SERVER_ERROR);
 	}
 	
+	public BootstrapException(Throwable cause) {
+		super(cause, SC_INTERNAL_SERVER_ERROR);
+	}
+	
 	public BootstrapException() {
 		super(SC_INTERNAL_SERVER_ERROR);
 	}

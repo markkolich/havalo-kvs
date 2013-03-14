@@ -27,6 +27,7 @@
 package com.kolich.havalo.servlets.api.handlers;
 
 import static com.kolich.common.util.URLEncodingUtils.urlDecode;
+import static com.kolich.havalo.HavaloServletContext.HAVALO_ADMIN_API_UUID_PROPERTY;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.lang3.Validate.notEmpty;
 
@@ -60,9 +61,9 @@ public final class RepositoryApi extends HavaloApiServlet {
 		final AsyncContext context) {
 		return new HavaloApiServletClosure<ObjectList>(logger__, context) {
 			@Override
-			public ObjectList execute(final HavaloUUID userId) throws Exception {
+			public ObjectList execute(final KeyPair userKp) throws Exception {
 				final String startsWith = request_.getParameter("startsWith");
-				final Repository repo = getRepository(userId);
+				final Repository repo = getRepository(userKp.getKey());
 				return new ReentrantReadWriteEntityLock<ObjectList>(repo) {
 					@Override
 					public ObjectList transaction() throws Exception {
@@ -81,7 +82,7 @@ public final class RepositoryApi extends HavaloApiServlet {
 		final AsyncContext context) {
 		return new HavaloApiServletClosure<KeyPair>(logger__, context) {
 			@Override
-			public KeyPair execute(final HavaloUUID userId) throws Exception {
+			public KeyPair execute(final KeyPair userKp) throws Exception {
 				// Create a new KeyPair; this is a new user access key
 				// and access secret.  NOTE: Currently key pair identities
 				// always associated with "normal" user roles.  The first
@@ -93,7 +94,7 @@ public final class RepositoryApi extends HavaloApiServlet {
 				// Create a base repository for the new access key.  All of
 				// the resources associated with this access key will sit
 				// under this base repository (some directory on disk).
-				createRepository(kp.getIdKey(), kp);
+				createRepository(kp.getKey(), kp);
 				return kp;
 			}
 		};
@@ -104,13 +105,13 @@ public final class RepositoryApi extends HavaloApiServlet {
 		final AsyncContext context) {
 		return new HavaloApiServletClosure<S>(logger__, context) {
 			@Override
-			public S execute(final HavaloUUID userId) throws Exception {
+			public S execute(final KeyPair userKp) throws Exception {				
 				// URL-decode the incoming key (the UUID of the repo)
 				final String key = urlDecode(getEndOfRequestURI());							
 				notEmpty(key, "Key cannot be null or empty.");
 				final HavaloUUID toDelete = new HavaloUUID(key);
 				final HavaloUUID adminId = new HavaloUUID(
-					getAppConfig().getString("havalo.api.admin.uuid"));
+					getAppConfig().getString(HAVALO_ADMIN_API_UUID_PROPERTY));
 				// Admin users cannot delete the "admin" repository.
 				if(adminId.equals(toDelete)) {
 					throw new RepositoryForbiddenException("Authenticated " +
@@ -121,9 +122,9 @@ public final class RepositoryApi extends HavaloApiServlet {
 				// objects inside of it.
 				deleteRepository(toDelete);
 				// Send an empty HTTP 204 No Content back on success.
-				response_.setStatus(SC_NO_CONTENT);
+				setStatus(SC_NO_CONTENT);
 				// Return null to tell the parent that we've
-				// handled the response.
+				// handled the response ourselves.
 				return null;
 			}
 		};

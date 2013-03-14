@@ -46,7 +46,6 @@ import org.slf4j.Logger;
 import com.kolich.bolt.exceptions.LockConflictException;
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.HavaloError;
-import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.exceptions.HavaloException;
 import com.kolich.havalo.servlets.HavaloServletClosure;
@@ -63,10 +62,10 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 	
 	@Override
 	public final S doit() throws Exception {		
-		return execute(getUserFromRequest().getIdKey());
+		return execute(getUserFromRequest());
 	}
 	
-	public abstract S execute(final HavaloUUID userId) throws Exception;
+	public abstract S execute(final KeyPair userKp) throws Exception;
 	
 	@Override
 	public final void run() {
@@ -110,6 +109,15 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 	
 	protected final String getHeader(final String headerName) {
 		return request_.getHeader(headerName);
+	}
+	
+	protected final void setHeader(final String headerName,
+		final String headerValue) {
+		response_.setHeader(headerName, headerValue);
+	}
+	
+	protected final void setStatus(final int status) {
+		response_.setStatus(status);
 	}
 	
 	public static final void renderHavaloException(final Logger logger,

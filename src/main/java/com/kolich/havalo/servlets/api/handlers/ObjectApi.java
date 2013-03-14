@@ -58,7 +58,7 @@ import com.kolich.bolt.ReentrantReadWriteEntityLock;
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.DiskObject;
 import com.kolich.havalo.entities.types.HashedFileObject;
-import com.kolich.havalo.entities.types.HavaloUUID;
+import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.objects.ObjectConflictException;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
@@ -79,8 +79,8 @@ public final class ObjectApi extends HavaloApiServlet {
 		head(final AsyncContext context) {
 		return new HavaloApiServletClosure<S>(logger__, context) {
 			@Override
-			public S execute(final HavaloUUID userId) throws Exception {
-				final Repository repo = getRepository(userId);
+			public S execute(final KeyPair userKp) throws Exception {
+				final Repository repo = getRepository(userKp.getKey());
 				new ReentrantReadWriteEntityLock<Void>(repo) {
 					@Override
 					public Void transaction() throws Exception {
@@ -115,8 +115,8 @@ public final class ObjectApi extends HavaloApiServlet {
 		get(final AsyncContext context) {
 		return new HavaloApiServletClosure<S>(logger__, context) {
 			@Override
-			public S execute(final HavaloUUID userId) throws Exception {
-				final Repository repo = getRepository(userId);
+			public S execute(final KeyPair userKp) throws Exception {
+				final Repository repo = getRepository(userKp.getKey());
 				new ReentrantReadWriteEntityLock<Void>(repo) {
 					@Override
 					public Void transaction() throws Exception {
@@ -166,8 +166,8 @@ public final class ObjectApi extends HavaloApiServlet {
 		final AsyncContext context) {
 		return new HavaloApiServletClosure<HashedFileObject>(logger__, context) {
 			@Override
-			public HashedFileObject execute(final HavaloUUID userId) throws Exception {
-				final Repository repo = getRepository(userId);
+			public HashedFileObject execute(final KeyPair userKp) throws Exception {
+				final Repository repo = getRepository(userKp.getKey());
 				return new ReentrantReadWriteEntityLock<HashedFileObject>(repo) {
 					@Override
 					public HashedFileObject transaction() throws Exception {
@@ -233,7 +233,7 @@ public final class ObjectApi extends HavaloApiServlet {
 								}
 								// Append an ETag header to the response for the
 								// PUT'ed object.
-								response_.addHeader(ETAG, hfo.getFirstHeader(ETAG));
+								setHeader(ETAG, hfo.getFirstHeader(ETAG));
 								return hfo;
 							}
 							@Override
@@ -255,7 +255,7 @@ public final class ObjectApi extends HavaloApiServlet {
 		delete(final AsyncContext context) {
 		return new HavaloApiServletClosure<S>(logger__, context) {
 			@Override
-			public S execute(final HavaloUUID userId) throws Exception {
+			public S execute(final KeyPair userKp) throws Exception {
 				// URL-decode the incoming key (the name of the object)
 				final String key = urlDecode(getEndOfRequestURI());							
 				notEmpty(key, "Key cannot be null or empty.");
@@ -263,16 +263,16 @@ public final class ObjectApi extends HavaloApiServlet {
 				// The delete operation does return a pointer to the "deleted"
 				// HFO, but we're not using it, we're just dropping it on the
 				// floor (intentionally not returning it to the caller).
-				deleteHashedFileObject(userId,
+				deleteHashedFileObject(userKp.getKey(),
 					// The URL-decoded key of the object to delete.
 					key,
 					// Only delete the object if the provided ETag via the
 					// If-Match header matches the object on disk.
 					ifMatch);
 				// Send an empty HTTP 204 No Content back on success.
-				response_.setStatus(SC_NO_CONTENT);
+				setStatus(SC_NO_CONTENT);
 				// Return null to tell the parent that we've
-				// handled the response.
+				// handled the response ourselves.
 				return null;
 			}
 		};

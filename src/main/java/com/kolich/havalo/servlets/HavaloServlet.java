@@ -26,6 +26,7 @@
 
 package com.kolich.havalo.servlets;
 
+import static com.kolich.havalo.HavaloServletContext.HAVALO_API_REQUEST_TIMEOUT_PROPERTY;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_CONFIG_ATTRIBUTE;
 
 import java.util.concurrent.ExecutorService;
@@ -54,9 +55,13 @@ public abstract class HavaloServlet extends HttpServlet {
 	
 	@Override
 	public void init(final ServletConfig config) throws ServletException {
-		final ServletContext context = config.getServletContext();		
+		final ServletContext context = config.getServletContext();
 		config_ = (Config)context.getAttribute(HAVALO_CONTEXT_CONFIG_ATTRIBUTE);
-		asyncTimeout_ = config_.getLong("havalo.api.request.timeout");
+		asyncTimeout_ = config_.getLong(HAVALO_API_REQUEST_TIMEOUT_PROPERTY);
+		// Creates a thread pool that creates new threads as needed, but will
+		// reuse previously constructed threads when they are available,
+		// and uses the provided ThreadFactory to create new threads when
+		// needed.
 		pool_ = Executors.newCachedThreadPool(
 			new ThreadFactoryBuilder()
 				.setDaemon(true)
