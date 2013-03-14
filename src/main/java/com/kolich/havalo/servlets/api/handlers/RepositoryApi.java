@@ -31,8 +31,6 @@ import static com.kolich.havalo.HavaloServletContext.HAVALO_ADMIN_API_UUID_PROPE
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.lang3.Validate.notEmpty;
 
-import java.util.Arrays;
-
 import javax.servlet.AsyncContext;
 
 import org.slf4j.Logger;
@@ -44,7 +42,6 @@ import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.ObjectList;
 import com.kolich.havalo.entities.types.Repository;
-import com.kolich.havalo.entities.types.UserRole;
 import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.servlets.api.HavaloApiServlet;
 import com.kolich.havalo.servlets.api.HavaloApiServletClosure;
@@ -83,14 +80,19 @@ public final class RepositoryApi extends HavaloApiServlet {
 		return new HavaloApiServletClosure<KeyPair>(logger__, context) {
 			@Override
 			public KeyPair execute(final KeyPair userKp) throws Exception {
+				// Only admin level users have the right to delete repositories.
+				if(!userKp.isAdmin()) {
+					throw new RepositoryForbiddenException("Authenticated " +
+						"user does not have permission to create repositories: " +
+						"(userId=" + userKp.getKey() + ")");
+				}
 				// Create a new KeyPair; this is a new user access key
 				// and access secret.  NOTE: Currently key pair identities
 				// always associated with "normal" user roles.  The first
 				// admin user is created via the HavaloBootstrap bean on
 				// first boot.  Only the first admin user has the rights
 				// to call this specific API function.
-				final KeyPair kp = new KeyPair(Arrays.asList(
-					new UserRole[]{UserRole.USER}));
+				final KeyPair kp = new KeyPair();
 				// Create a base repository for the new access key.  All of
 				// the resources associated with this access key will sit
 				// under this base repository (some directory on disk).
@@ -105,10 +107,16 @@ public final class RepositoryApi extends HavaloApiServlet {
 		final AsyncContext context) {
 		return new HavaloApiServletClosure<S>(logger__, context) {
 			@Override
-			public S execute(final KeyPair userKp) throws Exception {				
+			public S execute(final KeyPair userKp) throws Exception {
 				// URL-decode the incoming key (the UUID of the repo)
 				final String key = urlDecode(getEndOfRequestURI());							
 				notEmpty(key, "Key cannot be null or empty.");
+				// Only admin level users have the right to delete repositories.
+				if(!userKp.isAdmin()) {
+					throw new RepositoryForbiddenException("Authenticated " +
+						"user does not have permission to delete repositories: " +
+						"(userId=" + userKp.getKey() + ", repoId=" + key + ")");
+				}
 				final HavaloUUID toDelete = new HavaloUUID(key);
 				final HavaloUUID adminId = new HavaloUUID(
 					getAppConfig().getString(HAVALO_ADMIN_API_UUID_PROPERTY));

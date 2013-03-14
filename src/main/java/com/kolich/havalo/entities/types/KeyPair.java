@@ -26,10 +26,13 @@
 
 package com.kolich.havalo.entities.types;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.kolich.common.util.crypt.Base64Utils.encodeBase64URLSafe;
+import static com.kolich.havalo.entities.types.UserRole.ADMIN;
 import static org.apache.commons.codec.binary.StringUtils.newStringUtf8;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -90,7 +93,7 @@ public final class KeyPair extends HavaloEntity implements Serializable {
 	}
 		
 	public List<UserRole> getRoles() {
-		return roles_;
+		return new ArrayList<UserRole>(roles_);
 	}
 		
 	public KeyPair setRoles(List<UserRole> roles) {
@@ -98,17 +101,12 @@ public final class KeyPair extends HavaloEntity implements Serializable {
 		return this;
 	}
 	
-	/*
-	public List<GrantedAuthority> getAuthorities() {
-		checkNotNull(roles_);
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		for(final String r : roles_.getRoles()) {
-			authorities.add(new SimpleGrantedAuthority(r));
-		}
-		return authorities;
+	public boolean isAdmin() {
+		checkNotNull(roles_, "Checking for admin status, role " +
+			"list cannot be null.");
+		return roles_.contains(ADMIN);
 	}
-	*/
-		
+	
 	private static final String generateRandomSecret() {
 		return newStringUtf8(encodeBase64URLSafe(random__.getRandom()));
 	}
