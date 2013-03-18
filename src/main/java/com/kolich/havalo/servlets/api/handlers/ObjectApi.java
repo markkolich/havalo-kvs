@@ -254,7 +254,10 @@ public final class ObjectApi extends HavaloApiServlet {
 										hfo.setContentType(contentType);
 									}
 								} catch (KolichChecksumException e) {
-									// TODO
+									throw new ObjectTooLargeException("The " +
+										"size of the incoming object is too " +
+										"large. Max upload size is " +
+										uploadMaxSize_ + "-bytes.", e);
 								} finally {
 									closeQuietly(os);
 									closeQuietly(is);
