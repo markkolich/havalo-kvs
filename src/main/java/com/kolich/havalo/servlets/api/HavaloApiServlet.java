@@ -61,7 +61,7 @@ public abstract class HavaloApiServlet extends HavaloServlet {
 		repositoryManager_ = (RepositoryManager)config.getServletContext()
 			.getAttribute(HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE);
 	}
-					
+
 	@Override
 	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
 		trace(final AsyncContext context) {

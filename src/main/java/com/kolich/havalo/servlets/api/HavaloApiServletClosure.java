@@ -111,6 +111,14 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 		return request_.getHeader(headerName);
 	}
 	
+	/**
+	 * Expect a {@link NumberFormatException} if the input String
+	 * does not contain a parsable long.
+	 */
+	protected final long getHeaderAsLong(final String headerName) {
+		return Long.parseLong(getHeader(headerName));
+	}
+	
 	protected final void setHeader(final String headerName,
 		final String headerValue) {
 		response_.setHeader(headerName, headerValue);

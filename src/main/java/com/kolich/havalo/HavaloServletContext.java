@@ -66,6 +66,8 @@ public final class HavaloServletContext implements ServletContextListener {
 	
 	public static final String HAVALO_API_REQUEST_TIMEOUT_PROPERTY = "havalo.api.request.timeout";
 	
+	public static final String HAVALO_UPLOAD_MAX_SIZE_PROPERTY = "havalo.upload.max.size";
+	
 	private static final String REPO_BASE_DEFAULT = "WEB-INF/work";
 	
 	private ServletContext context_;

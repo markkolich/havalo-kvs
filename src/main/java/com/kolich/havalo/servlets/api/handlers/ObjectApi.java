@@ -34,6 +34,7 @@ import static com.google.common.net.HttpHeaders.IF_MATCH;
 import static com.google.common.net.MediaType.OCTET_STREAM;
 import static com.kolich.common.util.URLEncodingUtils.urlDecode;
 import static com.kolich.common.util.secure.KolichChecksum.getSHA1HashAndCopy;
+import static com.kolich.havalo.HavaloServletContext.HAVALO_UPLOAD_MAX_SIZE_PROPERTY;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.io.IOUtils.copyLarge;
@@ -49,12 +50,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.AsyncContext;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
+import com.kolich.common.util.secure.KolichChecksum.KolichChecksumException;
 import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.DiskObject;
 import com.kolich.havalo.entities.types.HashedFileObject;
@@ -62,6 +66,7 @@ import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.objects.ObjectConflictException;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
+import com.kolich.havalo.exceptions.objects.ObjectTooLargeException;
 import com.kolich.havalo.servlets.api.HavaloApiServlet;
 import com.kolich.havalo.servlets.api.HavaloApiServletClosure;
 
@@ -73,6 +78,15 @@ public final class ObjectApi extends HavaloApiServlet {
 		LoggerFactory.getLogger(ObjectApi.class);
 	
 	private static final String OCTET_STREAM_TYPE = OCTET_STREAM.toString();
+	
+	private long uploadMaxSize_ = 0L;
+	
+	@Override
+	public final void init(final ServletConfig config) throws ServletException {
+		super.init(config);
+		uploadMaxSize_ = getAppConfig().getLong(HAVALO_UPLOAD_MAX_SIZE_PROPERTY);
+		logger__.info("Max object upload size is " + uploadMaxSize_ + "-bytes.");
+	}
 	
 	@Override
 	public final <S extends HavaloEntity> HavaloApiServletClosure<S>
@@ -170,12 +184,19 @@ public final class ObjectApi extends HavaloApiServlet {
 				final Repository repo = getRepository(userKp.getKey());
 				return new ReentrantReadWriteEntityLock<HashedFileObject>(repo) {
 					@Override
-					public HashedFileObject transaction() throws Exception {
+					public HashedFileObject transaction() throws Exception {						
 						// URL-decode the incoming key (the name of the object)
 						final String key = urlDecode(getEndOfRequestURI());							
 						notEmpty(key, "Key cannot be null or empty.");
 						final String contentType = getHeader(CONTENT_TYPE);
 						final String ifMatch = getHeader(IF_MATCH);
+						final long contentLength = getHeaderAsLong(CONTENT_LENGTH);
+						if(contentLength > uploadMaxSize_) {
+							throw new ObjectTooLargeException("The '" +
+								CONTENT_LENGTH + "' of the incoming request " +
+								"is too large. Max upload size allowed is " +
+								uploadMaxSize_ + "-bytes.");
+						}
 						final HashedFileObject hfo = getHashedFileObject(repo, key);
 						return new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
 							@Override
@@ -207,7 +228,7 @@ public final class ObjectApi extends HavaloApiServlet {
 								final File objFile = object.getFile();
 								InputStream is = null;
 								OutputStream os = null;
-								try {
+								try {									
 									is = request_.getInputStream();
 									// Create a new output stream which will point at
 									// the new home of this HFO on the file system.
@@ -218,7 +239,12 @@ public final class ObjectApi extends HavaloApiServlet {
 									// to the output stream -- ideally computing the
 									// hash and copying the file at the same time.
 									// Set the resulting ETag header (meta data).
-									hfo.setETag(getSHA1HashAndCopy(is, os));
+									hfo.setETag(getSHA1HashAndCopy(is, os,
+										// Only copy as much as the incoming
+										// Content-Length header sez is going
+										// to be sent.  Anything more than this
+										// is caught gracefully and dropped.
+										contentLength));
 									// Set the Last-Modified header (meta data).
 									hfo.setLastModified(objFile.lastModified());
 									// Set the Content-Length header (meta data).
@@ -227,6 +253,8 @@ public final class ObjectApi extends HavaloApiServlet {
 									if(contentType != null) {
 										hfo.setContentType(contentType);
 									}
+								} catch (KolichChecksumException e) {
+									// TODO
 								} finally {
 									closeQuietly(os);
 									closeQuietly(is);

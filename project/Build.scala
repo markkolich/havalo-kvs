@@ -38,7 +38,8 @@ import com.typesafe.sbteclipse.plugin.EclipsePlugin._
 object Dependencies {
 
   // Internal dependencies
-
+  
+  private val kolichCommon = "com.kolich" % "kolich-common" % "0.0.8" % "compile"
   private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.4" % "compile"
 
   // External dependencies
@@ -67,7 +68,7 @@ object Dependencies {
   private val commonsCodec = "commons-codec" % "commons-codec" % "1.6" % "compile"
   private val commonsFileupload = "commons-fileupload" % "commons-fileupload" % "1.2.2" % "compile"
 
-  val deps = Seq(kolichBolt,
+  val deps = Seq(kolichCommon, kolichBolt,
     jettyWebApp, jettyPlus, jettyJsp,
     jspApi, jstl, servlet,
     ardverkTrie,
