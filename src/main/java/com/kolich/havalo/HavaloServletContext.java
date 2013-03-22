@@ -60,6 +60,8 @@ public final class HavaloServletContext implements ServletContextListener {
 	public static final String HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE = "havalo.repomanager";
 	public static final String HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE = "havalo.userservice";
 	
+	public static final String HAVALO_API_MAX_CONCURRENT_REQUESTS_PROPERTY = "havalo.api.request.max";
+	
 	public static final String HAVALO_REPO_BASE_CONFIG_PROPERTY = "havalo.repository.base";
 	public static final String HAVALO_ADMIN_API_UUID_PROPERTY = "havalo.api.admin.uuid";
 	public static final String HAVALO_ADMIN_API_SECRET_PROPERTY = "havalo.api.admin.secret";
