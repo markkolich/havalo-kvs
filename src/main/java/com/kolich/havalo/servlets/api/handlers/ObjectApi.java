@@ -190,7 +190,21 @@ public final class ObjectApi extends HavaloApiServlet {
 						notEmpty(key, "Key cannot be null or empty.");
 						final String contentType = getHeader(CONTENT_TYPE);
 						final String ifMatch = getHeader(IF_MATCH);
-						final long contentLength = getHeaderAsLong(CONTENT_LENGTH);
+						final long contentLength;
+						// Some HTTP clients may not send a proper Content-Length
+						// request header, but we still need to enforce the max
+						// object size on the server side.
+						if(getHeaderAsLong(CONTENT_LENGTH) < 0) {
+							logger__.warn("Client sent request where '" +
+								CONTENT_LENGTH + "' header was not present " +
+								"or less than zero.  Defaulting to " +
+								uploadMaxSize_ + "-bytes.");
+							contentLength = uploadMaxSize_;
+						} else {
+							contentLength = getHeaderAsLong(CONTENT_LENGTH);
+						}
+						// Validate that we've got an OK Content-Length before
+						// we proceed.
 						if(contentLength > uploadMaxSize_) {
 							throw new ObjectTooLargeException("The '" +
 								CONTENT_LENGTH + "' of the incoming request " +

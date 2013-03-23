@@ -112,11 +112,18 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 	}
 	
 	/**
-	 * Expect a {@link NumberFormatException} if the input String
-	 * does not contain a parsable long.
+	 * A return value of -1 indicates that no Content-Length
+	 * header was found, or the Content-Length header could not
+	 * be parsed.
 	 */
 	protected final long getHeaderAsLong(final String headerName) {
-		return Long.parseLong(getHeader(headerName));
+		long result = -1L;
+		try {
+			result = Long.parseLong(getHeader(headerName));
+		} catch (Exception e) {
+			result = -1L;
+		}
+		return result;
 	}
 	
 	protected final void setHeader(final String headerName,
