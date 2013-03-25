@@ -112,7 +112,7 @@ public abstract class ObjectStore {
 							")", e);
 				}
 			}
-			return new DiskObject(index, f, new File(storeDir_, fileName));
+			return new DiskObject(index, f, new File(parent, fileName));
 		} catch (Exception e) {
 			throw new ObjectLoadException("Failed to build canonical disk " +
 				"object for index/key: " + index, e);
