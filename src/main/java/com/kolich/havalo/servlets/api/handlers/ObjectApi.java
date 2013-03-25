@@ -27,6 +27,7 @@
 package com.kolich.havalo.servlets.api.handlers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.io.Files.move;
 import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.HttpHeaders.ETAG;
@@ -36,6 +37,7 @@ import static com.kolich.common.util.URLEncodingUtils.urlDecode;
 import static com.kolich.common.util.secure.KolichChecksum.getSHA1HashAndCopy;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_UPLOAD_MAX_SIZE_PROPERTY;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
+import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.io.IOUtils.copyLarge;
 import static org.apache.commons.lang3.Validate.notEmpty;
@@ -240,13 +242,14 @@ public final class ObjectApi extends HavaloApiServlet {
 									true);
 								// The file itself (should exist now).
 								final File objFile = object.getFile();
+								final File tempObjFile = object.getTempFile();
 								InputStream is = null;
 								OutputStream os = null;
-								try {									
+								try {
 									is = request_.getInputStream();
 									// Create a new output stream which will point at
-									// the new home of this HFO on the file system.
-									os = new FileOutputStream(objFile);
+									// the new home of this temp HFO on the file system.
+									os = new FileOutputStream(tempObjFile);
 									// Compute the ETag (an MD5 hash of the file) while
 									// copying the file into place.  The bytes of the
 									// input stream and piped into an MD5 digest _and_
@@ -259,6 +262,11 @@ public final class ObjectApi extends HavaloApiServlet {
 										// to be sent.  Anything more than this
 										// is caught gracefully and dropped.
 										contentLength));
+									// Move the uploaded file into place (moves
+									// the file from the temp location to the
+									// real destiation inside of the repository
+									// on disk).
+									move(tempObjFile, objFile);
 									// Set the Last-Modified header (meta data).
 									hfo.setLastModified(objFile.lastModified());
 									// Set the Content-Length header (meta data).
@@ -268,11 +276,21 @@ public final class ObjectApi extends HavaloApiServlet {
 										hfo.setContentType(contentType);
 									}
 								} catch (KolichChecksumException e) {
+									// Quietly delete the object on disk when
+									// it has exceeded the max upload size allowed
+									// by this Havalo instance.							
 									throw new ObjectTooLargeException("The " +
 										"size of the incoming object is too " +
 										"large. Max upload size is " +
 										uploadMaxSize_ + "-bytes.", e);
 								} finally {
+									// Delete the file from the temp upload
+									// location.  Note, this file may not exist
+									// if the upload was successful and the object
+									// was moved into place.. which is OK here.
+									deleteQuietly(tempObjFile);
+									// Close any associated streams for this
+									// object upload.
 									closeQuietly(os);
 									closeQuietly(is);
 								}
@@ -284,8 +302,8 @@ public final class ObjectApi extends HavaloApiServlet {
 							@Override
 							public void success(final HashedFileObject e) throws Exception {
 								// On success only, ask the repo manager to
-								// asynchronously flush this repository's meta data
-								// to disk.
+								// asynchronously flush this repository's meta
+								// data to disk.
 								flushRepository(repo);
 							}
 						}.write(); // Exclusive lock on this HFO, no wait

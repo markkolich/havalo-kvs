@@ -36,11 +36,19 @@ public final class DiskObject extends HavaloFileEntity implements Serializable {
 	private static final long serialVersionUID = -3291763185439424118L;
 	
 	// Not serialized by GSON
-	private transient File file_;
+	private transient final File file_;
 	
-	public DiskObject(String name, File file) {
+	// Not serialized by GSON
+	private transient final File tempFile_;
+	
+	public DiskObject(String name, File file, File tempFile) {
 		super(name);
 		file_ = file;
+		tempFile_ = tempFile;
+	}
+	
+	public DiskObject(String name, File file) {
+		this(name, file, null);
 	}
 	
 	public DiskObject(String name) {
@@ -54,6 +62,10 @@ public final class DiskObject extends HavaloFileEntity implements Serializable {
 	
 	public File getFile() {
 		return file_;
+	}
+	
+	public File getTempFile() {
+		return tempFile_;
 	}
 
 	@Override

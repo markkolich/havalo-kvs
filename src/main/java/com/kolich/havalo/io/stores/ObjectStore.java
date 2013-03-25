@@ -26,24 +26,14 @@
 
 package com.kolich.havalo.io.stores;
 
-import static com.kolich.common.util.crypt.Base32Utils.decodeBase32;
 import static com.kolich.common.util.crypt.Base32Utils.encodeBase32;
-import static java.lang.System.getProperty;
-import static java.util.regex.Pattern.compile;
-import static java.util.regex.Pattern.quote;
+import static org.apache.commons.io.FileUtils.forceMkdir;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.regex.Pattern;
-
-import org.apache.commons.io.FileUtils;
 
 import com.kolich.havalo.entities.types.DiskObject;
-import com.kolich.havalo.entities.types.ObjectList;
 import com.kolich.havalo.exceptions.objects.ObjectLoadException;
-import com.kolich.havalo.exceptions.repositories.RepositoryListObjectsException;
 
 public abstract class ObjectStore {
 	
@@ -55,13 +45,7 @@ public abstract class ObjectStore {
 	 * itself.
 	 */
 	private static final int DEFAULT_MAX_FILENAME_LENGTH = 255;
-	
-	/**
-	 * Character that separates components of a file path. This is
-	 * "/" on UNIX and "\" on Windows.
-	 */
-	private static final String FILE_SEPARATOR = getProperty("file.separator");
-	
+		
 	/**
 	 * The max length of a cache filename before it's split up
 	 * into multiple directories.  Default is 255 to work on most
@@ -121,14 +105,14 @@ public abstract class ObjectStore {
 			if(makeParentDirs) {				
 				try {
 					final File parentDir = f.getParentFile();
-					FileUtils.forceMkdir(parentDir);
+					forceMkdir(parentDir);
 				} catch (Exception e) {
 					throw new IOException("Could not create required parent " +
 						"directories for object (file=" + f.getAbsolutePath() +
 							")", e);
 				}
 			}
-			return new DiskObject(index, f);
+			return new DiskObject(index, f, new File(storeDir_, fileName));
 		} catch (Exception e) {
 			throw new ObjectLoadException("Failed to build canonical disk " +
 				"object for index/key: " + index, e);
@@ -141,6 +125,7 @@ public abstract class ObjectStore {
 			makeParentDirs);
 	}
 	
+	/*
 	protected ObjectList listFiles(final File directory,
 		final boolean recursive) {
 		// A new index.
@@ -187,9 +172,10 @@ public abstract class ObjectStore {
 	protected ObjectList listFiles(final File directory) {
 		return listFiles(directory, true);
 	}
+	*/
 	
 	protected File getStoreDir() {
 		return storeDir_;
 	}
-
+	
 }
