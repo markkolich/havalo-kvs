@@ -44,7 +44,7 @@ public abstract class ObjectStore {
 	 * max length of any component along the path, not the entire path
 	 * itself.
 	 */
-	private static final int DEFAULT_MAX_FILENAME_LENGTH = 255;
+	public static final int DEFAULT_MAX_FILENAME_LENGTH = 255;
 		
 	/**
 	 * The max length of a cache filename before it's split up

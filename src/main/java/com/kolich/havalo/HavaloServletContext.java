@@ -61,8 +61,9 @@ public final class HavaloServletContext implements ServletContextListener {
 	public static final String HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE = "havalo.userservice";
 	
 	public static final String HAVALO_API_MAX_CONCURRENT_REQUESTS_PROPERTY = "havalo.api.request.max";
-	
+		
 	public static final String HAVALO_REPO_BASE_CONFIG_PROPERTY = "havalo.repository.base";
+	public static final String HAVALO_REPO_MAX_FILENAME_LENGTH_PROPERTY = "havalo.repository.max-filename-length";
 	public static final String HAVALO_ADMIN_API_UUID_PROPERTY = "havalo.api.admin.uuid";
 	public static final String HAVALO_ADMIN_API_SECRET_PROPERTY = "havalo.api.admin.secret";
 	
@@ -108,6 +109,7 @@ public final class HavaloServletContext implements ServletContextListener {
 	
 	private static final RepositoryManager getRepositoryManager(
 		final ServletContext context, final Config config) {
+		final int maxFilenameLength = config.getInt(HAVALO_REPO_MAX_FILENAME_LENGTH_PROPERTY);
 		String repositoryBase = config.getString(HAVALO_REPO_BASE_CONFIG_PROPERTY);
 		if(repositoryBase == null) {
 			logger__.warn("Config property '" + HAVALO_REPO_BASE_CONFIG_PROPERTY +
@@ -126,7 +128,8 @@ public final class HavaloServletContext implements ServletContextListener {
 			realPath = new File(context.getRealPath("/" + repositoryBase));
 		}
 		logger__.info("Using repository root at: " + realPath.getAbsolutePath());
-		return new RepositoryManager(realPath);
+		logger__.info("Max repository object filename length: " + maxFilenameLength);
+		return new RepositoryManager(realPath, maxFilenameLength);
 	}
 	
 	private static final RepositoryManager createInitialAdminRepository(

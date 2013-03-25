@@ -66,9 +66,9 @@ public final class RepositoryManager extends ObjectStore {
 	 */
 	private final Cache<HavaloUUID, Repository> repositories_;
 		
-	public RepositoryManager(final File objectDir) {
+	public RepositoryManager(final File objectDir, final int maxFileNameLength) {
 		// Set the directory that will physicially store the repositories.
-		super(objectDir);
+		super(objectDir, maxFileNameLength);
 		// Setup the meta store that's used to store meta data about each
 		// repository on disk.  The root of the repository meta data store
 		// is always the same as the repository root.
