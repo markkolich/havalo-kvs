@@ -121,6 +121,10 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 		try {
 			result = Long.parseLong(getHeader(headerName));
 		} catch (Exception e) {
+			// Kinda questionable that this is the right thing to do, but
+			// it seemed to make sense.  If the Content-Length header was
+			// unparsable (or didn't exist) then we just return a -1 instead
+			// of bubbling up such exceptions to the caller.
 			result = -1L;
 		}
 		return result;

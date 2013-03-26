@@ -6,7 +6,7 @@
   version="3.0">
   
 	<display-name>Havalo</display-name>
-	<description>A zero configuration, non-distributed key-value store.</description>
+	<description>A zero configuration, non-distributed key-value store that runs in your existing Servlet container.</description>
 
 	<context-param>
 		<param-name>webAppRootKey</param-name>

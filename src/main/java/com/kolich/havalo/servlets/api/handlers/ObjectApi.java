@@ -149,11 +149,20 @@ public final class ObjectApi extends HavaloApiServlet {
 							@Override
 							public HashedFileObject transaction() throws Exception {
 								final DiskObject object = getCanonicalObject(repo, hfo);
+								// Validate that the object file exists on disk
+								// before we attempt to load it.
+								if(!object.getFile().exists()) {
+									throw new ObjectNotFoundException("Failed " +
+										"to find canonical object on disk " +
+										"(key=" + key + ", file=" +
+										object.getFile().getAbsolutePath() +
+										")");
+								}
 								streamHeaders(object, hfo, response_);
 								streamObject(object, response_);
 								return hfo;
 							}
-						}.read(); // Shared read lock on file object
+						}.read(); // Shared read lock on file object, wait
 						return null;
 					}
 				}.read(false); // Shared read lock on repo, no wait
