@@ -67,6 +67,7 @@ import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.objects.ObjectConflictException;
+import com.kolich.havalo.exceptions.objects.ObjectLengthNotSpecifiedException;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
 import com.kolich.havalo.exceptions.objects.ObjectTooLargeException;
 import com.kolich.havalo.servlets.api.HavaloApiServlet;
@@ -193,20 +194,19 @@ public final class ObjectApi extends HavaloApiServlet {
 						final String contentType = getHeader(CONTENT_TYPE);
 						final String ifMatch = getHeader(IF_MATCH);
 						final long contentLength;
-						// Some HTTP clients may not send a proper Content-Length
-						// request header, but we still need to enforce the max
-						// object size on the server side.
-						if(getHeaderAsLong(CONTENT_LENGTH) < 0) {
-							logger__.warn("Client sent request where '" +
-								CONTENT_LENGTH + "' header was not present " +
-								"or less than zero.  Defaulting to " +
-								uploadMaxSize_ + "-bytes.");
-							contentLength = uploadMaxSize_;
-						} else {
-							contentLength = getHeaderAsLong(CONTENT_LENGTH);
+						// Havalo requires the consumer to send a Content-Length
+						// request header with the request when uploading an
+						// object.
+						if((contentLength = getHeaderAsLong(CONTENT_LENGTH)) < 0L) {
+							// A value of -1 indicates that no Content-Length
+							// header was set.  Bail gracefully.
+							throw new ObjectLengthNotSpecifiedException("Client " +
+								"sent request where '" + CONTENT_LENGTH +
+								"' header was not present or less than zero.");
 						}
-						// Validate that we've got an OK Content-Length before
-						// we proceed.
+						// Only accept the object if the Content-Length of the
+						// incoming request is less than or equal to the max
+						// upload size.
 						if(contentLength > uploadMaxSize_) {
 							throw new ObjectTooLargeException("The '" +
 								CONTENT_LENGTH + "' of the incoming request " +
@@ -264,7 +264,7 @@ public final class ObjectApi extends HavaloApiServlet {
 										contentLength));
 									// Move the uploaded file into place (moves
 									// the file from the temp location to the
-									// real destiation inside of the repository
+									// real destination inside of the repository
 									// on disk).
 									move(tempObjFile, objFile);
 									// Set the Last-Modified header (meta data).
