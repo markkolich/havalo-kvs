@@ -2,9 +2,10 @@
 
 <html><body>
 
-	<h2>500 Internal Server Error</h2>
+	<h2>Havalo</h2>
+	<h3>500 Internal Server Error</h3>
 	
-	<p>	
+	<pre>
 	<% 
 	try {
 		// The Servlet spec guarantees this attribute will be available
@@ -40,6 +41,6 @@
 		e.printStackTrace(new java.io.PrintWriter(out));
 	}
 	%>	
-	</p>
+	</pre>
 
 </body></html>
