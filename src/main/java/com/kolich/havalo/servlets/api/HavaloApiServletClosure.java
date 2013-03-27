@@ -28,6 +28,7 @@ package com.kolich.havalo.servlets.api;
 
 import static com.google.common.net.MediaType.JSON_UTF_8;
 import static com.kolich.common.DefaultCharacterEncoding.UTF_8;
+import static com.kolich.common.util.URLEncodingUtils.urlDecode;
 import static com.kolich.havalo.servlets.filters.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
@@ -105,6 +106,15 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 	
 	protected final String getEndOfRequestURI() {
 		return requestUri_.substring(requestUri_.lastIndexOf("/")+1);
+	}
+	
+	/**
+	 * Returns the last slash separated component of the request URI,
+	 * URL-decoded.  For example, if the request URI is
+	 * "/foobar/dog/kewl%2Fdood" then this method will return "kewl/dood".  
+	 */
+	protected final String getRequestObject() {
+		return urlDecode(getEndOfRequestURI());
 	}
 	
 	protected final String getHeader(final String headerName) {

@@ -26,7 +26,6 @@
 
 package com.kolich.havalo.servlets.api.handlers;
 
-import static com.kolich.common.util.URLEncodingUtils.urlDecode;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_ADMIN_API_UUID_PROPERTY;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.lang3.Validate.notEmpty;
@@ -109,7 +108,7 @@ public final class RepositoryApi extends HavaloApiServlet {
 			@Override
 			public S execute(final KeyPair userKp) throws Exception {
 				// URL-decode the incoming key (the UUID of the repo)
-				final String key = urlDecode(getEndOfRequestURI());							
+				final String key = getRequestObject();							
 				notEmpty(key, "Key cannot be null or empty.");
 				// Only admin level users have the right to delete repositories.
 				if(!userKp.isAdmin()) {

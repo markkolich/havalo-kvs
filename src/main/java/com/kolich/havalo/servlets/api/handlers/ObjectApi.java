@@ -33,7 +33,6 @@ import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.HttpHeaders.ETAG;
 import static com.google.common.net.HttpHeaders.IF_MATCH;
 import static com.google.common.net.MediaType.OCTET_STREAM;
-import static com.kolich.common.util.URLEncodingUtils.urlDecode;
 import static com.kolich.common.util.secure.KolichChecksum.getSHA1HashAndCopy;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_UPLOAD_MAX_SIZE_PROPERTY;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
@@ -102,7 +101,7 @@ public final class ObjectApi extends HavaloApiServlet {
 					@Override
 					public Void transaction() throws Exception {
 						// URL-decode the incoming key (the name of the object)
-						final String key = urlDecode(getEndOfRequestURI());							
+						final String key = getRequestObject();
 						notEmpty(key, "Key cannot be null or empty.");
 						final HashedFileObject hfo = getHashedFileObject(repo,
 							// The URL-decoded key of the object to delete.
@@ -138,7 +137,7 @@ public final class ObjectApi extends HavaloApiServlet {
 					@Override
 					public Void transaction() throws Exception {
 						// URL-decode the incoming key (the name of the object)
-						final String key = urlDecode(getEndOfRequestURI());							
+						final String key = getRequestObject();							
 						notEmpty(key, "Key cannot be null or empty.");
 						final HashedFileObject hfo = getHashedFileObject(repo,
 							// The URL-decoded key of the object to delete.
@@ -198,7 +197,7 @@ public final class ObjectApi extends HavaloApiServlet {
 					@Override
 					public HashedFileObject transaction() throws Exception {						
 						// URL-decode the incoming key (the name of the object)
-						final String key = urlDecode(getEndOfRequestURI());							
+						final String key = getRequestObject();							
 						notEmpty(key, "Key cannot be null or empty.");
 						final String contentType = getHeader(CONTENT_TYPE);
 						final String ifMatch = getHeader(IF_MATCH);
@@ -329,7 +328,7 @@ public final class ObjectApi extends HavaloApiServlet {
 			@Override
 			public S execute(final KeyPair userKp) throws Exception {
 				// URL-decode the incoming key (the name of the object)
-				final String key = urlDecode(getEndOfRequestURI());							
+				final String key = getRequestObject();							
 				notEmpty(key, "Key cannot be null or empty.");
 				final String ifMatch = getHeader(IF_MATCH);
 				// The delete operation does return a pointer to the "deleted"
