@@ -66,14 +66,13 @@ object Dependencies {
 
   private val commonsLang = "org.apache.commons" % "commons-lang3" % "3.1" % "compile"
   private val commonsCodec = "commons-codec" % "commons-codec" % "1.6" % "compile"
-  private val commonsFileupload = "commons-fileupload" % "commons-fileupload" % "1.2.2" % "compile"
 
   val deps = Seq(kolichCommon, kolichBolt,
     jettyWebApp, jettyPlus, jettyJsp,
     jspApi, jstl, servlet,
     ardverkTrie,
     typesafeConfig,
-    commonsLang, commonsCodec, commonsFileupload,
+    commonsLang, commonsCodec,
     logback, logbackClassic, slf4j, jclOverSlf4j)
 
 }
