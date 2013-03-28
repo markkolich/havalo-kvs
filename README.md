@@ -6,7 +6,7 @@ Sometimes you just need fast K,V storage, but don't need full redundancy and sca
 
 Havalo is perfect for testing, maintaining fast indexes of records stored "elsewhere", and almost every other deployment scenario where relational databases are just too heavy.
 
-The latest <a href="http://markkolich.github.com/downloads/havalo/0.0.5/havalo-0.0.5.war">stable version of Havalo is 0.0.5</a>.
+The latest <a href="http://markkolich.github.com/downloads/havalo/1.2/havalo-1.2.war">stable version of Havalo is 1.2</a>.
 
 ## Features
 
@@ -213,21 +213,16 @@ Run SBT from within your newly cloned *havalo* directory.
     #~> cd havalo
     #~/havalo> sbt
     ...
-    havalo:0.0.5>
+    havalo:1.2>
 
 You will see a `havalo` SBT prompt once all dependencies are resolved and the project is loaded.
 
 In SBT, run `container:start` to start the local Servlet container.  By default the server listens on **port 8080**.
 
-    havalo:0.0.5> container:start
-    [info] jetty-8.0.4.v20111024
-    [info] started o.e.j.w.WebAppContext{/,[file:~/havalo/src/main/webapp/]}
-    [info] Initializing Spring root WebApplicationContext
-    ...
-    10/27 10:41:33 INFO  [pool-6-thread-2] o.s.w.s.DispatcherServlet -
-        FrameworkServlet 'havalo': initialization completed in 60 ms
-    [info] Started SelectChannelConnector@0.0.0.0:8080 STARTING
-    [success] Total time: 2 s, completed Oct 27, 2012 10:41:33 AM
+    havalo:1.2> container:start
+    [info] jetty-8.1.10.v20130312
+    [info] Started SelectChannelConnector@0.0.0.0:8080
+    [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
 
 In your nearest web-browser, visit <a href="http://localhost:8080">http://localhost:8080</a> and you should see the Havalo application homepage &mdash; it's a blank page that says *Havalo*.  The Havalo API endpoint can be found at <a href="http://localhost:8080/api">http://localhost:8080/api</a>.
 
@@ -237,20 +232,20 @@ See the <a href="https://github.com/siasia/xsbt-web-plugin/wiki">xsbt-web-plugin
 
 In SBT, run `package` to build a deployable WAR for your favorite Servlet container.
 
-    havalo:0.0.5> package
+    havalo:1.2> package
     ...
-    [info] Compiling 49 Java sources to ~/havalo/target/classes...
-    [info] Packaging ~/havalo/dist/havalo-0.0.5.jar ...
+    [info] Compiling 51 Java sources to ~/havalo/target/classes...
+    [info] Packaging ~/havalo/dist/havalo-1.2.jar ...
     [info] Done packaging.
-    [info] Packaging ~/havalo/dist/havalo-0.0.5.war ...
+    [info] Packaging ~/havalo/dist/havalo-1.2.war ...
     [info] Done packaging.
-    [success] Total time: 8 s, completed Oct 27, 2012 10:47:38 AM
+    [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
 
 Note the resulting WAR is placed into the **havalo/dist** directory.  Deploy and enjoy.
 
 To create an Eclipse Java project for Havalo, run `eclipse` in SBT.
 
-    havalo:0.0.5> eclipse
+    havalo:1.2> eclipse
     ...
     [info] Successfully created Eclipse project files for project(s):
     [info] havalo
