@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012 Mark S. Kolich
+ * Copyright (c) 2013 Mark S. Kolich
  * http://mark.koli.ch
  *
  * Permission is hereby granted, free of charge, to any person
@@ -92,7 +92,7 @@ object Common extends Build {
   import Resolvers._
 
   private val aName = "havalo"
-  private val aVer = "1.0"
+  private val aVer = "1.2"
   private val aOrg = "com.kolich"
 
   lazy val havalo: Project = Project(
