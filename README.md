@@ -2,27 +2,27 @@
 
 A zero configuration, non-distributed key-value store that runs in your existing Servlet container.
 
-Sometimes you just need fast K,V storage, but don't need full redundancy and scalability (`localhost` will do just fine).  With Havalo, simply drop `havalo.war` into your favorite Servlet 3.0 compatible container and with almost no configuration you'll have access to a fast and lightweight NoSQL engine backed by any local mount point for persistent storage.  And, Havalo has a pleasantly simple RESTful API for your added enjoyment.
+Sometimes you just need fast NoSQL storage, but don't need full redundancy and scalability (that's right, `localhost` will do just fine).  With Havalo, simply drop `havalo.war` into your favorite Servlet 3.0 compatible container and with almost no configuration you'll have access to a fast and lightweight K,V store backed by any local mount point for persistent storage.  And, Havalo has a pleasantly simple RESTful API for your added enjoyment.
 
-Havalo is perfect for testing, maintaining fast indexes of records stored "elsewhere", and almost every other deployment scenario where relational databases are just too heavy.
+Havalo is perfect for testing, maintaining fast indexes of data stored "elsewhere", and almost any other deployment scenario where relational databases are just too heavy.
 
 The latest <a href="http://markkolich.github.com/downloads/havalo/1.2/havalo-1.2.war">stable version of Havalo is 1.2</a>.
 
 ## Features
 
-* **Zero Configuration** &ndash; Drop `havalo.war` into your Servlet 3.0 compatible container, and get local NoSQL storage with **nothing else to install**.  For a slightly *more* secure deployment, create one `.conf` file with the right magic inside and place it in your Servlet container's default configuration directory.
+* **Zero Configuration** &ndash; Drop `havalo.war` into your Servlet 3.0 compatible container, and get local NoSQL storage with nothing else to install &mdash; Havalo is built to run alongside your exsting applications.  For a slightly more secure deployment, create one `.conf` file with the right magic inside and place it in your Servlet container's default configuration directory.
 
 * **In-Memory Locking** &ndash; Completely avoids relying on the filesystem to manage resource locking.  As a result, Havalo manages all locks on objects and repositories in local memory.  As such, Havalo behaves the same on ext3, ext4, NTFS, NFS Plus, etc.  No matter where you deploy Havalo, you can trust it will do the right thing.
 
 * **In-Memory Indexing** &ndash; Searchable object indexes are held in memory and flushed to disk as needed.  The size of your object indexes are only limited by the amount of memory available to your Servlet container JVM.
 
-* **Trusted Stack** &ndash; Written in Java, built around *raw* asynchronous servlet's with no "bloated frameworks" to get in the way.  Deployable in any **Servlet 3.0** compatible container.  Fully tested and qualified on Tomcat 7 and Jetty 8.
+* **Trusted Stack** &ndash; Written in Java, built around *raw asynchronous* servlet's with no "bloated frameworks" to get in the way.  Deployable in any **Servlet 3.0** compatible container.  Fully tested and qualified on Tomcat 7 and Jetty 8.
 
-* **RESTful API** &ndash; Once deployed, Havalo immediately provides a RESTful API that just makes perfect sense.  All API responses are in pure JSON &mdash; no awful XML, anywhere. 
+* **RESTful API** &ndash; Havalo offers a <a href="#api">simple RESTful API that just makes perfect sense</a>.  All API responses are in pure JSON &mdash; no XML, anywhere. 
 
 * **ETag and If-Match Support** &ndash; All objects are stored with an automatically generated SHA-1 `ETag` hash of the binary object data.  As such, subsequent update operations on that object can be conditional if desired.  In slightly more technical terms, accept a `PUT` for an object only if the SHA-1 hash sent with the `If-Match` HTTP request header matches the existing object `ETag` hash.
 
-* **Havalo Client** &ndash; A Java client for the <a href="https://github.com/markkolich/havalo#api">Havalo API</a> is available off-the-shelf as provided by the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> project.  If you'd rather not use the provided Java client, it's straightforward to write a client for the <a href="https://github.com/markkolich/havalo#api">Havalo API</a> in a language of your choice.
+* **Havalo Client** &ndash; A Java client for the <a href="#api">Havalo API</a> is available off-the-shelf as provided by the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> project.  If you'd rather not use the provided Java client, it's straightforward to write a client for the <a href="#api">Havalo API</a> in a language of your choice.
 
 ## Compatibility
 
@@ -66,6 +66,27 @@ Therefore, if you intend to use Havalo with Tomcat 7, you must add the following
 ## Considerations
 
 Havalo is **not** an off-the-shelf replacement for <a href="http://aws.amazon.com/s3/">Amazon S3</a>, <a href="http://redis.io">Redis</a>, <a href="http://www.project-voldemort.com/voldemort/">Voldemort</a> or <a href="http://cassandra.apache.org/">Apache's Cassandra</a>.  If you need completely fault-tolerant, distributed K,V storage then Havalo is probably not for you.
+
+## Deployment
+
+Deploying Havalo into your environment is a snap.
+
+You have two deployment options:
+
+1. Default &ndash; Drop the Havalo `.war` file into your Servlet container's `webapps` directory, and away you go.
+2. Custom &ndash; Create a custom `havalo.conf` file and place it into your Servlet container's `conf` directory.  Then, drop the Havalo `.war` file into your Servlet container's `webapps` directory.
+
+### Default
+
+If desired, Havalo supports "hot deployment" which allows you to deploy or undeploy the application without stopping your Servlet container.
+
+1. Download the <a href="http://markkolich.github.com/downloads/havalo">latest version</a> of Havalo.  This is a `.war` file you will drop into your Servlet container.
+2. Copy the `.war` file into your Servlet container's `webapps` directory.
+3. Start your Servlet container, if not already running.
+
+### Custom
+
+To be written.
 
 ## Fundamentals
 
