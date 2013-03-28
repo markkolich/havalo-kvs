@@ -228,7 +228,7 @@ In your nearest web-browser, visit <a href="http://localhost:8080">http://localh
 
 To stop the development server, run `container:stop`.
 
-See the <a href="https://github.com/siasia/xsbt-web-plugin/wiki">xsbt-web-plugin wiki</a> for all of the gory details on managing the development servlet container from SBT.
+See the <a href="https://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki">xsbt-web-plugin wiki</a> for all of the gory details on managing the development servlet container from SBT.
 
 In SBT, run `package` to build a deployable WAR for your favorite Servlet container.
 
