@@ -82,16 +82,16 @@ public abstract class HavaloApiServletClosure<S extends HavaloEntity>
 				renderEntity(logger_, response_, result);
 			}
 		} catch (HavaloException e) {
-			logger_.debug(comment, e);
+			logger_.warn(comment, e);
 			renderHavaloException(logger_, response_, e);
 		} catch (LockConflictException e) {
-			logger_.debug(comment, e);
+			logger_.warn(comment, e);
 			renderError(logger_, response_, SC_CONFLICT, e);
 		} catch (IllegalArgumentException e) {
-			logger_.debug(comment, e);
+			logger_.warn(comment, e);
 			renderError(logger_, response_, SC_BAD_REQUEST, e);
 		} catch (Exception e) {
-			logger_.debug(comment, e);
+			logger_.warn(comment, e);
 			renderError(logger_, response_, e);
 		} finally {
 			logger_.debug("Finishing handle of " + comment);

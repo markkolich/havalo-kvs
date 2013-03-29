@@ -62,7 +62,7 @@ public final class HashedFileObject extends HavaloFileEntity
 		
 	// For GSON
 	public HashedFileObject() {
-		this(null, null);
+		this(null);
 	}
 	
 	public HashedFileObject setLastModified(Date lastModified) {		
@@ -110,12 +110,20 @@ public final class HashedFileObject extends HavaloFileEntity
 	 * @param headerValue
 	 * @return
 	 */
-	public HashedFileObject setHeader(final String headerName,
+	public HashedFileObject addHeader(final String headerName,
 		final String headerValue) {
 		List<String> list = null;
 		if((list = headers_.get(headerName)) == null) {
 			list = new ArrayList<String>();
 		}
+		list.add(headerValue);
+		headers_.put(headerName, list);
+		return this;
+	}
+	
+	public HashedFileObject setHeader(final String headerName,
+		final String headerValue) {
+		final List<String> list = new ArrayList<String>();
 		list.add(headerValue);
 		headers_.put(headerName, list);
 		return this;
