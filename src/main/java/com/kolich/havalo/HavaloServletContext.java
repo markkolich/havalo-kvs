@@ -64,7 +64,7 @@ public final class HavaloServletContext implements ServletContextListener {
 	public static final String HAVALO_API_MAX_CONCURRENT_REQUESTS_PROPERTY = "havalo.api.request.max";
 		
 	public static final String HAVALO_REPO_BASE_CONFIG_PROPERTY = "havalo.repository.base";
-	public static final String HAVALO_REPO_MAX_FILENAME_LENGTH_PROPERTY = "havalo.repository.max-filename-length";
+	public static final String HAVALO_REPO_MAX_FILENAME_LENGTH_PROPERTY = "havalo.repository.maxfilename.length";
 	public static final String HAVALO_ADMIN_API_UUID_PROPERTY = "havalo.api.admin.uuid";
 	public static final String HAVALO_ADMIN_API_SECRET_PROPERTY = "havalo.api.admin.secret";
 	

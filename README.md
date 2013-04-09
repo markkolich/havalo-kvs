@@ -73,8 +73,8 @@ Deploying Havalo into your environment is a snap.
 
 You have two deployment options:
 
-1. Default &ndash; Drop the Havalo `.war` file into your Servlet container's `webapps` directory, and away you go.
-2. Custom &ndash; Create a custom `havalo.conf` file and place it into your Servlet container's `conf` directory.  Then, drop the Havalo `.war` file into your Servlet container's `webapps` directory.
+1. Default &ndash; Drop the Havalo `.war` file into your Servlet container's `webapps` directory, and away you go.  No JVM restart is needed unless required by your container. 
+2. Custom &ndash; Create a custom `havalo.conf` file and place it into your Servlet container's `conf` directory.  Then, drop the Havalo `.war` file into your Servlet container's `webapps` directory.  Note, if you are using the Tomcat Manager to deploy and manage your applications in Tomcat, you can also deploy the Havalo `.war` using the Tomcat Manager interface.
 
 ### Default
 
@@ -86,7 +86,31 @@ If desired, Havalo supports "hot deployment" which allows you to deploy or undep
 
 ### Custom
 
-To be written.
+Havalo is configured using the HOCON configuration format provided by the <a href="https://github.com/typesafehub/config">Typesafe Config</a> library.  Read more about HOCON and its similarities to JSON <a href="https://github.com/typesafehub/config#json-superset">here</a>.
+
+The Havalo default configuration file, <a href="https://github.com/markkolich/havalo/blob/master/src/main/resources/reference.conf">reference.conf</a>, is shipped inside of the Havalo `.war` file.  To override any of these configuration properties, simply drop a file named `havalo.conf` into your Servlet container's `conf` directory.  For example, if running Havalo inside of Tomcat, drop your custom `havalo.conf` into `$CATALINA_HOME\conf` before deploying `havalo.war`.
+
+Finally, note you only need to override the configuration properties you want to change.  For example, if you only want to override the location on disk where Havalo stores its repositories and objects, create a `havalo.conf` file that looks like this:
+
+```no-highlight
+havalo {
+  api {
+    admin.uuid = "your admin UUID goes here"
+    admin.secret = "your admin API secret goes here"
+  }
+  repository {
+    base = "/path/to/your/havalo/root"
+  }
+}
+```
+
+For a complete list of configurable properties and their description, see the <a href="https://github.com/markkolich/havalo/blob/master/src/main/resources/reference.conf">Havalo default reference.conf</a>.
+
+### Security
+
+If you plan to use Havalo in a real production environment exposed to the world, you should be sure to change the `havalo.api.admin.uuid` and `havalo.api.admin.secret` configuration properties.
+
+The `havalo.api.admin.uuid` and `havalo.api.admin.secret` configuration properties define the default administrator user credentials that are used to create/delete users and repositories.  These should be set to something "unguessable" and unique to your environment before Havalo deployment.
 
 ## Fundamentals
 
