@@ -88,7 +88,7 @@ If desired, Havalo supports "hot deployment" which allows you to deploy or undep
 
 Havalo is configured using the HOCON configuration format provided by the <a href="https://github.com/typesafehub/config">Typesafe Config</a> library.  Read more about HOCON and its similarities to JSON <a href="https://github.com/typesafehub/config#json-superset">here</a>.
 
-The Havalo default configuration file, <a href="https://github.com/markkolich/havalo/blob/master/src/main/resources/reference.conf">reference.conf</a>, is shipped inside of the Havalo `.war` file.  To override any of these configuration properties, simply drop a file named `havalo.conf` into your Servlet container's `conf` directory.  For example, if running Havalo inside of Tomcat, drop your custom `havalo.conf` into `$CATALINA_HOME\conf` before deploying `havalo.war`.
+The Havalo default configuration file, <a href="https://github.com/markkolich/havalo/blob/master/src/main/resources/reference.conf">reference.conf</a>, is shipped inside of the Havalo `.war` file.  To override any of these configuration properties, simply drop a file named `havalo.conf` into your Servlet container's `conf` directory.  For example, if running Havalo inside of Tomcat, drop your custom `havalo.conf` into `$CATALINA_HOME/conf` before deploying `havalo.war`.
 
 Finally, note you only need to override the configuration properties you want to change.  For example, if you only want to override the location on disk where Havalo stores its repositories and objects, create a `havalo.conf` file that looks like this:
 
