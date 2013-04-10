@@ -1,6 +1,6 @@
 # Havalo
 
-A zero configuration, non-distributed key-value store that runs in any Servlet 3.0 compatible container.
+A zero configuration, non-distributed NoSQL key-value store that runs in any Servlet 3.0 compatible container.
 
 Sometimes you just need fast NoSQL storage, but don't need full redundancy and scalability (that's right, `localhost` will do just fine).  With Havalo, simply drop `havalo.war` into your favorite Servlet 3.0 compatible container and with <a href="#deployment">almost no configuration</a> you'll have access to a fast and lightweight K,V store backed by any local mount point for persistent storage.  And, Havalo has a pleasantly simple RESTful API for your added enjoyment.
 
