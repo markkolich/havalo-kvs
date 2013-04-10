@@ -116,13 +116,13 @@ The `havalo.api.admin.uuid` and `havalo.api.admin.secret` configuration properti
 
 There are a few fundamental constructs to be aware of when using Havalo and its API.
 
-* **Repositories** &ndash; Logical containers that hold objects.  You can think of repositories as a directory on disk that holds a bunch of files.  Each Havalo "user" you create is assigned a unique repository identified under-the-hood by a UUID &mdash; that user, once authenticated, can do whatever they want inside of their repository.
+* **Repositories** &ndash; Logical containers that hold objects.  You can think of repositories as a directory on disk that holds a bunch of files.  Each Havalo "user" you create is assigned a unique repository identified under-the-hood by a UUID &mdash; that user, once authenticated, can do whatever they want inside of their repository.  Note that the user-to-repository relationship is 1:1, meaning creating a repository is equivalent to creating a user, and deleting a repository is equivalent to deleting a user.
 
 * **Objects** &ndash; A blob of binary data.  Objects are anything you want up to a reasonable maximum of 2GB.  Using the Havalo API, you can attach pieces of arbitrary metadata to an object &mdash; sent to the API in the `Content-Type` and `ETag` HTTP request headers.  If a `Content-Type` is sent with an object to the API, that same `Content-Type` is sent back to the client when the object is retrieved.
 
 ## API
 
-Havalo provides a completely RESTful API that lets users `PUT` objects, `GET` objects, and `DELETE` objects in their repositories.  Additionally, administrator level users can also `POST` (create) repositories and `DELETE` repositories.  Note that the user-to-repository relationship is 1:1, meaning creating a repository is equivalent to creating a user, and deleting a repository is equivalent to deleting a user.
+Havalo provides a completely RESTful API that lets users `PUT` objects, `GET` objects, and `DELETE` objects in their repositories.  Additionally, administrator level users can also `POST` (create) repositories and `DELETE` repositories.
 
 ### Credentials
 
