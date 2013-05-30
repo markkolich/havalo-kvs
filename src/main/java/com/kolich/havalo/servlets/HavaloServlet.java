@@ -62,9 +62,8 @@ public abstract class HavaloServlet extends HttpServlet {
 		maxConcurrentRequests_ = config_.getInt(HAVALO_API_MAX_CONCURRENT_REQUESTS_PROPERTY);
 		asyncTimeout_ = config_.getLong(HAVALO_API_REQUEST_TIMEOUT_PROPERTY);
 		// Creates a thread pool that creates new threads as needed, but will
-		// reuse previously constructed threads when they are available,
-		// and uses the provided ThreadFactory to create new threads when
-		// needed.
+		// reuse previously constructed threads when they are available.
+		// Uses the provided ThreadFactory to create new threads as needed.
 		pool_ = Executors.newFixedThreadPool(
 			// Only support N-concurrent requests.
 			maxConcurrentRequests_,
@@ -83,49 +82,44 @@ public abstract class HavaloServlet extends HttpServlet {
 	@Override
 	public final void doTrace(final HttpServletRequest request,
 		final HttpServletResponse response) {
-		final AsyncContext context = request.startAsync(request, response);
-		context.setTimeout(asyncTimeout_);
-		pool_.submit(trace(context));
+		pool_.submit(trace(doAsync(request, response)));
 	}
 			
 	@Override
 	public final void doHead(final HttpServletRequest request,
 		final HttpServletResponse response) {
-		final AsyncContext context = request.startAsync(request, response);
-		context.setTimeout(asyncTimeout_);
-		pool_.submit(head(context));
+		pool_.submit(head(doAsync(request, response)));
 	}
 		
 	@Override
 	public final void doGet(final HttpServletRequest request,
 		final HttpServletResponse response) {
-		final AsyncContext context = request.startAsync(request, response);
-		context.setTimeout(asyncTimeout_);
-		pool_.submit(get(context));
+		pool_.submit(get(doAsync(request, response)));
 	}
 		
 	@Override
 	public final void doPost(final HttpServletRequest request,
 		final HttpServletResponse response) {
-		final AsyncContext context = request.startAsync(request, response);
-		context.setTimeout(asyncTimeout_);
-		pool_.submit(post(context));
+		pool_.submit(post(doAsync(request, response)));
 	}
 		
 	@Override
 	public final void doPut(final HttpServletRequest request,
 		final HttpServletResponse response) {
-		final AsyncContext context = request.startAsync(request, response);
-		context.setTimeout(asyncTimeout_);
-		pool_.submit(put(context));
+		pool_.submit(put(doAsync(request, response)));
 	}
 		
 	@Override
 	public final void doDelete(final HttpServletRequest request,
+		final HttpServletResponse response) {		
+		pool_.submit(delete(doAsync(request, response)));
+	}
+	
+	private final AsyncContext doAsync(final HttpServletRequest request,
 		final HttpServletResponse response) {
 		final AsyncContext context = request.startAsync(request, response);
 		context.setTimeout(asyncTimeout_);
-		pool_.submit(delete(context));
+		return context;
 	}
 	
 	public abstract <T extends HavaloEntity> HavaloServletClosure

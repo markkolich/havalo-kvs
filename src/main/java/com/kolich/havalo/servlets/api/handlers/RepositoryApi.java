@@ -119,7 +119,7 @@ public final class RepositoryApi extends HavaloApiServlet {
 				final HavaloUUID toDelete = new HavaloUUID(key);
 				final HavaloUUID adminId = new HavaloUUID(
 					getAppConfig().getString(HAVALO_ADMIN_API_UUID_PROPERTY));
-				// Admin users cannot delete the "admin" repository.
+				// Admin users cannot delete the root "admin" repository.
 				if(adminId.equals(toDelete)) {
 					throw new RepositoryForbiddenException("Authenticated " +
 						"admin user attempted to delete admin repository: " +

@@ -39,10 +39,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 public final class HavaloUUID implements Comparable<HavaloUUID> {
-	
-	public static final HavaloUUID HAVALO_ADMIN_UUID =
-		new HavaloUUID("00000000-0000-0000-0000-000000000000");
-	
+		
 	private final UUID id_;
 	
 	public HavaloUUID(UUID id) {
