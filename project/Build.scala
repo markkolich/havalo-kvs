@@ -85,7 +85,7 @@ object Resolvers {
 
 }
 
-object Common extends Build {
+object Havalo extends Build {
 
   import Dependencies._
   import Resolvers._
