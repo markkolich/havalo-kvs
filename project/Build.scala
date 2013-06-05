@@ -38,8 +38,8 @@ object Dependencies {
 
   // Internal dependencies
   
-  private val kolichCommon = "com.kolich" % "kolich-common" % "0.0.8" % "compile"
-  private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.4" % "compile"
+  private val kolichCommon = "com.kolich" % "kolich-common" % "0.0.9" % "compile"
+  private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.5" % "compile"
 
   // External dependencies
 
@@ -91,7 +91,7 @@ object Havalo extends Build {
   import Resolvers._
 
   private val aName = "havalo"
-  private val aVer = "1.2"
+  private val aVer = "1.2.1"
   private val aOrg = "com.kolich"
 
   lazy val havalo: Project = Project(
@@ -100,7 +100,7 @@ object Havalo extends Build {
     settings = Defaults.defaultSettings ++ Seq(resolvers := depResolvers) ++ Seq(
       version := aVer,
       organization := aOrg,
-      scalaVersion := "2.10.0",
+      scalaVersion := "2.10.1",
       javacOptions ++= Seq("-Xlint", "-g"),
       shellPrompt := { (state: State) => { "%s:%s> ".format(aName, aVer) } },
       // True to export the packaged JAR instead of just the compiled .class files.
