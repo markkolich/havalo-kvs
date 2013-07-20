@@ -29,9 +29,10 @@ package com.kolich.havalo.servlets;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_API_MAX_CONCURRENT_REQUESTS_PROPERTY;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_API_REQUEST_TIMEOUT_PROPERTY;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_CONFIG_ATTRIBUTE;
+import static java.lang.Thread.MAX_PRIORITY;
+import static java.util.concurrent.Executors.newFixedThreadPool;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletConfig;
@@ -64,13 +65,13 @@ public abstract class HavaloServlet extends HttpServlet {
 		// Creates a thread pool that creates new threads as needed, but will
 		// reuse previously constructed threads when they are available.
 		// Uses the provided ThreadFactory to create new threads as needed.
-		pool_ = Executors.newFixedThreadPool(
+		pool_ = newFixedThreadPool(
 			// Only support N-concurrent requests.
 			maxConcurrentRequests_,
 			// Use a thread build to create new threads in the pool.
 			new ThreadFactoryBuilder()
 				.setDaemon(true)
-				.setPriority(Thread.MAX_PRIORITY)
+				.setPriority(MAX_PRIORITY)
 				.setNameFormat("havalo-async-servlet-%d")
 				.build());
 	}
