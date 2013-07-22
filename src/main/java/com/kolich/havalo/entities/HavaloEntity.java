@@ -27,8 +27,12 @@
 package com.kolich.havalo.entities;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.kolich.common.date.ISO8601DateFormat.getPrimaryFormat;
+import static java.util.TimeZone.getTimeZone;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.ardverk.collection.Trie;
@@ -36,7 +40,6 @@ import org.ardverk.collection.Trie;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.kolich.common.date.ISO8601DateFormat;
 import com.kolich.common.entities.KolichCommonEntity;
 import com.kolich.common.entities.gson.KolichDefaultDateTypeAdapter;
 import com.kolich.havalo.entities.types.HashedFileObject;
@@ -48,6 +51,12 @@ import com.kolich.havalo.entities.types.Repository;
  * Any entity should extend this abstract class, {@link HavaloEntity}.
  */
 public abstract class HavaloEntity extends KolichCommonEntity {
+	
+	private static final DateFormat iso8601Format__;
+	static {
+		iso8601Format__ = new SimpleDateFormat(getPrimaryFormat());
+		iso8601Format__.setTimeZone(getTimeZone("GMT"));
+	}
 				
 	/**
 	 * Get a new {@link GsonBuilder} instance, configured accordingly.
@@ -59,7 +68,7 @@ public abstract class HavaloEntity extends KolichCommonEntity {
 		builderBuilder.registerTypeAdapter(new TypeToken<HavaloUUID>(){}.getType(),
 			new HavaloUUID.HavaloUUIDTypeAdapter());
 		builderBuilder.registerTypeAdapter(new TypeToken<Date>(){}.getType(),
-			new KolichDefaultDateTypeAdapter(ISO8601DateFormat.getPrimaryFormat()));
+			new KolichDefaultDateTypeAdapter(iso8601Format__));
 		builderBuilder.registerTypeAdapter(new TypeToken<File>(){}.getType(),
 			new Repository.FileTypeAdapter());
 		builderBuilder.registerTypeAdapter(new TypeToken<Trie<String, HashedFileObject>>(){}.getType(), 
