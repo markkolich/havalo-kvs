@@ -56,7 +56,7 @@ object Dependencies {
 
   //private val akkaActor = "com.typesafe.akka" % "akka-actor" % "2.0.5" % "compile"
   //private val akkaSlf4j = "com.typesafe.akka" % "akka-slf4j" % "2.0.5" % "compile"
-  private val typesafeConfig = "com.typesafe" % "config" % "1.0.0" % "compile"
+  private val typesafeConfig = "com.typesafe" % "config" % "1.0.2" % "compile"
 
   private val logback = "ch.qos.logback" % "logback-core" % "1.0.7" % "compile"
   private val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.0.7" % "compile" // An Slf4j impl
