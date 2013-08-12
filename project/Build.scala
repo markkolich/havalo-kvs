@@ -38,8 +38,9 @@ object Dependencies {
 
   // Internal dependencies
   
-  private val kolichCommon = "com.kolich" % "kolich-common" % "0.0.9" % "compile"
+  private val kolichCommon = "com.kolich" % "kolich-common" % "0.1.0" % "compile"
   private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.5" % "compile"
+  private val kolichServletClosure = "com.kolich" % "kolich-servlet-closure" % "0.1" % "compile"
 
   // External dependencies
 
@@ -66,7 +67,7 @@ object Dependencies {
   private val commonsLang = "org.apache.commons" % "commons-lang3" % "3.1" % "compile"
   private val commonsCodec = "commons-codec" % "commons-codec" % "1.6" % "compile"
 
-  val deps = Seq(kolichCommon, kolichBolt,
+  val deps = Seq(kolichCommon, kolichBolt, kolichServletClosure,
     jettyWebApp, jettyPlus, jettyJsp,
     jspApi, jstl, servlet,
     ardverkTrie,
@@ -91,7 +92,7 @@ object Havalo extends Build {
   import Resolvers._
 
   private val aName = "havalo"
-  private val aVer = "1.2.1"
+  private val aVer = "1.3"
   private val aOrg = "com.kolich"
 
   lazy val havalo: Project = Project(

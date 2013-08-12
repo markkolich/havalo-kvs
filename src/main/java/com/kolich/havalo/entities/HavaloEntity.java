@@ -27,8 +27,10 @@
 package com.kolich.havalo.entities;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.net.MediaType.JSON_UTF_8;
 import static com.kolich.common.date.ISO8601DateFormat.getPrimaryFormat;
 import static java.util.TimeZone.getTimeZone;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -40,17 +42,20 @@ import org.ardverk.collection.Trie;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.kolich.common.entities.KolichCommonEntity;
 import com.kolich.common.entities.gson.KolichDefaultDateTypeAdapter;
 import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.HavaloError;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
+import com.kolich.servlet.entities.common.KolichCommonAppendableServletClosureEntity;
 
 /**
  * Any entity should extend this abstract class, {@link HavaloEntity}.
  */
-public abstract class HavaloEntity extends KolichCommonEntity {
+public abstract class HavaloEntity
+	extends KolichCommonAppendableServletClosureEntity {
+	
+	private static final String JSON_UTF_8_TYPE = JSON_UTF_8.toString();
 	
 	private static final DateFormat iso8601Format__;
 	static {
@@ -86,9 +91,20 @@ public abstract class HavaloEntity extends KolichCommonEntity {
 	 * Serialize this entity to the provided {@link Appendable} writer.
 	 * @param writer
 	 */
+	@Override
 	public final void toWriter(final Appendable writer) {
 		checkNotNull(writer, "Cannot serialize entity using a null writer.");
 		getHavaloGsonInstance().toJson(this, writer);
+	}
+	
+	@Override
+	public int getStatus() {
+		return SC_OK;
+	}
+	
+	@Override
+	public String getContentType() {
+		return JSON_UTF_8_TYPE;
 	}
 	
 	/**

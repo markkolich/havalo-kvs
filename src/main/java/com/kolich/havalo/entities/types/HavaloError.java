@@ -73,6 +73,7 @@ public final class HavaloError extends HavaloEntity implements Serializable {
 		this(null);
 	}
 	
+	@Override
 	public int getStatus() {
 		return status_;
 	}
