@@ -33,8 +33,8 @@ public class MethodNotNotSupportedException extends HavaloException {
 	private static final long serialVersionUID = -7863924412834952274L;
 
 	public MethodNotNotSupportedException() {
-		super("Request method not allowed or supported.",
-			SC_METHOD_NOT_ALLOWED);
+		super(SC_METHOD_NOT_ALLOWED, "Request method not allowed or " +
+			"not supported.");
 	}
 	
 }

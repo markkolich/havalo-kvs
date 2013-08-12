@@ -35,15 +35,15 @@ public class ObjectNotFoundException extends HavaloException {
 	private static final long serialVersionUID = 5686431043127205040L;
 
 	public ObjectNotFoundException(String message, Exception cause) {
-		super(message, cause, SC_NOT_FOUND);
+		super(SC_NOT_FOUND, message, cause);
 	}
 	
 	public ObjectNotFoundException(Exception cause) {
-		super(cause, SC_NOT_FOUND);
+		super(SC_NOT_FOUND, cause);
 	}
 	
 	public ObjectNotFoundException(String message) {
-		super(message, SC_NOT_FOUND);
+		super(SC_NOT_FOUND, message);
 	}
 	
 }

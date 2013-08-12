@@ -33,15 +33,15 @@ public class BootstrapException extends HavaloException {
 	private static final long serialVersionUID = -7473419765855248861L;
 	
 	public BootstrapException(String message, Exception cause) {
-		super(message, cause, SC_INTERNAL_SERVER_ERROR);
+		super(SC_INTERNAL_SERVER_ERROR, message, cause);
 	}
 
 	public BootstrapException(String message) {
-		super(message, SC_INTERNAL_SERVER_ERROR);
+		super(SC_INTERNAL_SERVER_ERROR, message);
 	}
 	
 	public BootstrapException(Exception cause) {
-		super(cause, SC_INTERNAL_SERVER_ERROR);
+		super(SC_INTERNAL_SERVER_ERROR, cause);
 	}
 		
 }

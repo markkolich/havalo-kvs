@@ -32,16 +32,16 @@ public class HavaloException extends ServletClosureException.WithStatus {
 	
 	private static final long serialVersionUID = -7889750833064607753L;
 
-	public HavaloException(String message, Exception cause, int status) {
+	public HavaloException(int status, String message, Exception cause) {
 		super(status, message, cause);
 	}
 	
-	public HavaloException(Exception cause, int statusCode) {
-		super(statusCode, cause);
+	public HavaloException(int status, Exception cause) {
+		super(status, cause);
 	}
 	
-	public HavaloException(String message, int statusCode) {
-		super(statusCode, message, null);
+	public HavaloException(int status, String message) {
+		super(status, message, null);
 	}
 	
 }
