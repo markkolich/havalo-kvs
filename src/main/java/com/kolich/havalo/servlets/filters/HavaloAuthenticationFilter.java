@@ -30,7 +30,7 @@ import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.net.HttpHeaders.DATE;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE;
-import static com.kolich.havalo.servlets.api.HavaloApiServletClosure.renderError;
+import static com.kolich.servlet.closures.ServletClosureHandler.renderEntity;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.codec.binary.StringUtils.getBytesUtf8;
@@ -167,7 +167,7 @@ public final class HavaloAuthenticationFilter implements Filter {
         	if(authSuccess) {
         		chain.doFilter(req, resp);
         	} else {
-        		renderError(logger__, resp, new HavaloError(SC_UNAUTHORIZED,
+        		renderEntity(logger__, resp, new HavaloError(SC_UNAUTHORIZED,
         			"Authentication failed; either the provided signature " +
         			"did not match, or you do not have permission to access " +
         			"the requested resource."));

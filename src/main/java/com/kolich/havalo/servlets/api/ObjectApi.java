@@ -24,7 +24,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.servlets.api.handlers;
+package com.kolich.havalo.servlets.api;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.io.Files.move;
@@ -40,6 +40,7 @@ import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.io.IOUtils.copyLarge;
 import static org.apache.commons.lang3.Validate.notEmpty;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,15 +53,14 @@ import java.util.Map;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
 import com.kolich.common.util.secure.KolichChecksum.KolichChecksumException;
-import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.DiskObject;
 import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.KeyPair;
@@ -69,31 +69,32 @@ import com.kolich.havalo.exceptions.objects.ObjectConflictException;
 import com.kolich.havalo.exceptions.objects.ObjectLengthNotSpecifiedException;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
 import com.kolich.havalo.exceptions.objects.ObjectTooLargeException;
-import com.kolich.havalo.servlets.api.HavaloApiServlet;
-import com.kolich.havalo.servlets.api.HavaloApiServletClosure;
+import com.kolich.havalo.servlets.HavaloApiServlet;
+import com.kolich.havalo.servlets.HavaloServletClosureHandler;
+import com.kolich.servlet.entities.ServletClosureEntity;
 
 public final class ObjectApi extends HavaloApiServlet {
 	
 	private static final long serialVersionUID = 2047425072395464972L;
 	
-	private static final Logger logger__ =
-		LoggerFactory.getLogger(ObjectApi.class);
+	private static final Logger logger__ = getLogger(ObjectApi.class);
 	
 	private static final String OCTET_STREAM_TYPE = OCTET_STREAM.toString();
 	
 	private long uploadMaxSize_ = 0L;
 	
 	@Override
-	public final void init(final ServletConfig config) throws ServletException {
-		super.init(config);
-		uploadMaxSize_ = getAppConfig().getLong(HAVALO_UPLOAD_MAX_SIZE_PROPERTY);
+	public final void myInit(final ServletConfig servletConfig,
+		final ServletContext context) throws ServletException {
+		super.myInit(servletConfig, context);
+		uploadMaxSize_ = getHavaloConfig().getLong(HAVALO_UPLOAD_MAX_SIZE_PROPERTY);
 		logger__.info("Max object upload size is " + uploadMaxSize_ + "-bytes.");
 	}
 	
 	@Override
-	public final <S extends HavaloEntity> HavaloApiServletClosure<S>
+	public final <S extends ServletClosureEntity> HavaloServletClosureHandler<S>
 		head(final AsyncContext context) {
-		return new HavaloApiServletClosure<S>(logger__, context) {
+		return new HavaloServletClosureHandler<S>(logger__, context) {
 			@Override
 			public S execute(final KeyPair userKp) throws Exception {
 				final Repository repo = getRepository(userKp.getKey());
@@ -127,9 +128,9 @@ public final class ObjectApi extends HavaloApiServlet {
 	}
 	
 	@Override
-	public final <S extends HavaloEntity> HavaloApiServletClosure<S>
+	public final <S extends ServletClosureEntity> HavaloServletClosureHandler<S>
 		get(final AsyncContext context) {
-		return new HavaloApiServletClosure<S>(logger__, context) {
+		return new HavaloServletClosureHandler<S>(logger__, context) {
 			@Override
 			public S execute(final KeyPair userKp) throws Exception {
 				final Repository repo = getRepository(userKp.getKey());
@@ -187,17 +188,17 @@ public final class ObjectApi extends HavaloApiServlet {
 	*/
 	
 	@Override
-	public final HavaloApiServletClosure<HashedFileObject> put(
+	public final HavaloServletClosureHandler<HashedFileObject> put(
 		final AsyncContext context) {
-		return new HavaloApiServletClosure<HashedFileObject>(logger__, context) {
+		return new HavaloServletClosureHandler<HashedFileObject>(logger__, context) {
 			@Override
 			public HashedFileObject execute(final KeyPair userKp) throws Exception {
 				final Repository repo = getRepository(userKp.getKey());
 				return new ReentrantReadWriteEntityLock<HashedFileObject>(repo) {
 					@Override
-					public HashedFileObject transaction() throws Exception {						
+					public HashedFileObject transaction() throws Exception {
 						// URL-decode the incoming key (the name of the object)
-						final String key = getRequestObject();							
+						final String key = getRequestObject();
 						notEmpty(key, "Key cannot be null or empty.");
 						final String contentType = getHeader(CONTENT_TYPE);
 						final String ifMatch = getHeader(IF_MATCH);
@@ -286,7 +287,7 @@ public final class ObjectApi extends HavaloApiServlet {
 								} catch (KolichChecksumException e) {
 									// Quietly delete the object on disk when
 									// it has exceeded the max upload size allowed
-									// by this Havalo instance.							
+									// by this Havalo instance.
 									throw new ObjectTooLargeException("The " +
 										"size of the incoming object is too " +
 										"large. Max upload size is " +
@@ -322,9 +323,9 @@ public final class ObjectApi extends HavaloApiServlet {
 	}
 	
 	@Override
-	public final <S extends HavaloEntity> HavaloApiServletClosure<S>
+	public final <S extends ServletClosureEntity> HavaloServletClosureHandler<S>
 		delete(final AsyncContext context) {
-		return new HavaloApiServletClosure<S>(logger__, context) {
+		return new HavaloServletClosureHandler<S>(logger__, context) {
 			@Override
 			public S execute(final KeyPair userKp) throws Exception {
 				// URL-decode the incoming key (the name of the object)

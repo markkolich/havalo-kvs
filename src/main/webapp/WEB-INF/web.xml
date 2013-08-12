@@ -28,7 +28,7 @@
 		
 	<servlet>
 		<servlet-name>AuthenticateApi</servlet-name>
-		<servlet-class>com.kolich.havalo.servlets.api.handlers.AuthenticateApi</servlet-class>
+		<servlet-class>com.kolich.havalo.servlets.api.AuthenticateApi</servlet-class>
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>
@@ -39,7 +39,7 @@
 	
 	<servlet>
 		<servlet-name>ObjectApi</servlet-name>
-		<servlet-class>com.kolich.havalo.servlets.api.handlers.ObjectApi</servlet-class>
+		<servlet-class>com.kolich.havalo.servlets.api.ObjectApi</servlet-class>
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>
@@ -50,7 +50,7 @@
 	
 	<servlet>
 		<servlet-name>RepositoryApi</servlet-name>
-		<servlet-class>com.kolich.havalo.servlets.api.handlers.RepositoryApi</servlet-class>
+		<servlet-class>com.kolich.havalo.servlets.api.RepositoryApi</servlet-class>
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>

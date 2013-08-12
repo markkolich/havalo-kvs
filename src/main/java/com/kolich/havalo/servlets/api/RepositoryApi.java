@@ -24,7 +24,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.servlets.api.handlers;
+package com.kolich.havalo.servlets.api;
 
 import static com.kolich.havalo.HavaloServletContext.HAVALO_ADMIN_API_UUID_PROPERTY;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
@@ -36,14 +36,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
-import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.ObjectList;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
-import com.kolich.havalo.servlets.api.HavaloApiServlet;
-import com.kolich.havalo.servlets.api.HavaloApiServletClosure;
+import com.kolich.havalo.servlets.HavaloApiServlet;
+import com.kolich.havalo.servlets.HavaloServletClosureHandler;
+import com.kolich.servlet.entities.ServletClosureEntity;
 
 public final class RepositoryApi extends HavaloApiServlet {
 	
@@ -53,9 +53,9 @@ public final class RepositoryApi extends HavaloApiServlet {
 		LoggerFactory.getLogger(RepositoryApi.class);
 	
 	@Override
-	public final HavaloApiServletClosure<ObjectList> get(
+	public final HavaloServletClosureHandler<ObjectList> get(
 		final AsyncContext context) {
-		return new HavaloApiServletClosure<ObjectList>(logger__, context) {
+		return new HavaloServletClosureHandler<ObjectList>(logger__, context) {
 			@Override
 			public ObjectList execute(final KeyPair userKp) throws Exception {
 				final String startsWith = request_.getParameter("startsWith");
@@ -74,9 +74,9 @@ public final class RepositoryApi extends HavaloApiServlet {
 	}
 	
 	@Override
-	public final HavaloApiServletClosure<KeyPair> post(
+	public final HavaloServletClosureHandler<KeyPair> post(
 		final AsyncContext context) {
-		return new HavaloApiServletClosure<KeyPair>(logger__, context) {
+		return new HavaloServletClosureHandler<KeyPair>(logger__, context) {
 			@Override
 			public KeyPair execute(final KeyPair userKp) throws Exception {
 				// Only admin level users have the right to delete repositories.
@@ -102,9 +102,9 @@ public final class RepositoryApi extends HavaloApiServlet {
 	}
 	
 	@Override
-	public final <S extends HavaloEntity> HavaloApiServletClosure<S> delete(
-		final AsyncContext context) {
-		return new HavaloApiServletClosure<S>(logger__, context) {
+	public final <S extends ServletClosureEntity> HavaloServletClosureHandler<S>
+		delete(final AsyncContext context) {
+		return new HavaloServletClosureHandler<S>(logger__, context) {
 			@Override
 			public S execute(final KeyPair userKp) throws Exception {
 				// URL-decode the incoming key (the UUID of the repo)
@@ -118,7 +118,7 @@ public final class RepositoryApi extends HavaloApiServlet {
 				}
 				final HavaloUUID toDelete = new HavaloUUID(key);
 				final HavaloUUID adminId = new HavaloUUID(
-					getAppConfig().getString(HAVALO_ADMIN_API_UUID_PROPERTY));
+					getHavaloConfig().getString(HAVALO_ADMIN_API_UUID_PROPERTY));
 				// Admin users cannot delete the root "admin" repository.
 				if(adminId.equals(toDelete)) {
 					throw new RepositoryForbiddenException("Authenticated " +

@@ -27,7 +27,9 @@
 package com.kolich.havalo;
 
 import static com.kolich.havalo.entities.types.UserRole.ADMIN;
+import static com.typesafe.config.ConfigFactory.load;
 import static java.lang.System.getProperty;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.util.Arrays;
@@ -39,7 +41,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
@@ -54,21 +55,16 @@ import com.typesafe.config.ConfigValue;
 
 public final class HavaloServletContext implements ServletContextListener {
 	
-	private static final Logger logger__ =
-		LoggerFactory.getLogger(HavaloServletContext.class);
+	private static final Logger logger__ = getLogger(HavaloServletContext.class);
 	
 	public static final String HAVALO_CONTEXT_CONFIG_ATTRIBUTE = "havalo.config";
 	public static final String HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE = "havalo.repomanager";
 	public static final String HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE = "havalo.userservice";
-	
-	public static final String HAVALO_API_MAX_CONCURRENT_REQUESTS_PROPERTY = "havalo.api.request.max";
 		
 	public static final String HAVALO_REPO_BASE_CONFIG_PROPERTY = "havalo.repository.base";
 	public static final String HAVALO_REPO_MAX_FILENAME_LENGTH_PROPERTY = "havalo.repository.maxfilename.length";
 	public static final String HAVALO_ADMIN_API_UUID_PROPERTY = "havalo.api.admin.uuid";
 	public static final String HAVALO_ADMIN_API_SECRET_PROPERTY = "havalo.api.admin.secret";
-	
-	public static final String HAVALO_API_REQUEST_TIMEOUT_PROPERTY = "havalo.api.request.timeout";
 	
 	public static final String HAVALO_UPLOAD_MAX_SIZE_PROPERTY = "havalo.upload.max.size";
 	
@@ -80,13 +76,13 @@ public final class HavaloServletContext implements ServletContextListener {
 	private static final String CATALINA_HOME_SYS_PROPERTY = getProperty("catalina.home");
 	
 	private ServletContext context_;
-			
+	
 	@Override
 	public void contextInitialized(final ServletContextEvent event) {
 		logger__.info("Servlet context initialized.");
 		// Get the default servlet context.
 		context_ = event.getServletContext();
-		final Config refConfConfig = ConfigFactory.load();		
+		final Config refConfConfig = load();
 		// Load the external 'havalo.conf' application configuration file
 		// specific to the internal Servlet container.
 		final Config overrideConfig = getOverrideHavaloConfig();
@@ -254,5 +250,5 @@ public final class HavaloServletContext implements ServletContextListener {
 		}
 		return config;
 	}
-		
+	
 }

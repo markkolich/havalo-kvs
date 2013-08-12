@@ -24,47 +24,36 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.servlets;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+package com.kolich.havalo.servlets.api;
 
 import javax.servlet.AsyncContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.kolich.havalo.entities.HavaloEntity;
+import com.kolich.havalo.entities.types.KeyPair;
+import com.kolich.havalo.servlets.HavaloApiServlet;
+import com.kolich.havalo.servlets.HavaloServletClosureHandler;
 
-public abstract class HavaloServletClosure<S extends HavaloEntity>
-	implements Runnable {
+public final class AuthenticateApi extends HavaloApiServlet {
 	
-	protected final Logger logger_;
+	private static final Logger logger__ =
+		LoggerFactory.getLogger(AuthenticateApi.class);
+
+	private static final long serialVersionUID = 1087288709731427991L;
 	
-	protected final AsyncContext context_;
-	
-	protected final HttpServletRequest request_;
-	protected final HttpServletResponse response_;
-	
-	protected final String method_;
-	protected final String requestUri_;
-		
-	public HavaloServletClosure(final Logger logger,
+	@Override
+	public final HavaloServletClosureHandler<KeyPair> post(
 		final AsyncContext context) {
-		checkNotNull(logger, "The provided logger cannot be null.");
-		checkNotNull(context, "The provided async context cannot be null.");
-		logger_ = logger;
-		context_ = context;
-		request_ = (HttpServletRequest)context_.getRequest();
-		response_ = (HttpServletResponse)context_.getResponse();
-		method_ = request_.getMethod();
-		requestUri_ = request_.getRequestURI();
-	}
-	
-	public abstract S doit() throws Exception;
-			
-	protected final String getComment() {
-		return String.format("%s:%s", method_, requestUri_);
+		return new HavaloServletClosureHandler<KeyPair>(logger__, context) {
+			@Override
+			public KeyPair execute(final KeyPair userKp) throws Exception {
+				// A bit redundant, but the call to getRepository() here
+				// just verifies that the user account exists ~and~ the
+				// corresponding repository exists in the system as well.
+				return getRepository(userKp.getKey()).getKeyPair();
+			}
+		};
 	}
 	
 }

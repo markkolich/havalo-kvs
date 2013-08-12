@@ -24,108 +24,42 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.servlets.api;
+package com.kolich.havalo.servlets;
 
+import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_CONFIG_ATTRIBUTE;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE;
 
-import javax.servlet.AsyncContext;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.kolich.havalo.entities.HavaloEntity;
 import com.kolich.havalo.entities.types.DiskObject;
 import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.Repository;
-import com.kolich.havalo.exceptions.MethodNotNotSupportedException;
 import com.kolich.havalo.io.managers.RepositoryManager;
-import com.kolich.havalo.servlets.HavaloServlet;
-import com.kolich.havalo.servlets.HavaloServletClosure;
+import com.kolich.servlet.closures.AbstractServletClosure;
+import com.typesafe.config.Config;
 
-public abstract class HavaloApiServlet extends HavaloServlet {
+public abstract class HavaloApiServlet extends AbstractServletClosure {
 
 	private static final long serialVersionUID = -7154044213558472481L;
 	
-	private static final Logger logger__ =
-		LoggerFactory.getLogger(HavaloApiServlet.class);
-	
+	protected Config havaloConfig_;
 	protected RepositoryManager repositoryManager_;
 	
 	@Override
-	public void init(final ServletConfig config) throws ServletException {
-		super.init(config);
-		repositoryManager_ = (RepositoryManager)config.getServletContext()
+	public void myInit(final ServletConfig servletConfig,
+		final ServletContext context) throws ServletException {
+		havaloConfig_ = (Config)context.getAttribute(
+			HAVALO_CONTEXT_CONFIG_ATTRIBUTE);
+		repositoryManager_ = (RepositoryManager)context
 			.getAttribute(HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE);
 	}
-
-	@Override
-	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
-		trace(final AsyncContext context) {
-		return new HavaloApiServletClosure<T>(logger__, context) {
-			@Override
-			public T execute(final KeyPair userKp) throws Exception {
-				throw new MethodNotNotSupportedException();
-			}
-		};
-	}
 	
-	@Override
-	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
-		head(final AsyncContext context) {
-		return new HavaloApiServletClosure<T>(logger__, context) {
-			@Override
-			public T execute(final KeyPair userKp) throws Exception {
-				throw new MethodNotNotSupportedException();
-			}
-		};
-	}
-	
-	@Override
-	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
-		get(final AsyncContext context) {
-		return new HavaloApiServletClosure<T>(logger__, context) {
-			@Override
-			public T execute(final KeyPair userKp) throws Exception {
-				throw new MethodNotNotSupportedException();
-			}
-		};
-	}
-	
-	@Override
-	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
-		post(final AsyncContext context) {
-		return new HavaloApiServletClosure<T>(logger__, context) {
-			@Override
-			public T execute(final KeyPair userKp) throws Exception {
-				throw new MethodNotNotSupportedException();
-			}
-		};
-	}
-	
-	@Override
-	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
-		put(final AsyncContext context) {
-		return new HavaloApiServletClosure<T>(logger__, context) {
-			@Override
-			public T execute(final KeyPair userKp) throws Exception {
-				throw new MethodNotNotSupportedException();
-			}
-		};
-	}
-	
-	@Override
-	public <T extends HavaloEntity> HavaloServletClosure<? extends HavaloEntity>
-		delete(final AsyncContext context) {
-		return new HavaloApiServletClosure<T>(logger__, context) {
-			@Override
-			public T execute(final KeyPair userKp) throws Exception {
-				throw new MethodNotNotSupportedException();
-			}
-		};
+	protected final Config getHavaloConfig() {
+		return havaloConfig_;
 	}
 	
 	protected final Repository createRepository(final HavaloUUID id,
