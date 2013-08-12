@@ -26,36 +26,22 @@
 
 package com.kolich.havalo.exceptions;
 
-import com.kolich.common.KolichCommonException;
+import com.kolich.servlet.exceptions.ServletClosureException;
 
-public class HavaloException extends KolichCommonException {
+public class HavaloException extends ServletClosureException.WithStatus {
 	
 	private static final long serialVersionUID = -7889750833064607753L;
-	
-	private final int statusCode_;
 
-	public HavaloException(String message, Throwable cause, int statusCode) {
-		super(message, cause);
-		statusCode_ = statusCode;
+	public HavaloException(String message, Exception cause, int status) {
+		super(status, message, cause);
 	}
 	
-	public HavaloException(Throwable cause, int statusCode) {
-		super(cause);
-		statusCode_ = statusCode;
+	public HavaloException(Exception cause, int statusCode) {
+		super(statusCode, cause);
 	}
 	
 	public HavaloException(String message, int statusCode) {
-		super(message);
-		statusCode_ = statusCode;
-	}
-	
-	public HavaloException(int statusCode) {
-		super();
-		statusCode_ = statusCode;
-	}
-		
-	public int getStatusCode() {
-		return statusCode_;
+		super(statusCode, message, null);
 	}
 	
 }

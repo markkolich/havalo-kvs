@@ -32,7 +32,7 @@ public class BootstrapException extends HavaloException {
 
 	private static final long serialVersionUID = -7473419765855248861L;
 	
-	public BootstrapException(String message, Throwable cause) {
+	public BootstrapException(String message, Exception cause) {
 		super(message, cause, SC_INTERNAL_SERVER_ERROR);
 	}
 
@@ -40,12 +40,8 @@ public class BootstrapException extends HavaloException {
 		super(message, SC_INTERNAL_SERVER_ERROR);
 	}
 	
-	public BootstrapException(Throwable cause) {
+	public BootstrapException(Exception cause) {
 		super(cause, SC_INTERNAL_SERVER_ERROR);
-	}
-	
-	public BootstrapException() {
-		super(SC_INTERNAL_SERVER_ERROR);
 	}
 		
 }

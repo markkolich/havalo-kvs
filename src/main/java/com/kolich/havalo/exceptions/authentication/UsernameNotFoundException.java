@@ -30,7 +30,7 @@ public final class UsernameNotFoundException extends AuthenticationException {
 
 	private static final long serialVersionUID = 8271081711610449505L;
 	
-	public UsernameNotFoundException(String message, Throwable cause) {
+	public UsernameNotFoundException(String message, Exception cause) {
 		super(message, cause);
 	}
 	

@@ -34,11 +34,11 @@ public class RepositoryNotFoundException extends HavaloException {
 
 	private static final long serialVersionUID = -1714010225115461107L;
 
-	public RepositoryNotFoundException(String message, Throwable cause) {
+	public RepositoryNotFoundException(String message, Exception cause) {
 		super(message, cause, SC_NOT_FOUND);
 	}
 	
-	public RepositoryNotFoundException(Throwable cause) {
+	public RepositoryNotFoundException(Exception cause) {
 		super(cause, SC_NOT_FOUND);
 	}
 	

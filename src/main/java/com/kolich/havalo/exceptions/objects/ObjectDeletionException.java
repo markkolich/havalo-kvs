@@ -34,11 +34,11 @@ public class ObjectDeletionException extends HavaloException {
 
 	private static final long serialVersionUID = 4875646775404503031L;
 
-	public ObjectDeletionException(String message, Throwable cause) {
+	public ObjectDeletionException(String message, Exception cause) {
 		super(message, cause, SC_SERVICE_UNAVAILABLE);
 	}
 	
-	public ObjectDeletionException(Throwable cause) {
+	public ObjectDeletionException(Exception cause) {
 		super(cause, SC_SERVICE_UNAVAILABLE);
 	}
 	

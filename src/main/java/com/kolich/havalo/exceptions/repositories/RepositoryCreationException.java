@@ -34,11 +34,11 @@ public class RepositoryCreationException extends HavaloException {
 
 	private static final long serialVersionUID = -4077239638178895875L;
 
-	public RepositoryCreationException(String message, Throwable cause) {
+	public RepositoryCreationException(String message, Exception cause) {
 		super(message, cause, SC_SERVICE_UNAVAILABLE);
 	}
 	
-	public RepositoryCreationException(Throwable cause) {
+	public RepositoryCreationException(Exception cause) {
 		super(cause, SC_SERVICE_UNAVAILABLE);
 	}
 	

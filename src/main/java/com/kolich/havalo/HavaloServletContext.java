@@ -154,10 +154,11 @@ public final class HavaloServletContext implements ServletContextListener {
 			repoManager = getRepositoryManager(context, config);
 			final String adminUUID = config.getString(HAVALO_ADMIN_API_UUID_PROPERTY);
 			if(adminUUID == null) {
-				logger__.error("Config property '" +
+				final String msg = "Config property '" +
 					HAVALO_ADMIN_API_UUID_PROPERTY + "' not set. Cannot " +
-					"start until this property contains a valid UUID.");
-				throw new BootstrapException();
+					"start until this property contains a valid UUID.";
+				logger__.error(msg);
+				throw new BootstrapException(msg);
 			} else {
 				try {
 					UUID.fromString(adminUUID);
@@ -172,10 +173,11 @@ public final class HavaloServletContext implements ServletContextListener {
 			// Verify a proper admin API accout secret is set.			
 			final String adminSecret = config.getString(HAVALO_ADMIN_API_SECRET_PROPERTY);
 			if(adminSecret == null) {
-				logger__.error("Config property '" +
+				final String msg = "Config property '" +
 					HAVALO_ADMIN_API_SECRET_PROPERTY + "' not set. Cannot " +
-					"start until this property contains a valid secret.");
-				throw new BootstrapException();
+					"start until this property contains a valid secret.";
+				logger__.error(msg);
+				throw new BootstrapException(msg);
 			}
 			logger__.debug("Admin API account initialized (uuid=" + adminUUID +
 				", secret=" + adminSecret + ")");

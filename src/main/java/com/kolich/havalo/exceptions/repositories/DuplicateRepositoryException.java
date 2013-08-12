@@ -34,11 +34,11 @@ public class DuplicateRepositoryException extends HavaloException {
 
 	private static final long serialVersionUID = 1010104860922675369L;
 
-	public DuplicateRepositoryException(String message, Throwable cause) {
+	public DuplicateRepositoryException(String message, Exception cause) {
 		super(message, cause, SC_CONFLICT);
 	}
 	
-	public DuplicateRepositoryException(Throwable cause) {
+	public DuplicateRepositoryException(Exception cause) {
 		super(cause, SC_CONFLICT);
 	}
 	

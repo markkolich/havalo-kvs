@@ -34,11 +34,11 @@ public class ObjectLengthNotSpecifiedException extends HavaloException {
 
 	private static final long serialVersionUID = -9038601692753507142L;
 
-	public ObjectLengthNotSpecifiedException(String message, Throwable cause) {
+	public ObjectLengthNotSpecifiedException(String message, Exception cause) {
 		super(message, cause, SC_LENGTH_REQUIRED);
 	}
 	
-	public ObjectLengthNotSpecifiedException(Throwable cause) {
+	public ObjectLengthNotSpecifiedException(Exception cause) {
 		super(cause, SC_LENGTH_REQUIRED);
 	}
 	

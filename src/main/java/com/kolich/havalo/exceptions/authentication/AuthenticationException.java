@@ -34,7 +34,7 @@ public class AuthenticationException extends HavaloException {
 
 	private static final long serialVersionUID = -3112819251217503077L;
 	
-	public AuthenticationException(String message, Throwable cause) {
+	public AuthenticationException(String message, Exception cause) {
 		super(message, cause, SC_UNAUTHORIZED);
 	}
 
@@ -42,7 +42,7 @@ public class AuthenticationException extends HavaloException {
 		super(message, SC_UNAUTHORIZED);
 	}
 	
-	public AuthenticationException(Throwable cause) {
+	public AuthenticationException(Exception cause) {
 		super(cause, SC_UNAUTHORIZED);
 	}
 

@@ -28,14 +28,18 @@ package com.kolich.havalo.servlets;
 
 import static com.kolich.common.util.URLEncodingUtils.urlDecode;
 import static com.kolich.havalo.servlets.filters.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 
 import javax.servlet.AsyncContext;
 
 import org.slf4j.Logger;
 
+import com.kolich.bolt.exceptions.LockConflictException;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.servlet.closures.ServletClosureHandler;
 import com.kolich.servlet.entities.ServletClosureEntity;
+import com.kolich.servlet.exceptions.ServletClosureException;
 
 public abstract class HavaloServletClosureHandler<S extends ServletClosureEntity>
 	extends ServletClosureHandler<S> {
@@ -51,7 +55,13 @@ public abstract class HavaloServletClosureHandler<S extends ServletClosureEntity
 	
 	@Override
 	public final S handle() throws Exception {
-		return execute(getUserFromRequest());
+		try {
+			return execute(getUserFromRequest());
+		} catch (IllegalArgumentException e) {
+			throw new ServletClosureException.WithStatus(SC_BAD_REQUEST, e);
+		} catch (LockConflictException e) {
+			throw new ServletClosureException.WithStatus(SC_CONFLICT, e);
+		}
 	}
 	
 	public abstract S execute(final KeyPair userKp) throws Exception;

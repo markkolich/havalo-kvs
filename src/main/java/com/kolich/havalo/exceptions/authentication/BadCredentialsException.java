@@ -30,7 +30,7 @@ public final class BadCredentialsException extends AuthenticationException {
 
 	private static final long serialVersionUID = 8271081711610449505L;
 	
-	public BadCredentialsException(String message, Throwable cause) {
+	public BadCredentialsException(String message, Exception cause) {
 		super(message, cause);
 	}
 	

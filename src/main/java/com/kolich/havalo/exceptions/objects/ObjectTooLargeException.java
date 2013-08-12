@@ -34,11 +34,11 @@ public class ObjectTooLargeException extends HavaloException {
 
 	private static final long serialVersionUID = -9038601692753507142L;
 
-	public ObjectTooLargeException(String message, Throwable cause) {
+	public ObjectTooLargeException(String message, Exception cause) {
 		super(message, cause, SC_BAD_REQUEST);
 	}
 	
-	public ObjectTooLargeException(Throwable cause) {
+	public ObjectTooLargeException(Exception cause) {
 		super(cause, SC_BAD_REQUEST);
 	}
 	

@@ -68,19 +68,19 @@ public abstract class HavaloEntity
 	 * @return
 	 */
 	public static final GsonBuilder getHavaloGsonBuilder() {
-		final GsonBuilder builderBuilder = getDefaultGsonBuilder();
+		final GsonBuilder builder = getDefaultGsonBuilder();
 		// Register a type adapter for the HavaloUUID entity type.
-		builderBuilder.registerTypeAdapter(new TypeToken<HavaloUUID>(){}.getType(),
+		builder.registerTypeAdapter(new TypeToken<HavaloUUID>(){}.getType(),
 			new HavaloUUID.HavaloUUIDTypeAdapter());
-		builderBuilder.registerTypeAdapter(new TypeToken<Date>(){}.getType(),
+		builder.registerTypeAdapter(new TypeToken<Date>(){}.getType(),
 			new KolichDefaultDateTypeAdapter(iso8601Format__));
-		builderBuilder.registerTypeAdapter(new TypeToken<File>(){}.getType(),
+		builder.registerTypeAdapter(new TypeToken<File>(){}.getType(),
 			new Repository.FileTypeAdapter());
-		builderBuilder.registerTypeAdapter(new TypeToken<Trie<String, HashedFileObject>>(){}.getType(), 
+		builder.registerTypeAdapter(new TypeToken<Trie<String, HashedFileObject>>(){}.getType(), 
 			new Repository.TrieTypeAdapter());
-		builderBuilder.registerTypeAdapter(new TypeToken<Exception>(){}.getType(), 
+		builder.registerTypeAdapter(new TypeToken<Exception>(){}.getType(), 
 			new HavaloError.ExceptionTypeAdapter());
-		return builderBuilder;
+		return builder;
 	}
 	
 	public static final Gson getHavaloGsonInstance() {
