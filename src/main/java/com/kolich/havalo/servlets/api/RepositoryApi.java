@@ -42,7 +42,7 @@ import com.kolich.havalo.entities.types.ObjectList;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.servlets.HavaloApiServlet;
-import com.kolich.havalo.servlets.HavaloServletClosureHandler;
+import com.kolich.havalo.servlets.HavaloAuthenticatingServletClosureHandler;
 import com.kolich.servlet.entities.ServletClosureEntity;
 
 public final class RepositoryApi extends HavaloApiServlet {
@@ -53,9 +53,9 @@ public final class RepositoryApi extends HavaloApiServlet {
 		LoggerFactory.getLogger(RepositoryApi.class);
 	
 	@Override
-	public final HavaloServletClosureHandler<ObjectList> get(
+	public final HavaloAuthenticatingServletClosureHandler<ObjectList> get(
 		final AsyncContext context) {
-		return new HavaloServletClosureHandler<ObjectList>(logger__, context) {
+		return new HavaloAuthenticatingServletClosureHandler<ObjectList>(logger__, context) {
 			@Override
 			public ObjectList execute(final KeyPair userKp) throws Exception {
 				final String startsWith = request_.getParameter("startsWith");
@@ -74,9 +74,9 @@ public final class RepositoryApi extends HavaloApiServlet {
 	}
 	
 	@Override
-	public final HavaloServletClosureHandler<KeyPair> post(
+	public final HavaloAuthenticatingServletClosureHandler<KeyPair> post(
 		final AsyncContext context) {
-		return new HavaloServletClosureHandler<KeyPair>(logger__, context) {
+		return new HavaloAuthenticatingServletClosureHandler<KeyPair>(logger__, context) {
 			@Override
 			public KeyPair execute(final KeyPair userKp) throws Exception {
 				// Only admin level users have the right to delete repositories.
@@ -102,9 +102,9 @@ public final class RepositoryApi extends HavaloApiServlet {
 	}
 	
 	@Override
-	public final <S extends ServletClosureEntity> HavaloServletClosureHandler<S>
+	public final <S extends ServletClosureEntity> HavaloAuthenticatingServletClosureHandler<S>
 		delete(final AsyncContext context) {
-		return new HavaloServletClosureHandler<S>(logger__, context) {
+		return new HavaloAuthenticatingServletClosureHandler<S>(logger__, context) {
 			@Override
 			public S execute(final KeyPair userKp) throws Exception {
 				// URL-decode the incoming key (the UUID of the repo)

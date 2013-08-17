@@ -29,6 +29,7 @@ package com.kolich.havalo.servlets;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_CONFIG_ATTRIBUTE;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE;
 
+import javax.servlet.AsyncContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -40,6 +41,9 @@ import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.io.managers.RepositoryManager;
 import com.kolich.servlet.closures.AbstractServletClosure;
+import com.kolich.servlet.closures.ServletClosureHandler;
+import com.kolich.servlet.entities.ServletClosureEntity;
+import com.kolich.servlet.exceptions.MethodNotSupportedException;
 import com.typesafe.config.Config;
 
 public abstract class HavaloApiServlet extends AbstractServletClosure {
@@ -47,6 +51,7 @@ public abstract class HavaloApiServlet extends AbstractServletClosure {
 	private static final long serialVersionUID = -7154044213558472481L;
 	
 	protected Config havaloConfig_;
+	
 	protected RepositoryManager repositoryManager_;
 	
 	@Override
@@ -56,6 +61,72 @@ public abstract class HavaloApiServlet extends AbstractServletClosure {
 			HAVALO_CONTEXT_CONFIG_ATTRIBUTE);
 		repositoryManager_ = (RepositoryManager)context
 			.getAttribute(HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE);
+	}
+	
+	@Override
+	public <T extends ServletClosureEntity> ServletClosureHandler<? extends ServletClosureEntity>
+		trace(final AsyncContext context) {
+		return new HavaloAuthenticatingServletClosureHandler<T>(context) {
+			@Override
+			public T execute(final KeyPair userKp) throws Exception {
+				throw new MethodNotSupportedException();
+			}
+		};
+	}
+	
+	@Override
+	public <T extends ServletClosureEntity> ServletClosureHandler<? extends ServletClosureEntity>
+		head(final AsyncContext context) {
+		return new HavaloAuthenticatingServletClosureHandler<T>(context) {
+			@Override
+			public T execute(final KeyPair userKp) throws Exception {
+				throw new MethodNotSupportedException();
+			}
+		};
+	}
+	
+	@Override
+	public <T extends ServletClosureEntity> ServletClosureHandler<? extends ServletClosureEntity>
+		get(final AsyncContext context) {
+		return new HavaloAuthenticatingServletClosureHandler<T>(context) {
+			@Override
+			public T execute(final KeyPair userKp) throws Exception {
+				throw new MethodNotSupportedException();
+			}
+		};
+	}
+	
+	@Override
+	public <T extends ServletClosureEntity> ServletClosureHandler<? extends ServletClosureEntity>
+		post(final AsyncContext context) {
+		return new HavaloAuthenticatingServletClosureHandler<T>(context) {
+			@Override
+			public T execute(final KeyPair userKp) throws Exception {
+				throw new MethodNotSupportedException();
+			}
+		};
+	}
+	
+	@Override
+	public <T extends ServletClosureEntity> ServletClosureHandler<? extends ServletClosureEntity>
+		put(final AsyncContext context) {
+		return new HavaloAuthenticatingServletClosureHandler<T>(context) {
+			@Override
+			public T execute(final KeyPair userKp) throws Exception {
+				throw new MethodNotSupportedException();
+			}
+		};
+	}
+	
+	@Override
+	public <T extends ServletClosureEntity> ServletClosureHandler<? extends ServletClosureEntity>
+		delete(final AsyncContext context) {
+		return new HavaloAuthenticatingServletClosureHandler<T>(context) {
+			@Override
+			public T execute(final KeyPair userKp) throws Exception {
+				throw new MethodNotSupportedException();
+			}
+		};
 	}
 	
 	protected final Config getHavaloConfig() {

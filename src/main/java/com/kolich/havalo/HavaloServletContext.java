@@ -48,7 +48,8 @@ import com.kolich.havalo.entities.types.UserRole;
 import com.kolich.havalo.exceptions.BootstrapException;
 import com.kolich.havalo.exceptions.repositories.RepositoryCreationException;
 import com.kolich.havalo.io.managers.RepositoryManager;
-import com.kolich.havalo.servlets.filters.HavaloUserService;
+import com.kolich.havalo.servlets.auth.HavaloAuthenticator;
+import com.kolich.havalo.servlets.auth.HavaloUserService;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigValue;
@@ -60,6 +61,7 @@ public final class HavaloServletContext implements ServletContextListener {
 	public static final String HAVALO_CONTEXT_CONFIG_ATTRIBUTE = "havalo.config";
 	public static final String HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE = "havalo.repomanager";
 	public static final String HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE = "havalo.userservice";
+	public static final String HAVALO_CONTEXT_AUTHENTICATOR_ATTRIBUTE = "havalo.authenticator";
 		
 	public static final String HAVALO_REPO_BASE_CONFIG_PROPERTY = "havalo.repository.base";
 	public static final String HAVALO_REPO_MAX_FILENAME_LENGTH_PROPERTY = "havalo.repository.maxfilename.length";
@@ -115,6 +117,10 @@ public final class HavaloServletContext implements ServletContextListener {
 		final HavaloUserService userService = createUserService(repoManager);
 		context_.setAttribute(HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE,
 			userService);
+		// Create a new authenticator.
+		final HavaloAuthenticator authenticator = createAuthenticator(userService);
+		context_.setAttribute(HAVALO_CONTEXT_AUTHENTICATOR_ATTRIBUTE,
+			authenticator);
 	}
 
 	@Override
@@ -207,6 +213,11 @@ public final class HavaloServletContext implements ServletContextListener {
 	private static final HavaloUserService createUserService(
 		final RepositoryManager repoManager) {
 		return new HavaloUserService(repoManager);
+	}
+	
+	private static final HavaloAuthenticator createAuthenticator(
+		final HavaloUserService userService) {
+		return new HavaloAuthenticator(userService);
 	}
 	
 	private static final Config getOverrideHavaloConfig() {

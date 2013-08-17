@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.servlets.HavaloApiServlet;
-import com.kolich.havalo.servlets.HavaloServletClosureHandler;
+import com.kolich.havalo.servlets.HavaloAuthenticatingServletClosureHandler;
 
 public final class AuthenticateApi extends HavaloApiServlet {
 	
@@ -43,9 +43,9 @@ public final class AuthenticateApi extends HavaloApiServlet {
 	private static final long serialVersionUID = 1087288709731427991L;
 	
 	@Override
-	public final HavaloServletClosureHandler<KeyPair> post(
+	public final HavaloAuthenticatingServletClosureHandler<KeyPair> post(
 		final AsyncContext context) {
-		return new HavaloServletClosureHandler<KeyPair>(logger__, context) {
+		return new HavaloAuthenticatingServletClosureHandler<KeyPair>(logger__, context) {
 			@Override
 			public KeyPair execute(final KeyPair userKp) throws Exception {
 				// A bit redundant, but the call to getRepository() here

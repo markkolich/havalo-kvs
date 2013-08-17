@@ -27,9 +27,10 @@
 package com.kolich.havalo.servlets;
 
 import static com.kolich.common.util.URLEncodingUtils.urlDecode;
-import static com.kolich.havalo.servlets.filters.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
+import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_AUTHENTICATOR_ATTRIBUTE;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import javax.servlet.AsyncContext;
 
@@ -37,26 +38,32 @@ import org.slf4j.Logger;
 
 import com.kolich.bolt.exceptions.LockConflictException;
 import com.kolich.havalo.entities.types.KeyPair;
+import com.kolich.havalo.servlets.auth.HavaloAuthenticator;
 import com.kolich.servlet.closures.ServletClosureHandler;
 import com.kolich.servlet.entities.ServletClosureEntity;
 import com.kolich.servlet.exceptions.ServletClosureException;
 
-public abstract class HavaloServletClosureHandler<S extends ServletClosureEntity>
+public abstract class HavaloAuthenticatingServletClosureHandler<S extends ServletClosureEntity>
 	extends ServletClosureHandler<S> {
 	
-	public HavaloServletClosureHandler(final Logger logger,
+	private final HavaloAuthenticator authenticator_;
+	
+	public HavaloAuthenticatingServletClosureHandler(final Logger logger,
 		final AsyncContext context) {
 		super(logger, context);
+		authenticator_ = getServletContextAttribute(
+			HAVALO_CONTEXT_AUTHENTICATOR_ATTRIBUTE);
 	}
-
-	public HavaloServletClosureHandler(final AsyncContext context) {
-		super(context);
+	
+	public HavaloAuthenticatingServletClosureHandler(final AsyncContext context) {
+		this(getLogger(HavaloAuthenticatingServletClosureHandler.class),
+			context);
 	}
 	
 	@Override
 	public final S handle() throws Exception {
 		try {
-			return execute(getUserFromRequest());
+			return execute(authenticator_.authenticate(request_));
 		} catch (IllegalArgumentException e) {
 			throw new ServletClosureException.WithStatus(SC_BAD_REQUEST, e);
 		} catch (LockConflictException e) {
@@ -65,10 +72,6 @@ public abstract class HavaloServletClosureHandler<S extends ServletClosureEntity
 	}
 	
 	public abstract S execute(final KeyPair userKp) throws Exception;
-	
-	protected final KeyPair getUserFromRequest() {
-		return (KeyPair)request_.getAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE);
-	}
 	
 	protected final String getEndOfRequestURI() {
 		return requestUri_.substring(requestUri_.lastIndexOf("/")+1);
@@ -81,38 +84,6 @@ public abstract class HavaloServletClosureHandler<S extends ServletClosureEntity
 	 */
 	protected final String getRequestObject() {
 		return urlDecode(getEndOfRequestURI());
-	}
-	
-	protected final String getHeader(final String headerName) {
-		return request_.getHeader(headerName);
-	}
-	
-	/**
-	 * A return value of -1 indicates that no Content-Length
-	 * header was found, or the Content-Length header could not
-	 * be parsed.
-	 */
-	protected final long getHeaderAsLong(final String headerName) {
-		long result = -1L;
-		try {
-			result = Long.parseLong(getHeader(headerName));
-		} catch (Exception e) {
-			// Kinda questionable that this is the right thing to do, but
-			// it seemed to make sense.  If the Content-Length header was
-			// unparsable (or didn't exist) then we just return a -1 instead
-			// of bubbling up such exceptions to the caller.
-			result = -1L;
-		}
-		return result;
-	}
-	
-	protected final void setHeader(final String headerName,
-		final String headerValue) {
-		response_.setHeader(headerName, headerValue);
-	}
-	
-	protected final void setStatus(final int status) {
-		response_.setStatus(status);
 	}
 
 }

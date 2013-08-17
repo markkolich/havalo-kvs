@@ -70,7 +70,7 @@ import com.kolich.havalo.exceptions.objects.ObjectLengthNotSpecifiedException;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
 import com.kolich.havalo.exceptions.objects.ObjectTooLargeException;
 import com.kolich.havalo.servlets.HavaloApiServlet;
-import com.kolich.havalo.servlets.HavaloServletClosureHandler;
+import com.kolich.havalo.servlets.HavaloAuthenticatingServletClosureHandler;
 import com.kolich.servlet.entities.ServletClosureEntity;
 
 public final class ObjectApi extends HavaloApiServlet {
@@ -92,9 +92,9 @@ public final class ObjectApi extends HavaloApiServlet {
 	}
 	
 	@Override
-	public final <S extends ServletClosureEntity> HavaloServletClosureHandler<S>
+	public final <S extends ServletClosureEntity> HavaloAuthenticatingServletClosureHandler<S>
 		head(final AsyncContext context) {
-		return new HavaloServletClosureHandler<S>(logger__, context) {
+		return new HavaloAuthenticatingServletClosureHandler<S>(logger__, context) {
 			@Override
 			public S execute(final KeyPair userKp) throws Exception {
 				final Repository repo = getRepository(userKp.getKey());
@@ -128,9 +128,9 @@ public final class ObjectApi extends HavaloApiServlet {
 	}
 	
 	@Override
-	public final <S extends ServletClosureEntity> HavaloServletClosureHandler<S>
+	public final <S extends ServletClosureEntity> HavaloAuthenticatingServletClosureHandler<S>
 		get(final AsyncContext context) {
-		return new HavaloServletClosureHandler<S>(logger__, context) {
+		return new HavaloAuthenticatingServletClosureHandler<S>(logger__, context) {
 			@Override
 			public S execute(final KeyPair userKp) throws Exception {
 				final Repository repo = getRepository(userKp.getKey());
@@ -188,9 +188,9 @@ public final class ObjectApi extends HavaloApiServlet {
 	*/
 	
 	@Override
-	public final HavaloServletClosureHandler<HashedFileObject> put(
+	public final HavaloAuthenticatingServletClosureHandler<HashedFileObject> put(
 		final AsyncContext context) {
-		return new HavaloServletClosureHandler<HashedFileObject>(logger__, context) {
+		return new HavaloAuthenticatingServletClosureHandler<HashedFileObject>(logger__, context) {
 			@Override
 			public HashedFileObject execute(final KeyPair userKp) throws Exception {
 				final Repository repo = getRepository(userKp.getKey());
@@ -323,9 +323,9 @@ public final class ObjectApi extends HavaloApiServlet {
 	}
 	
 	@Override
-	public final <S extends ServletClosureEntity> HavaloServletClosureHandler<S>
+	public final <S extends ServletClosureEntity> HavaloAuthenticatingServletClosureHandler<S>
 		delete(final AsyncContext context) {
-		return new HavaloServletClosureHandler<S>(logger__, context) {
+		return new HavaloAuthenticatingServletClosureHandler<S>(logger__, context) {
 			@Override
 			public S execute(final KeyPair userKp) throws Exception {
 				// URL-decode the incoming key (the name of the object)

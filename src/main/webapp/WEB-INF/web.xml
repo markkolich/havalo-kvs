@@ -58,19 +58,6 @@
 		<servlet-name>RepositoryApi</servlet-name>
 		<url-pattern>/api/repository/*</url-pattern>
 	</servlet-mapping>
-	
-	<filter>
-		<filter-name>HavaloAuthenticationFilter</filter-name>
-		<filter-class>com.kolich.havalo.servlets.filters.HavaloAuthenticationFilter</filter-class>
-		<async-supported>true</async-supported>
-	</filter>
-    <filter-mapping>
-		<filter-name>HavaloAuthenticationFilter</filter-name>
-		<url-pattern>/api/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-		<dispatcher>ASYNC</dispatcher>
-	</filter-mapping>
 
 	<error-page>
 		<error-code>404</error-code>
