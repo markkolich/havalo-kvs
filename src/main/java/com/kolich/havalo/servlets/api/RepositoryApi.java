@@ -29,11 +29,11 @@ package com.kolich.havalo.servlets.api;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_ADMIN_API_UUID_PROPERTY;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.lang3.Validate.notEmpty;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import javax.servlet.AsyncContext;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
 import com.kolich.havalo.entities.types.HavaloUUID;
@@ -49,8 +49,7 @@ public final class RepositoryApi extends HavaloApiServlet {
 	
 	private static final long serialVersionUID = -2934103705538663343L;
 	
-	private static final Logger logger__ =
-		LoggerFactory.getLogger(RepositoryApi.class);
+	private static final Logger logger__ = getLogger(RepositoryApi.class);
 	
 	@Override
 	public final HavaloAuthenticatingServletClosureHandler<ObjectList> get(

@@ -119,7 +119,7 @@ public final class HavaloAuthenticator {
         	// Success!
         	return userKp;
         } catch (Exception e) {
-        	logger__.warn("Authentication failure; service failed " +
+        	logger__.debug("Authentication failure; service failed " +
         		"to authenticate request.", e);
         	throw new AuthenticationException("Authentication " +
         		"failed; either the provided signature did not match, " +

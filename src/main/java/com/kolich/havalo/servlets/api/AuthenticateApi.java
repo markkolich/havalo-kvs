@@ -26,10 +26,11 @@
 
 package com.kolich.havalo.servlets.api;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import javax.servlet.AsyncContext;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.servlets.HavaloApiServlet;
@@ -38,7 +39,7 @@ import com.kolich.havalo.servlets.HavaloAuthenticatingServletClosureHandler;
 public final class AuthenticateApi extends HavaloApiServlet {
 	
 	private static final Logger logger__ =
-		LoggerFactory.getLogger(AuthenticateApi.class);
+		getLogger(AuthenticateApi.class);
 
 	private static final long serialVersionUID = 1087288709731427991L;
 	
