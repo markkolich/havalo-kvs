@@ -6,7 +6,7 @@ Sometimes you just need fast NoSQL storage, but don't need full redundancy and s
 
 Havalo is perfect for testing, maintaining fast indexes of data stored "elsewhere", and almost any other deployment scenario where relational databases are just too heavy.
 
-The latest <a href="http://markkolich.github.com/downloads/havalo/1.2.1/havalo-1.2.1.war">stable version of Havalo is 1.2.1</a>.
+The latest <a href="http://markkolich.github.io/downloads/havalo/1.3/havalo-1.3.war">stable version of Havalo is 1.3</a>.
 
 ## Features
 
@@ -243,7 +243,7 @@ You can download the latest version of Havalo on the <a href="http://markkolich.
 
 ### Build from Source
 
-Havalo is built and managed using <a href="https://github.com/harrah/xsbt">SBT 0.12.2</a>.
+Havalo is built and managed using <a href="https://github.com/harrah/xsbt">SBT 0.12.3</a>.
 
 To clone and build this project, you must have <a href="http://www.scala-sbt.org/release/docs/Getting-Started/Setup">SBT installed and configured on your computer</a>.
 
@@ -258,13 +258,13 @@ Run SBT from within your newly cloned *havalo* directory.
     #~> cd havalo
     #~/havalo> sbt
     ...
-    havalo:1.2.1>
+    havalo:1.3>
 
 You will see a `havalo` SBT prompt once all dependencies are resolved and the project is loaded.
 
 In SBT, run `container:start` to start the local Servlet container.  By default the server listens on **port 8080**.
 
-    havalo:1.2.1> container:start
+    havalo:1.3> container:start
     [info] jetty-8.1.10.v20130312
     [info] Started SelectChannelConnector@0.0.0.0:8080
     [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
@@ -277,12 +277,12 @@ See the <a href="https://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki">xsbt-
 
 In SBT, run `package` to build a deployable WAR for your favorite Servlet container.
 
-    havalo:1.2.1> package
+    havalo:1.3> package
     ...
     [info] Compiling 51 Java sources to ~/havalo/target/classes...
-    [info] Packaging ~/havalo/dist/havalo-1.2.1.jar ...
+    [info] Packaging ~/havalo/dist/havalo-1.3.jar ...
     [info] Done packaging.
-    [info] Packaging ~/havalo/dist/havalo-1.2.1.war ...
+    [info] Packaging ~/havalo/dist/havalo-1.3.war ...
     [info] Done packaging.
     [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
 
@@ -290,7 +290,7 @@ Note the resulting WAR is placed into the **havalo/dist** directory.  Deploy and
 
 To create an Eclipse Java project for Havalo, run `eclipse` in SBT.
 
-    havalo:1.2.1> eclipse
+    havalo:1.3> eclipse
     ...
     [info] Successfully created Eclipse project files for project(s):
     [info] havalo
