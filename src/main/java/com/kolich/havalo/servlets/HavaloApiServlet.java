@@ -28,6 +28,7 @@ package com.kolich.havalo.servlets;
 
 import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_CONFIG_ATTRIBUTE;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE;
+import static com.kolich.havalo.servlets.AsyncServletThreadPoolFactory.getPoolInstance;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletConfig;
@@ -53,6 +54,10 @@ public abstract class HavaloApiServlet extends AbstractServletClosure {
 	protected Config havaloConfig_;
 	
 	protected RepositoryManager repositoryManager_;
+	
+	public HavaloApiServlet() {
+		super(getPoolInstance(), 0L);
+	}
 	
 	@Override
 	public void myInit(final ServletConfig servletConfig,

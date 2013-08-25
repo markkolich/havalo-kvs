@@ -69,6 +69,7 @@ public final class HavaloServletContext implements ServletContextListener {
 	public static final String HAVALO_ADMIN_API_SECRET_PROPERTY = "havalo.api.admin.secret";
 	
 	public static final String HAVALO_UPLOAD_MAX_SIZE_PROPERTY = "havalo.upload.max.size";
+	public static final String HAVALO_MAX_CONCURRENT_REQUESTS_PROPERTY = "havalo.api.max-requests";
 	
 	private static final String REPO_BASE_DEFAULT = "WEB-INF/work";
 	
