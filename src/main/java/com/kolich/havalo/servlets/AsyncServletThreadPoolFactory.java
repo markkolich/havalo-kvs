@@ -26,24 +26,30 @@
 
 package com.kolich.havalo.servlets;
 
+import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_MAX_CONCURRENT_REQUESTS_PROPERTY;
+import static com.kolich.havalo.HavaloConfigurationFactory.getConfigInstance;
 import static java.lang.Thread.MAX_PRIORITY;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
 import java.util.concurrent.ExecutorService;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.typesafe.config.Config;
 
 public final class AsyncServletThreadPoolFactory {
 	
-	private static ExecutorService theInstance__ = null;
+	private static final Config havaloConfig__ = getConfigInstance();
+	
+	private static ExecutorService pool__ = null;
 	
 	// Cannot instantiate.
 	private AsyncServletThreadPoolFactory() { }
 	
-	public static synchronized final ExecutorService getPoolInstance(
-		final int maxConcurrentRequests) {
-		if(theInstance__ == null) {
-			theInstance__ = newFixedThreadPool(
+	public static synchronized final ExecutorService getPoolInstance() {
+		if(pool__ == null) {
+			final int maxConcurrentRequests = havaloConfig__.getInt(
+				HAVALO_MAX_CONCURRENT_REQUESTS_PROPERTY);
+			pool__ = newFixedThreadPool(
 				// Only support N-concurrent requests.
 				maxConcurrentRequests,
 				// Use a thread build to create new threads in the pool.
@@ -53,7 +59,7 @@ public final class AsyncServletThreadPoolFactory {
 					.setNameFormat("havalo-async-servlet-pool-%d")
 					.build());
 		}
-		return theInstance__;
+		return pool__;
 	}
 
 }

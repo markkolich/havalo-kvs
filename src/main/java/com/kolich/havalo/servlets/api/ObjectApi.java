@@ -34,7 +34,7 @@ import static com.google.common.net.HttpHeaders.ETAG;
 import static com.google.common.net.HttpHeaders.IF_MATCH;
 import static com.google.common.net.MediaType.OCTET_STREAM;
 import static com.kolich.common.util.secure.KolichChecksum.getSHA1HashAndCopy;
-import static com.kolich.havalo.HavaloServletContext.HAVALO_UPLOAD_MAX_SIZE_PROPERTY;
+import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_UPLOAD_MAX_SIZE_PROPERTY;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.apache.commons.io.IOUtils.closeQuietly;
@@ -52,9 +52,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.AsyncContext;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -81,14 +78,12 @@ public final class ObjectApi extends HavaloApiServlet {
 	
 	private static final String OCTET_STREAM_TYPE = OCTET_STREAM.toString();
 	
-	private long uploadMaxSize_ = 0L;
+	private final long uploadMaxSize_;
 	
-	@Override
-	public final void myInit(final ServletConfig servletConfig,
-		final ServletContext context) throws ServletException {
-		super.myInit(servletConfig, context);
-		uploadMaxSize_ = getHavaloConfig().getLong(HAVALO_UPLOAD_MAX_SIZE_PROPERTY);
-		logger__.info("Max object upload size is " + uploadMaxSize_ + "-bytes.");
+	public ObjectApi() {
+		super();
+		uploadMaxSize_ = getHavaloConfig().getLong(
+			HAVALO_UPLOAD_MAX_SIZE_PROPERTY);
 	}
 	
 	@Override

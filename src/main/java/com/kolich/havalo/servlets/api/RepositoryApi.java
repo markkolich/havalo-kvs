@@ -26,7 +26,7 @@
 
 package com.kolich.havalo.servlets.api;
 
-import static com.kolich.havalo.HavaloServletContext.HAVALO_ADMIN_API_UUID_PROPERTY;
+import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_ADMIN_API_UUID_PROPERTY;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -50,6 +50,14 @@ public final class RepositoryApi extends HavaloApiServlet {
 	private static final long serialVersionUID = -2934103705538663343L;
 	
 	private static final Logger logger__ = getLogger(RepositoryApi.class);
+	
+	private final HavaloUUID adminUUID_;
+	
+	public RepositoryApi() {
+		super();
+		adminUUID_ = new HavaloUUID(getHavaloConfig().getString(
+			HAVALO_ADMIN_API_UUID_PROPERTY));
+	}
 	
 	@Override
 	public final HavaloAuthenticatingServletClosureHandler<ObjectList> get(
@@ -116,10 +124,8 @@ public final class RepositoryApi extends HavaloApiServlet {
 						"(userId=" + userKp.getKey() + ", repoId=" + key + ")");
 				}
 				final HavaloUUID toDelete = new HavaloUUID(key);
-				final HavaloUUID adminId = new HavaloUUID(
-					getHavaloConfig().getString(HAVALO_ADMIN_API_UUID_PROPERTY));
 				// Admin users cannot delete the root "admin" repository.
-				if(adminId.equals(toDelete)) {
+				if(adminUUID_.equals(toDelete)) {
 					throw new RepositoryForbiddenException("Authenticated " +
 						"admin user attempted to delete admin repository: " +
 						toDelete.getId());
