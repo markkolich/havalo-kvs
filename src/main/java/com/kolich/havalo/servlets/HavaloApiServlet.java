@@ -29,7 +29,7 @@ package com.kolich.havalo.servlets;
 import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_ASYNC_REQUEST_TIMEOUT_PROPERTY;
 import static com.kolich.havalo.HavaloConfigurationFactory.getConfigInstance;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE;
-import static com.kolich.havalo.servlets.AsyncServletThreadPoolFactory.getPoolInstance;
+import static com.kolich.havalo.servlets.HavaloAsyncThreadPoolFactory.getPoolInstance;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletConfig;
