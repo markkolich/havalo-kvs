@@ -369,7 +369,7 @@ public final class ObjectApi extends HavaloApiServlet {
 				OCTET_STREAM_TYPE}));
 		}
 		// Now, send all headers to the response stream.
-		for(final Map.Entry<String, List<String>> entry : headers.entrySet()) {
+		for(final Map.Entry<String,List<String>> entry : headers.entrySet()) {
 			final String key = entry.getKey();
 			for(final String value : entry.getValue()) {
 				response.addHeader(key, value);
