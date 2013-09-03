@@ -36,9 +36,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -58,22 +56,21 @@ public abstract class MetaObjectStore extends ObjectStore implements MetaStore {
 		
 	/**
 	 * The caller is most definitely responsible for closing the
-	 * returned {@link Reader} when finished with it.
+	 * returned {@link InputStream} when finished with it.
 	 * @param index
 	 * @return
 	 */
 	@Override
-	public Reader getReader(final String index) {
-		Reader reader = null;
+	public InputStream getInputStream(final String index) {
+		InputStream is = null;
 		try {
-			final InputStream gis = new GZIPInputStream(
-				new FileInputStream(getCanonicalFile(index, false)));			
-			reader = new InputStreamReader(gis, UTF_8);
+			is = new GZIPInputStream(new FileInputStream(
+				getCanonicalFile(index, false)));
 		} catch (Exception e) {
 			throw new ObjectLoadException("Failed to read entity: " +
 				index, e);
 		}
-		return reader;
+		return is;
 	}
 	
 	@Override

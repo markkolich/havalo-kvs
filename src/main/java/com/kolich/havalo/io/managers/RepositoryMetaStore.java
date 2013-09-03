@@ -26,14 +26,19 @@
 
 package com.kolich.havalo.io.managers;
 
+import static com.kolich.common.DefaultCharacterEncoding.UTF_8;
 import static com.kolich.havalo.entities.HavaloEntity.getHavaloGsonInstance;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
+import com.kolich.havalo.exceptions.repositories.RepositoryLoadException;
 import com.kolich.havalo.io.stores.MetaObjectStore;
 
 /**
@@ -47,13 +52,18 @@ public final class RepositoryMetaStore extends MetaObjectStore {
 	}
 	
 	public Repository loadById(final HavaloUUID ownerId) {
+		InputStream is = null;
 		Reader reader = null;
 		try {
-			reader = super.getReader(ownerId.toString());
-			return getHavaloGsonInstance().fromJson(reader,
-				Repository.class);
+			is = getInputStream(ownerId.toString());
+			reader = new InputStreamReader(is, UTF_8);
+			return getHavaloGsonInstance().fromJson(reader, Repository.class);
+		} catch (UnsupportedEncodingException e) {
+			throw new RepositoryLoadException("Failed to load repository " +
+				"by ID: " + ownerId.toString(), e);
 		} finally {
 			closeQuietly(reader);
+			closeQuietly(is);
 		}
 	}
 
