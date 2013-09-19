@@ -26,8 +26,6 @@
 
 package com.kolich.havalo.entities;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.net.MediaType.JSON_UTF_8;
 import static com.kolich.common.date.ISO8601DateFormat.getPrimaryFormat;
 import static java.util.TimeZone.getTimeZone;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -47,22 +45,23 @@ import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.HavaloError;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
-import com.kolich.servlet.entities.common.KolichCommonAppendableServletClosureEntity;
+import com.kolich.servlet.entities.gson.GsonAppendableServletClosureEntity;
 
 /**
  * Any entity should extend this abstract class, {@link HavaloEntity}.
  */
-public abstract class HavaloEntity
-	extends KolichCommonAppendableServletClosureEntity {
-	
-	private static final String JSON_UTF_8_TYPE = JSON_UTF_8.toString();
-	
+public abstract class HavaloEntity extends GsonAppendableServletClosureEntity {
+
 	private static final DateFormat iso8601Format__;
 	static {
 		iso8601Format__ = new SimpleDateFormat(getPrimaryFormat());
 		iso8601Format__.setTimeZone(getTimeZone("GMT"));
 	}
-				
+	
+	public HavaloEntity() {
+		super(getHavaloGsonInstance());
+	}
+	
 	/**
 	 * Get a new {@link GsonBuilder} instance, configured accordingly.
 	 * @return
@@ -87,24 +86,9 @@ public abstract class HavaloEntity
 		return getHavaloGsonBuilder().create();
 	}
 	
-	/**
-	 * Serialize this entity to the provided {@link Appendable} writer.
-	 * @param writer
-	 */
-	@Override
-	public final void toWriter(final Appendable writer) {
-		checkNotNull(writer, "Cannot serialize entity using a null writer.");
-		getHavaloGsonInstance().toJson(this, writer);
-	}
-	
 	@Override
 	public int getStatus() {
 		return SC_OK;
-	}
-	
-	@Override
-	public String getContentType() {
-		return JSON_UTF_8_TYPE;
 	}
 	
 	/**

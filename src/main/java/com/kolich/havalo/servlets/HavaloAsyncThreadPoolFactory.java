@@ -50,7 +50,7 @@ public final class HavaloAsyncThreadPoolFactory {
 				HAVALO_MAX_CONCURRENT_REQUESTS_PROPERTY);
 			pool__ = new AsyncServletThreadPoolFactory(maxConcurrentRequests)
 				.setDaemon(true)
-				.setThreadNameFormat("havalo-async-servlet-pool-%d")
+				.setThreadNameFormat("havalo-async-servlet-%d")
 				.setPriority(MAX_PRIORITY)
 				.build();
 		}
