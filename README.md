@@ -16,7 +16,7 @@ The latest <a href="http://markkolich.github.io/downloads/havalo/1.4/havalo-1.4.
 
 * **In-Memory Indexing** &ndash; Searchable object indexes are held in memory and flushed to disk as needed.  The size of your object indexes are only limited by the amount of memory available to your Servlet container JVM.
 
-* **Trusted Stack** &ndash; Written in Java, built around *raw asynchronous* servlet's with no "bloated frameworks" to get in the way.  Deployable in any **Servlet 3.0** compatible container.  Fully tested and qualified on Tomcat 7 and Jetty 8.
+* **Trusted Stack** &ndash; Written in Java 7, built around *raw asynchronous* servlet's with no "bloated frameworks" to get in the way.  Deployable in any **Servlet 3.0** compatible container.  Fully tested and qualified on Tomcat 7 and Jetty 8.
 
 * **RESTful API** &ndash; Havalo offers a <a href="#api">simple RESTful API that just makes perfect sense</a>.  All API responses are in pure JSON &mdash; no XML, anywhere. 
 
