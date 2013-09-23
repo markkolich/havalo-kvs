@@ -34,7 +34,7 @@ import static com.google.common.net.HttpHeaders.ETAG;
 import static com.google.common.net.HttpHeaders.IF_MATCH;
 import static com.google.common.net.MediaType.OCTET_STREAM;
 import static com.kolich.common.util.secure.KolichChecksum.getSHA1HashAndCopy;
-import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_UPLOAD_MAX_SIZE_PROPERTY;
+import static com.kolich.havalo.HavaloConfigurationFactory.getMaxUploadSize;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.apache.commons.io.IOUtils.closeQuietly;
@@ -66,11 +66,11 @@ import com.kolich.havalo.exceptions.objects.ObjectConflictException;
 import com.kolich.havalo.exceptions.objects.ObjectLengthNotSpecifiedException;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
 import com.kolich.havalo.exceptions.objects.ObjectTooLargeException;
-import com.kolich.havalo.servlets.HavaloApiServlet;
+import com.kolich.havalo.servlets.HavaloApiServletClosure;
 import com.kolich.havalo.servlets.HavaloAuthenticatingServletClosureHandler;
 import com.kolich.servlet.entities.ServletClosureEntity;
 
-public final class ObjectApi extends HavaloApiServlet {
+public final class ObjectApi extends HavaloApiServletClosure {
 	
 	private static final long serialVersionUID = 2047425072395464972L;
 	
@@ -81,9 +81,7 @@ public final class ObjectApi extends HavaloApiServlet {
 	private final long uploadMaxSize_;
 	
 	public ObjectApi() {
-		super();
-		uploadMaxSize_ = getHavaloConfig().getLong(
-			HAVALO_UPLOAD_MAX_SIZE_PROPERTY);
+		uploadMaxSize_ = getMaxUploadSize();
 	}
 	
 	@Override

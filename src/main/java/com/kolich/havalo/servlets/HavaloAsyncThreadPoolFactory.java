@@ -26,21 +26,25 @@
 
 package com.kolich.havalo.servlets;
 
-import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_MAX_CONCURRENT_REQUESTS_PROPERTY;
-import static com.kolich.havalo.HavaloConfigurationFactory.getConfigInstance;
+import static com.kolich.havalo.HavaloConfigurationFactory.getMaxConcurrentRequests;
 import static java.lang.Thread.MAX_PRIORITY;
 
 import java.util.concurrent.ExecutorService;
 
 import com.kolich.servlet.util.AsyncServletThreadPoolFactory;
-import com.typesafe.config.Config;
 
 public final class HavaloAsyncThreadPoolFactory {
-	
-	private static final Config havaloConfig__ = getConfigInstance();
-	
+		
 	// Singleton.
-	private static ExecutorService pool__ = null;
+	private static final ExecutorService pool__;
+	static {
+		final int maxConcurrentRequests = getMaxConcurrentRequests();
+		pool__ = new AsyncServletThreadPoolFactory(maxConcurrentRequests)
+			.setDaemon(true)
+			.setThreadNameFormat("havalo-async-servlet-%d")
+			.setPriority(MAX_PRIORITY)
+			.build();
+	}
 	
 	// Cannot instantiate.
 	private HavaloAsyncThreadPoolFactory() { }
@@ -51,15 +55,6 @@ public final class HavaloAsyncThreadPoolFactory {
 	 * the Havalo service via the Servlet container. 
 	 */
 	public static synchronized final ExecutorService getPoolInstance() {
-		if(pool__ == null) {
-			final int maxConcurrentRequests = havaloConfig__.getInt(
-				HAVALO_MAX_CONCURRENT_REQUESTS_PROPERTY);
-			pool__ = new AsyncServletThreadPoolFactory(maxConcurrentRequests)
-				.setDaemon(true)
-				.setThreadNameFormat("havalo-async-servlet-%d")
-				.setPriority(MAX_PRIORITY)
-				.build();
-		}
 		return pool__;
 	}
 

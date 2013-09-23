@@ -26,8 +26,7 @@
 
 package com.kolich.havalo.servlets;
 
-import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_ASYNC_REQUEST_TIMEOUT_PROPERTY;
-import static com.kolich.havalo.HavaloConfigurationFactory.getConfigInstance;
+import static com.kolich.havalo.HavaloConfigurationFactory.getAsyncRequestTimeout;
 import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE;
 import static com.kolich.havalo.servlets.HavaloAsyncThreadPoolFactory.getPoolInstance;
 
@@ -41,20 +40,15 @@ import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.io.managers.RepositoryManager;
-import com.kolich.servlet.closures.AbstractServletClosure;
-import com.typesafe.config.Config;
 
-public abstract class HavaloApiServlet extends AbstractServletClosure {
+public abstract class HavaloApiServletClosure extends HavaloServletClosure {
 
 	private static final long serialVersionUID = -7154044213558472481L;
-	
-	private static final Config havaloConfig__ = getConfigInstance();
-	
+		
 	protected RepositoryManager repositoryManager_;
 	
-	public HavaloApiServlet() {
-		super(getPoolInstance(), havaloConfig__.getLong(
-			HAVALO_ASYNC_REQUEST_TIMEOUT_PROPERTY));
+	public HavaloApiServletClosure() {
+		super(getPoolInstance(), getAsyncRequestTimeout());
 	}
 	
 	@Override
@@ -62,10 +56,6 @@ public abstract class HavaloApiServlet extends AbstractServletClosure {
 		final ServletContext context) throws ServletException {
 		repositoryManager_ = (RepositoryManager)context
 			.getAttribute(HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE);
-	}
-		
-	protected final Config getHavaloConfig() {
-		return havaloConfig__;
 	}
 	
 	protected final Repository createRepository(final HavaloUUID id,

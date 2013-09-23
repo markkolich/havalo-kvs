@@ -26,7 +26,7 @@
 
 package com.kolich.havalo.servlets.api;
 
-import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_ADMIN_API_UUID_PROPERTY;
+import static com.kolich.havalo.HavaloConfigurationFactory.getHavaloAdminUUID;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -41,11 +41,11 @@ import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.ObjectList;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
-import com.kolich.havalo.servlets.HavaloApiServlet;
+import com.kolich.havalo.servlets.HavaloApiServletClosure;
 import com.kolich.havalo.servlets.HavaloAuthenticatingServletClosureHandler;
 import com.kolich.servlet.entities.ServletClosureEntity;
 
-public final class RepositoryApi extends HavaloApiServlet {
+public final class RepositoryApi extends HavaloApiServletClosure {
 	
 	private static final long serialVersionUID = -2934103705538663343L;
 	
@@ -54,9 +54,7 @@ public final class RepositoryApi extends HavaloApiServlet {
 	private final HavaloUUID adminUUID_;
 	
 	public RepositoryApi() {
-		super();
-		adminUUID_ = new HavaloUUID(getHavaloConfig().getString(
-			HAVALO_ADMIN_API_UUID_PROPERTY));
+		adminUUID_ = new HavaloUUID(getHavaloAdminUUID());
 	}
 	
 	@Override

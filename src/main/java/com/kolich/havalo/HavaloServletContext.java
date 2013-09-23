@@ -29,8 +29,11 @@ package com.kolich.havalo;
 import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_ADMIN_API_SECRET_PROPERTY;
 import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_ADMIN_API_UUID_PROPERTY;
 import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_REPO_BASE_CONFIG_PROPERTY;
-import static com.kolich.havalo.HavaloConfigurationFactory.HAVALO_REPO_MAX_FILENAME_LENGTH_PROPERTY;
 import static com.kolich.havalo.HavaloConfigurationFactory.getConfigInstance;
+import static com.kolich.havalo.HavaloConfigurationFactory.getHavaloAdminSecret;
+import static com.kolich.havalo.HavaloConfigurationFactory.getHavaloAdminUUID;
+import static com.kolich.havalo.HavaloConfigurationFactory.getMaxFilenameLength;
+import static com.kolich.havalo.HavaloConfigurationFactory.getRepositoryBase;
 import static com.kolich.havalo.entities.types.UserRole.ADMIN;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -98,7 +101,7 @@ public final class HavaloServletContext implements ServletContextListener {
 	
 	private static final RepositoryManager getRepositoryManager(
 		final ServletContext context, final Config config) {
-		String repositoryBase = config.getString(HAVALO_REPO_BASE_CONFIG_PROPERTY);
+		String repositoryBase = getRepositoryBase();
 		if(repositoryBase == null) {
 			logger__.warn("Config property '" + HAVALO_REPO_BASE_CONFIG_PROPERTY +
 				"' was not set, using default repository base: " +
@@ -116,8 +119,7 @@ public final class HavaloServletContext implements ServletContextListener {
 			realPath = new File(context.getRealPath("/" + repositoryBase));
 		}
 		logger__.info("Using repository root at: " + realPath.getAbsolutePath());
-		final int maxFilenameLength = config.getInt(
-			HAVALO_REPO_MAX_FILENAME_LENGTH_PROPERTY);
+		final int maxFilenameLength = getMaxFilenameLength();
 		logger__.info("Max repository object filename length: " +
 			maxFilenameLength);
 		return new RepositoryManager(realPath, maxFilenameLength);
@@ -128,8 +130,7 @@ public final class HavaloServletContext implements ServletContextListener {
 		RepositoryManager repoManager = null;
 		try {
 			repoManager = getRepositoryManager(context, config);
-			final String adminUUID = config.getString(
-				HAVALO_ADMIN_API_UUID_PROPERTY);
+			final String adminUUID = getHavaloAdminUUID();
 			if(adminUUID == null) {
 				final String msg = "Config property '" +
 					HAVALO_ADMIN_API_UUID_PROPERTY + "' not set. Cannot " +
@@ -143,13 +144,13 @@ public final class HavaloServletContext implements ServletContextListener {
 					logger__.error("Config property '" +
 						HAVALO_ADMIN_API_UUID_PROPERTY + "' was set, but " +
 						"did not contain a valid UUID. Cannot " +
-						"start until this property contains a valid UUID.", e);
+						"start until this property contains a well " +
+						"formed UUID.", e);
 					throw new BootstrapException(e);
 				}
 			}
 			// Verify a proper admin API accout secret is set.			
-			final String adminSecret = config.getString(
-				HAVALO_ADMIN_API_SECRET_PROPERTY);
+			final String adminSecret = getHavaloAdminSecret();
 			if(adminSecret == null) {
 				final String msg = "Config property '" +
 					HAVALO_ADMIN_API_SECRET_PROPERTY + "' not set. Cannot " +
@@ -191,7 +192,5 @@ public final class HavaloServletContext implements ServletContextListener {
 		final HavaloUserService userService) {
 		return new HavaloAuthenticator(userService);
 	}
-	
-	
 	
 }

@@ -43,6 +43,8 @@ public final class HavaloConfigurationFactory {
 	
 	private static final Logger logger__ = 
 		getLogger(HavaloConfigurationFactory.class);
+	
+	// Public static's
 		
 	public static final String HAVALO_REPO_BASE_CONFIG_PROPERTY =
 		"havalo.repository.base";
@@ -60,6 +62,8 @@ public final class HavaloConfigurationFactory {
 	public static final String HAVALO_ASYNC_REQUEST_TIMEOUT_PROPERTY =
 		"havalo.api.request.timeout.ms";
 	
+	// Private static's
+	
 	private static final String HAVALO_EXTERNAL_CONFIG_FILENAME =
 		"havalo.conf";
 	private static final String CONTAINER_CONF_DIRNAME =
@@ -70,7 +74,32 @@ public final class HavaloConfigurationFactory {
 		getProperty("catalina.home");
 	
 	// Singleton.
-	private static Config config__ = null;
+	private static final Config config__;
+	static {
+		final Config refConfConfig = load();
+		// Load the external 'havalo.conf' application configuration file
+		// specific to the internal Servlet container.
+		final Config overrideConfig = loadHavaloOverrideConfig();
+		// Load and build the application configuration, then attach the
+		// loaded immutable config to the servlet context. 
+		final Config havaloConfig;
+		if(overrideConfig != null) {
+			logger__.debug("Found valid override configuration; " +
+				"using override.");
+			havaloConfig = overrideConfig.withFallback(refConfConfig);
+		} else {
+			logger__.debug("Found no valid override configuration; " +
+				"using default configuration provided by bundled " +
+				"reference.conf");
+			havaloConfig = refConfConfig;
+		}
+		for(final Map.Entry<String,ConfigValue> entry :
+			havaloConfig.entrySet()) {
+		    logger__.trace("Loaded config (key=" + entry.getKey() +
+		    	", value=" + entry.getValue() + ")");
+		}
+		config__ = havaloConfig;
+	}
 	
 	// Cannot instantiate.
 	private HavaloConfigurationFactory() { }
@@ -81,32 +110,7 @@ public final class HavaloConfigurationFactory {
 	 * includes any custom configuration "overrides" placed into the Servlet
 	 * container's "conf" (configuration) directory.
 	 */
-	public synchronized static final Config getConfigInstance() {
-		if(config__ == null) {
-			final Config refConfConfig = load();
-			// Load the external 'havalo.conf' application configuration file
-			// specific to the internal Servlet container.
-			final Config overrideConfig = loadHavaloOverrideConfig();
-			// Load and build the application configuration, then attach the
-			// loaded immutable config to the servlet context. 
-			final Config havaloConfig;
-			if(overrideConfig != null) {
-				logger__.debug("Found valid override configuration; " +
-					"using override.");
-				havaloConfig = overrideConfig.withFallback(refConfConfig);
-			} else {
-				logger__.debug("Found no valid override configuration; " +
-					"using default configuration provided by bundled " +
-					"reference.conf");
-				havaloConfig = refConfConfig;
-			}
-			for(final Map.Entry<String,ConfigValue> entry :
-				havaloConfig.entrySet()) {
-			    logger__.trace("Loaded config (key=" + entry.getKey() +
-			    	", value=" + entry.getValue() + ")");
-			}
-			config__ = havaloConfig;
-		}
+	public static final Config getConfigInstance() {
 		return config__;
 	}
 	
@@ -153,5 +157,44 @@ public final class HavaloConfigurationFactory {
 		}
 		return config;
 	}
+	
+	// ******************************************************************
+	// Config property getters (helper methods)
+	// ******************************************************************
+	
+	public static final String getRepositoryBase() {
+		return getConfigInstance().getString(
+			HAVALO_REPO_BASE_CONFIG_PROPERTY);
+	}
+	
+	public static final int getMaxFilenameLength() {
+		return getConfigInstance().getInt(
+			HAVALO_REPO_MAX_FILENAME_LENGTH_PROPERTY);
+	}
+	
+	public static final String getHavaloAdminUUID() {
+		return getConfigInstance().getString(
+			HAVALO_ADMIN_API_UUID_PROPERTY);
+	}
+	
+	public static final String getHavaloAdminSecret() {
+		return getConfigInstance().getString(
+			HAVALO_ADMIN_API_SECRET_PROPERTY);
+	}
 
+	public static final long getMaxUploadSize() {
+		return getConfigInstance().getLong(
+			HAVALO_UPLOAD_MAX_SIZE_PROPERTY);
+	}
+	
+	public static final int getMaxConcurrentRequests() {
+		return getConfigInstance().getInt(
+			HAVALO_MAX_CONCURRENT_REQUESTS_PROPERTY);
+	}
+	
+	public static final long getAsyncRequestTimeout() {
+		return getConfigInstance().getLong(
+			HAVALO_ASYNC_REQUEST_TIMEOUT_PROPERTY);
+	}
+	
 }
