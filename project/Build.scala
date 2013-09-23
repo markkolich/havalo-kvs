@@ -102,7 +102,7 @@ object Havalo extends Build {
       version := aVer,
       organization := aOrg,
       scalaVersion := "2.10.1",
-      javacOptions ++= Seq("-Xlint", "-g"),
+      javacOptions ++= Seq("-Xlint", "-g"/*, "-source", "1.6", "-target", "1.6"*/),
       shellPrompt := { (state: State) => { "%s:%s> ".format(aName, aVer) } },
       // True to export the packaged JAR instead of just the compiled .class files.
       exportJars := true,
