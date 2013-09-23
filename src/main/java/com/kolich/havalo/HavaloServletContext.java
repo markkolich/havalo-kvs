@@ -35,6 +35,7 @@ import static com.kolich.havalo.HavaloConfigurationFactory.getHavaloAdminUUID;
 import static com.kolich.havalo.HavaloConfigurationFactory.getMaxFilenameLength;
 import static com.kolich.havalo.HavaloConfigurationFactory.getRepositoryBase;
 import static com.kolich.havalo.entities.types.UserRole.ADMIN;
+import static org.apache.commons.lang3.StringUtils.abbreviate;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -159,7 +160,7 @@ public final class HavaloServletContext implements ServletContextListener {
 				throw new BootstrapException(msg);
 			}
 			logger__.debug("Admin API account initialized (uuid=" + adminUUID +
-				", secret=" + adminSecret + ")");
+				", secret=" + abbreviate(adminSecret, 8) + ")");
 			// Create a new keypair for the default ADMIN level user.
 			final KeyPair adminKeyPair = new KeyPair(new HavaloUUID(adminUUID),
 				adminSecret, Arrays.asList(new UserRole[]{ADMIN}));
