@@ -39,11 +39,17 @@ public final class HavaloAsyncThreadPoolFactory {
 	
 	private static final Config havaloConfig__ = getConfigInstance();
 	
+	// Singleton.
 	private static ExecutorService pool__ = null;
 	
 	// Cannot instantiate.
 	private HavaloAsyncThreadPoolFactory() { }
 	
+	/**
+	 * Returns "the thread pool instance" singleton which manages a pool
+	 * of threads that are tasked with handling incoming requests into
+	 * the Havalo service via the Servlet container. 
+	 */
 	public static synchronized final ExecutorService getPoolInstance() {
 		if(pool__ == null) {
 			final int maxConcurrentRequests = havaloConfig__.getInt(

@@ -49,13 +49,12 @@ public abstract class HavaloApiServlet extends AbstractServletClosure {
 	private static final long serialVersionUID = -7154044213558472481L;
 	
 	private static final Config havaloConfig__ = getConfigInstance();
-	private static final Long asyncTimeoutMs__ = 
-		havaloConfig__.getLong(HAVALO_ASYNC_REQUEST_TIMEOUT_PROPERTY);
 	
 	protected RepositoryManager repositoryManager_;
 	
 	public HavaloApiServlet() {
-		super(getPoolInstance(), asyncTimeoutMs__);
+		super(getPoolInstance(), havaloConfig__.getLong(
+			HAVALO_ASYNC_REQUEST_TIMEOUT_PROPERTY));
 	}
 	
 	@Override

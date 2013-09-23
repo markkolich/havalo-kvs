@@ -8,7 +8,7 @@ Havalo is perfect for testing, maintaining fast indexes of data stored "elsewher
 
 The latest <a href="http://markkolich.github.io/downloads/havalo/1.4/havalo-1.4.war">stable version of Havalo is 1.4</a>.
 
-Written in Java 6, fully Java 7 compatible.
+Written in Java 7, but can be cross compiled against Java 6 if desired.
 
 ## Features
 

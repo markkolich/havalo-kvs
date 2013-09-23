@@ -29,6 +29,7 @@ package com.kolich.havalo.entities;
 import static com.kolich.common.date.ISO8601DateFormat.getPrimaryFormat;
 import static java.util.TimeZone.getTimeZone;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -36,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.ardverk.collection.Trie;
+import org.slf4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -51,6 +53,8 @@ import com.kolich.servlet.entities.gson.GsonAppendableServletClosureEntity;
  * Any entity should extend this abstract class, {@link HavaloEntity}.
  */
 public abstract class HavaloEntity extends GsonAppendableServletClosureEntity {
+	
+	private static final Logger logger__ = getLogger(HavaloEntity.class);
 
 	private static final DateFormat iso8601Format__;
 	static {
@@ -100,7 +104,13 @@ public abstract class HavaloEntity extends GsonAppendableServletClosureEntity {
 	 */
 	@Override
 	public final String toString() {
-		return getHavaloGsonInstance().toJson(this);
+		final StringBuilder sb = new StringBuilder();
+		try {
+			toWriter(sb);
+		} catch (Exception e) {
+			logger__.error("Failed to toString() write entity.", e);
+		}
+		return sb.toString();
 	}
-			
+	
 }

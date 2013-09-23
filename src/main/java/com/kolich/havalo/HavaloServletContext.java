@@ -58,9 +58,12 @@ public final class HavaloServletContext implements ServletContextListener {
 	
 	private static final Logger logger__ = getLogger(HavaloServletContext.class);
 	
-	public static final String HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE = "havalo.repomanager";
-	public static final String HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE = "havalo.userservice";
-	public static final String HAVALO_CONTEXT_AUTHENTICATOR_ATTRIBUTE = "havalo.authenticator";
+	public static final String HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE =
+		"havalo.repomanager";
+	public static final String HAVALO_CONTEXT_USER_SERVICE_ATTRIBUTE =
+		"havalo.userservice";
+	public static final String HAVALO_CONTEXT_AUTHENTICATOR_ATTRIBUTE =
+		"havalo.authenticator";
 	
 	private static final String REPO_BASE_DEFAULT = "WEB-INF/work";
 	

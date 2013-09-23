@@ -69,11 +69,18 @@ public final class HavaloConfigurationFactory {
 	private static final String CATALINA_HOME_SYS_PROPERTY =
 		getProperty("catalina.home");
 	
+	// Singleton.
 	private static Config config__ = null;
 	
 	// Cannot instantiate.
 	private HavaloConfigurationFactory() { }
 	
+	/**
+	 * Returns an immutable, shared, configuration singleton instance that
+	 * represents the configuration of this Havalo service.  Gracefully
+	 * includes any custom configuration "overrides" placed into the Servlet
+	 * container's "conf" (configuration) directory.
+	 */
 	public synchronized static final Config getConfigInstance() {
 		if(config__ == null) {
 			final Config refConfConfig = load();

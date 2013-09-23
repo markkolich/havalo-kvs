@@ -102,7 +102,15 @@ object Havalo extends Build {
       version := aVer,
       organization := aOrg,
       scalaVersion := "2.10.1",
-      javacOptions ++= Seq("-Xlint", "-g", "-source", "1.6", "-target", "1.6"),
+      javacOptions ++= Seq(
+        "-Xlint", "-g"/*,
+        // Java "cross compiling" against Java 6. Note you need to provide the "rt"
+        // and "jce" (Java crypto extension) JAR's and place them in a place where
+        // 'javac' can pick them up as specified by the "-bootclasspath" compiler
+        // argument.
+        "-bootclasspath", "jdk/jdk1.6.0_45_rt.jar:jdk/jdk1.6.0_45_jce.jar",
+        "-source", "1.6", "-target", "1.6"*/
+      ),
       shellPrompt := { (state: State) => { "%s:%s> ".format(aName, aVer) } },
       // True to export the packaged JAR instead of just the compiled .class files.
       exportJars := true,
