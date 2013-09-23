@@ -8,6 +8,8 @@ Havalo is perfect for testing, maintaining fast indexes of data stored "elsewher
 
 The latest <a href="http://markkolich.github.io/downloads/havalo/1.4/havalo-1.4.war">stable version of Havalo is 1.4</a>.
 
+Written in Java 7.
+
 ## Features
 
 * **Zero Configuration** &ndash; Drop `havalo.war` into your Servlet 3.0 compatible container, and get local NoSQL storage with nothing else to install &mdash; Havalo is built to run alongside your exsting applications.  For a slightly more secure deployment, create one `.conf` file with the right magic inside and place it in your Servlet container's default configuration directory.
