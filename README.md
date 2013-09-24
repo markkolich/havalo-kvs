@@ -6,7 +6,7 @@ Sometimes you just need fast NoSQL storage, but don't need full redundancy and s
 
 Havalo is perfect for testing, maintaining fast indexes of data stored "elsewhere", and almost any other deployment scenario where relational databases are just too heavy.
 
-The latest <a href="http://markkolich.github.io/downloads/havalo/1.4/havalo-1.4.war">stable version of Havalo is 1.4</a>.
+The latest <a href="http://markkolich.github.io/downloads/havalo/1.5/havalo-1.5.war">stable version of Havalo is 1.5</a>.
 
 Written in Java 7, but can be cross compiled against Java 6 if desired.
 
@@ -260,13 +260,13 @@ Run SBT from within your newly cloned *havalo* directory.
     #~> cd havalo
     #~/havalo> sbt
     ...
-    havalo:1.4>
+    havalo:1.5>
 
 You will see a `havalo` SBT prompt once all dependencies are resolved and the project is loaded.
 
 In SBT, run `container:start` to start the local Servlet container.  By default the server listens on **port 8080**.
 
-    havalo:1.4> container:start
+    havalo:1.5> container:start
     [info] jetty-8.1.10.v20130312
     [info] Started SelectChannelConnector@0.0.0.0:8080
     [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
@@ -279,12 +279,12 @@ See the <a href="https://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki">xsbt-
 
 In SBT, run `package` to build a deployable WAR for your favorite Servlet container.
 
-    havalo:1.4> package
+    havalo:1.5> package
     ...
     [info] Compiling 51 Java sources to ~/havalo/target/classes...
-    [info] Packaging ~/havalo/dist/havalo-1.4.jar ...
+    [info] Packaging ~/havalo/dist/havalo-1.5.jar ...
     [info] Done packaging.
-    [info] Packaging ~/havalo/dist/havalo-1.4.war ...
+    [info] Packaging ~/havalo/dist/havalo-1.5.war ...
     [info] Done packaging.
     [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
 
@@ -292,7 +292,7 @@ Note the resulting WAR is placed into the **havalo/dist** directory.  Deploy and
 
 To create an Eclipse Java project for Havalo, run `eclipse` in SBT.
 
-    havalo:1.4> eclipse
+    havalo:1.5> eclipse
     ...
     [info] Successfully created Eclipse project files for project(s):
     [info] havalo
