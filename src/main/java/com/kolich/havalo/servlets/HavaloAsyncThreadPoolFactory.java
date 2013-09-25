@@ -34,8 +34,15 @@ import java.util.concurrent.ExecutorService;
 import com.kolich.servlet.util.AsyncServletThreadPoolFactory;
 
 public final class HavaloAsyncThreadPoolFactory {
-		
+	
 	// Singleton.
+	// Note that this isn't a "singleton" per JVM, rather it's a singleton
+	// per invocation of the web-application in the Servlet container.  In
+	// other words, when the container starts, a new/fresh instance of this
+	// class is created to which the "pool" here is consumed.  When you stop
+	// the web-application but leave the container running, then hot deploy
+	// the application again, you will get a "new" instance of this class
+	// and hence an entirely new thread pool to use.
 	private static final ExecutorService pool__;
 	static {
 		final int maxConcurrentRequests = getMaxConcurrentRequests();

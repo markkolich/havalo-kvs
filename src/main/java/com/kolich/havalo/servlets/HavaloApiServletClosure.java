@@ -63,6 +63,11 @@ public abstract class HavaloApiServletClosure extends HavaloServletClosure {
 	
 	@Override
 	public void myDestroy(final ExecutorService pool) {
+		// If multiple Servlets are extending this abstract class, note
+		// that shutdown will be called multiple times, once per extending
+		// class.  That is OK, because we can call shutdown on the same
+		// executor service instance (thread pool) multiple times without
+		// any consequences (per the JDK API).
 		pool.shutdown();
 	}
 	
