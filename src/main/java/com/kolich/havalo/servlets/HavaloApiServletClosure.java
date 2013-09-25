@@ -30,6 +30,8 @@ import static com.kolich.havalo.HavaloConfigurationFactory.getAsyncRequestTimeou
 import static com.kolich.havalo.HavaloServletContext.HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE;
 import static com.kolich.havalo.servlets.HavaloAsyncThreadPoolFactory.getPoolInstance;
 
+import java.util.concurrent.ExecutorService;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -52,10 +54,16 @@ public abstract class HavaloApiServletClosure extends HavaloServletClosure {
 	}
 	
 	@Override
-	public void myInit(final ServletConfig servletConfig,
+	public void myInit(final ExecutorService pool,
+		final ServletConfig servletConfig,
 		final ServletContext context) throws ServletException {
 		repositoryManager_ = (RepositoryManager)context
 			.getAttribute(HAVALO_CONTEXT_REPO_MANAGER_ATTRIBUTE);
+	}
+	
+	@Override
+	public void myDestroy(final ExecutorService pool) {
+		pool.shutdown();
 	}
 	
 	protected final Repository createRepository(final HavaloUUID id,

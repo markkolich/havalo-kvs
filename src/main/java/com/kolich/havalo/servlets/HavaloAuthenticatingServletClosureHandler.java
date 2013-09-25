@@ -41,9 +41,9 @@ import org.slf4j.Logger;
 import com.kolich.bolt.exceptions.LockConflictException;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.servlets.auth.HavaloAuthenticator;
-import com.kolich.servlet.closures.ServletClosureHandler;
 import com.kolich.servlet.entities.ServletClosureEntity;
 import com.kolich.servlet.exceptions.ServletClosureException;
+import com.kolich.servlet.handlers.ServletClosureHandler;
 
 public abstract class HavaloAuthenticatingServletClosureHandler<S extends ServletClosureEntity>
 	extends ServletClosureHandler<S> {

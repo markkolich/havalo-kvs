@@ -40,7 +40,7 @@ object Dependencies {
   
   private val kolichCommon = "com.kolich" % "kolich-common" % "0.1.0" % "compile"
   private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.5" % "compile"
-  private val kolichServletClosure = "com.kolich" % "kolich-servlet-closure" % "1.5" % "compile"
+  private val kolichServletClosure = "com.kolich" % "kolich-servlet-closure" % "1.6" % "compile"
 
   // External dependencies
 
@@ -92,7 +92,7 @@ object Havalo extends Build {
   import Resolvers._
 
   private val aName = "havalo"
-  private val aVer = "1.5"
+  private val aVer = "1.5.1"
   private val aOrg = "com.kolich"
 
   lazy val havalo: Project = Project(
