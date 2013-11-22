@@ -37,7 +37,11 @@ Havalo is confirmed to work with the following containers:
   <th>&nbsp;</th>
   </tr>
   <tr>
-  <td rowspan="3">Servlet 3.0</td>
+  <td rowspan="4">Servlet 3.0</td>
+  <td>Tomcat 8*</td>
+  <td><img src="http://openclipart.org/image/800px/svg_to_png/161503/OK-1.png" height="20"></td>
+  </tr>
+  <tr>
   <td>Tomcat 7*</td>
   <td><img src="http://openclipart.org/image/800px/svg_to_png/161503/OK-1.png" height="20"></td>
   </tr>
@@ -47,19 +51,19 @@ Havalo is confirmed to work with the following containers:
   </tr>
   <tr>
   <td>Jetty 9</td>
-  <td><em>Untested</em></td>
+  <td><img src="http://openclipart.org/image/800px/svg_to_png/161503/OK-1.png" height="20"></td>
   </tr>
 </table>
 
-\* if deploying Havalo inside of Tomcat 7, see note below with regards to URL encoded slashes.
+\* if deploying Havalo inside of Tomcat 7/8, see note below with regards to URL encoded slashes.
 
 NOTE: may work with other containers, such as Weblogic or Websphere, but these have **not** been tested.
 
-### Using Havalo with Tomcat 7
+### Using Havalo with Tomcat 7/8
 
-By default, Tomcat 7 does **not** accept URI's that contain a URL encoded slash (`%2F`) &mdash; incoming request URI's that contain a `%2F` in them are immediately rejected with a `400 Bad Request`.  This behavior appears to be specific to Tomcat.
+By default, Tomcat 7 and 8 do **not** accept URI's that contain a URL encoded slash (`%2F`) &mdash; incoming request URI's that contain a `%2F` in them are immediately rejected with a `400 Bad Request`.  This behavior appears to be specific to Tomcat.
 
-Therefore, if you intend to use Havalo with Tomcat 7, you must add the following to your `CATALINA_OPTS` environment variable in `bin/startup.sh`:
+Therefore, if you intend to use Havalo with Tomcat 7 or 8, you must add the following to your `CATALINA_OPTS` environment variable in `bin/startup.sh`:
 
 ```bash
 -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true
