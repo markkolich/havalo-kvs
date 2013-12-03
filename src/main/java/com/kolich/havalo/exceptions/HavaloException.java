@@ -26,9 +26,9 @@
 
 package com.kolich.havalo.exceptions;
 
-import com.kolich.servlet.exceptions.ServletClosureException;
+import com.kolich.curacao.exceptions.CuracaoException;
 
-public class HavaloException extends ServletClosureException.WithStatus {
+public class HavaloException extends CuracaoException.WithStatus {
 	
 	private static final long serialVersionUID = -7889750833064607753L;
 

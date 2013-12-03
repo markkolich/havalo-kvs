@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-                      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-  version="3.0">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
   
 	<display-name>Havalo</display-name>
 	<description>A zero configuration, non-distributed key-value store that runs in your existing Servlet container.</description>
@@ -21,42 +20,16 @@
 	<session-config>
 		<tracking-mode>URL</tracking-mode>
 	</session-config>
-	
-	<listener>
-		<listener-class>com.kolich.havalo.HavaloServletContext</listener-class>
-	</listener>
 		
 	<servlet>
-		<servlet-name>AuthenticateApi</servlet-name>
-		<servlet-class>com.kolich.havalo.servlets.api.AuthenticateApi</servlet-class>
+		<servlet-name>HavaloApi</servlet-name>
+		<servlet-class>com.kolich.curacao.CuracaoDispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>AuthenticateApi</servlet-name>
-		<url-pattern>/api/authenticate</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>ObjectApi</servlet-name>
-		<servlet-class>com.kolich.havalo.servlets.api.ObjectApi</servlet-class>
-		<load-on-startup>1</load-on-startup>
-		<async-supported>true</async-supported>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>ObjectApi</servlet-name>
-		<url-pattern>/api/object/*</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>RepositoryApi</servlet-name>
-		<servlet-class>com.kolich.havalo.servlets.api.RepositoryApi</servlet-class>
-		<load-on-startup>1</load-on-startup>
-		<async-supported>true</async-supported>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>RepositoryApi</servlet-name>
-		<url-pattern>/api/repository/*</url-pattern>
+		<servlet-name>HavaloApi</servlet-name>
+		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
 	<error-page>

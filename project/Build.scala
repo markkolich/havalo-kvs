@@ -30,9 +30,6 @@ import sbt.Keys._
 import com.earldouglas.xsbtwebplugin._
 import PluginKeys._
 import WebPlugin._
-import WebappPlugin._
-
-import com.typesafe.sbteclipse.plugin.EclipsePlugin._
 
 object Dependencies {
 
@@ -40,14 +37,16 @@ object Dependencies {
   
   private val kolichCommon = "com.kolich" % "kolich-common" % "0.1.0" % "compile"
   private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.5" % "compile"
-  private val kolichServletClosure = "com.kolich" % "kolich-servlet-closure" % "1.6" % "compile"
 
   // External dependencies
 
-  // Using Jetty 8 "stable", version 8.1.8.v20121106
-  private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % "8.1.10.v20130312" % "container"
-  private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % "8.1.10.v20130312" % "container"
-  private val jettyJsp = "org.eclipse.jetty" % "jetty-jsp" % "8.1.10.v20130312" % "container"
+  private val curacao = "com.kolich.curacao" % "curacao" % "2.0-M3" % "compile"
+  private val curacaoGson = "com.kolich.curacao" % "curacao-gson" % "2.0-M3" % "compile"
+
+  // Jetty 9.1 "stable", version 9.1.0.v20131115 (as of 11/25/13)
+  private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % "9.1.0.v20131115" % "container"
+  private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % "9.1.0.v20131115" % "container"
+  private val jettyJsp = "org.eclipse.jetty" % "jetty-jsp" % "9.1.0.v20131115" % "container"
   
   private val jspApi = "javax.servlet.jsp" % "jsp-api" % "2.2" % "provided" // Provided by container  
   private val jstl = "javax.servlet" % "jstl" % "1.2" % "compile" // Package with WAR
@@ -55,25 +54,23 @@ object Dependencies {
 
   private val ardverkTrie = "org.ardverk" % "patricia-trie" % "0.6" % "compile"
 
-  //private val akkaActor = "com.typesafe.akka" % "akka-actor" % "2.0.5" % "compile"
-  //private val akkaSlf4j = "com.typesafe.akka" % "akka-slf4j" % "2.0.5" % "compile"
   private val typesafeConfig = "com.typesafe" % "config" % "1.0.2" % "compile"
 
   private val logback = "ch.qos.logback" % "logback-core" % "1.0.7" % "compile"
   private val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.0.7" % "compile" // An Slf4j impl
   private val slf4j = "org.slf4j" % "slf4j-api" % "1.6.4" % "compile"
-  private val jclOverSlf4j = "org.slf4j" % "jcl-over-slf4j" % "1.6.6" % "compile"
 
   private val commonsLang = "org.apache.commons" % "commons-lang3" % "3.1" % "compile"
   private val commonsCodec = "commons-codec" % "commons-codec" % "1.6" % "compile"
 
-  val deps = Seq(kolichCommon, kolichBolt, kolichServletClosure,
+  val deps = Seq(kolichCommon, kolichBolt,
+    curacao, curacaoGson,
     jettyWebApp, jettyPlus, jettyJsp,
     jspApi, jstl, servlet,
     ardverkTrie,
     typesafeConfig,
     commonsLang, commonsCodec,
-    logback, logbackClassic, slf4j, jclOverSlf4j)
+    logback, logbackClassic, slf4j)
 
 }
 
@@ -92,7 +89,7 @@ object Havalo extends Build {
   import Resolvers._
 
   private val aName = "havalo"
-  private val aVer = "1.5.1"
+  private val aVer = "1.6-SNAPSHOT"
   private val aOrg = "com.kolich"
 
   lazy val havalo: Project = Project(
@@ -176,12 +173,7 @@ object Havalo extends Build {
       // xsbt-web-plugin.
       artifactPath in (Compile, packageWar) ~= { defaultPath =>
         file("dist") / defaultPath.getName
-      }) ++
-      Seq(EclipseKeys.createSrc := EclipseCreateSrc.Default,
-        // Make sure SBT also fetches/loads the "src" (source) JAR's for
-        // all declared dependencies.
-        EclipseKeys.withSource := true,
-        // This is a Java project, only.
-        EclipseKeys.projectFlavor := EclipseProjectFlavor.Java))
+      })
+  )
 
 }

@@ -24,64 +24,67 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.servlets.auth;
+package com.kolich.havalo.filters;
 
-import static com.google.common.net.HttpHeaders.AUTHORIZATION;
-import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static com.google.common.net.HttpHeaders.DATE;
+import com.kolich.curacao.annotations.Injectable;
+import com.kolich.curacao.handlers.requests.filters.CuracaoRequestFilter;
+import com.kolich.havalo.components.RepositoryManagerComponent;
+import com.kolich.havalo.entities.types.KeyPair;
+import com.kolich.havalo.exceptions.authentication.AuthenticationException;
+import com.kolich.havalo.exceptions.authentication.BadCredentialsException;
+import org.slf4j.Logger;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
+
+import static com.google.common.net.HttpHeaders.*;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.codec.binary.StringUtils.getBytesUtf8;
 import static org.apache.commons.codec.binary.StringUtils.newStringUtf8;
 import static org.apache.commons.io.IOUtils.LINE_SEPARATOR_UNIX;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.util.UUID;
+public final class HavaloAuthenticationFilter extends CuracaoRequestFilter {
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.http.HttpServletRequest;
+	private static final Logger logger__ =
+        getLogger(HavaloAuthenticationFilter.class);
 
-import org.slf4j.Logger;
+	public static final String HAVALO_AUTHENTICATION_ATTRIBUTE =
+        "havalo.authentication";
 
-import com.kolich.havalo.entities.types.KeyPair;
-import com.kolich.havalo.exceptions.authentication.AuthenticationException;
-import com.kolich.havalo.exceptions.authentication.BadCredentialsException;
-
-public final class HavaloAuthenticator {
-	
-	private static final Logger logger__ = getLogger(HavaloAuthenticator.class);
-	
-	public static final String HAVALO_AUTHENTICATION_ATTRIBUTE = "havalo.authentication";
-		
 	private static final String HAVALO_AUTHORIZATION_PREFIX = "Havalo ";
 	private static final String HAVALO_AUTHORIZATION_SEPARATOR = ":";
-	
+
 	private final HavaloUserService userService_;
-	
-	public HavaloAuthenticator(final HavaloUserService userService) {
-		userService_ = userService;
+
+    @Injectable
+	public HavaloAuthenticationFilter(final RepositoryManagerComponent component) {
+		userService_ = new HavaloUserService(component.getRepositoryManager());
 	}
-	
-	public final KeyPair authenticate(final HttpServletRequest request) {
-		try {
-        	// Extract the Authorization header from the incoming HTTP request.
+
+    @Override
+    public final void filter(final HttpServletRequest request) throws Exception {
+        try {
+            // Extract the Authorization header from the incoming HTTP request.
             String header = request.getHeader(AUTHORIZATION);
             // If the header does not exist or does not start with the correct
-            // token, give up immeaditely.
+            // token, give up immediately.
             if(header == null || !header.startsWith(HAVALO_AUTHORIZATION_PREFIX)) {
-            	throw new AuthenticationException("Request did not contain " +
-            		"a valid '" + AUTHORIZATION + "' header.");
+                throw new AuthenticationException("Request did not contain " +
+                    "a valid '" + AUTHORIZATION + "' header.");
             }
             // Extract just the part of the Authorization header that follows
             // the Havalo authorization prefix.
             header = header.substring(HAVALO_AUTHORIZATION_PREFIX.length());
             final String[] tokens = header.split(HAVALO_AUTHORIZATION_SEPARATOR, 2);
             if(tokens == null || tokens.length != 2) {
-            	throw new AuthenticationException("Failed to extract correct " +
-            		"number of tokens from '" + AUTHORIZATION + "' header.");
+                throw new AuthenticationException("Failed to extract correct " +
+                    "number of tokens from '" + AUTHORIZATION + "' header.");
             }
             // If we get here, then we must have had some valid input
-        	// Authorization header with a real access key and signature.
+            // Authorization header with a real access key and signature.
             final String accessKey = tokens[0], signature = tokens[1];
             // request.getRequestURI();
             // Extract username from incoming signed request header.
@@ -98,35 +101,35 @@ public final class HavaloAuthenticator {
             //        the protocol name up to the query string in the first line
             //        of the HTTP request)
             // Call the user details service to load the user data for the UUID.
-        	final KeyPair userKp = userService_.loadKeyPairById(
-        		UUID.fromString(accessKey));
-        	if(userKp == null) {
-        		throw new AuthenticationException("User service returned " +
-        			"null, which is an interface contract violation.");
-        	}
-        	// Get the string to sign -- will fail gracefully if the incoming
-        	// request does not have the proper headers attached to it.
-        	final String stringToSign = getStringToSign(request);
-        	// Compute the resulting signed signature.
-        	final String computed = HMACSHA256Signer.sign(userKp, stringToSign);
-        	// Does the signature match what was passed to us in the
-        	// Authorization request header?
-        	if(!computed.equals(signature)) {
-        		throw new BadCredentialsException("Signatures did not " +
-        			"match (request=" + signature + ", computed=" + computed +
-        				")");
-        	}
-        	// Success!
-        	return userKp;
+            final KeyPair userKp = userService_.loadKeyPairById(
+                UUID.fromString(accessKey));
+            if(userKp == null) {
+                throw new AuthenticationException("User service returned " +
+                    "null, which is an interface contract violation.");
+            }
+            // Get the string to sign -- will fail gracefully if the incoming
+            // request does not have the proper headers attached to it.
+            final String stringToSign = getStringToSign(request);
+            // Compute the resulting signed signature.
+            final String computed = HMACSHA256Signer.sign(userKp, stringToSign);
+            // Does the signature match what was passed to us in the
+            // Authorization request header?
+            if(!computed.equals(signature)) {
+                throw new BadCredentialsException("Signatures did not " +
+                    "match (request=" + signature + ", computed=" + computed +
+                    ")");
+            }
+            // Success!
+            request.setAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE, userKp);
         } catch (Exception e) {
-        	logger__.debug("Authentication failure; service failed " +
-        		"to authenticate request.", e);
-        	throw new AuthenticationException("Authentication " +
-        		"failed; either the provided signature did not match, " +
-        		"or you do not have permission to access the requested " +
-        		"resource.", e);
+            logger__.debug("Authentication failure; service failed " +
+                "to authenticate request.", e);
+            throw new AuthenticationException("Authentication " +
+                "failed; either the provided signature did not match, " +
+                "or you do not have permission to access the requested " +
+                "resource.", e);
         }
-	}
+    }
 	
 	private static final String getStringToSign(final HttpServletRequest request) {
 		final StringBuilder sb = new StringBuilder();
@@ -149,8 +152,8 @@ public final class HavaloAuthenticator {
 		sb.append(request.getRequestURI());
 		return sb.toString();
 	}
-	
-	/**
+
+    /**
 	 * Computes an HMAC-SHA256 signature.
 	 */
 	private static final class HMACSHA256Signer {

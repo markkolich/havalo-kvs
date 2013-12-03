@@ -24,37 +24,27 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.servlets.auth;
+package com.kolich.havalo.mappers;
 
-import java.util.UUID;
-
-import com.kolich.havalo.entities.types.HavaloUUID;
+import com.kolich.curacao.annotations.mappers.ControllerArgumentTypeMapper;
+import com.kolich.curacao.handlers.requests.mappers.ControllerMethodArgumentMapper;
 import com.kolich.havalo.entities.types.KeyPair;
-import com.kolich.havalo.exceptions.authentication.NullorEmptySecretException;
-import com.kolich.havalo.exceptions.authentication.UsernameNotFoundException;
-import com.kolich.havalo.io.managers.RepositoryManager;
 
-public final class HavaloUserService {
-	
-	private final RepositoryManager repoManager_;
-	
-	public HavaloUserService(final RepositoryManager repoManager) {
-		repoManager_ = repoManager;
+import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.annotation.Annotation;
+
+import static com.kolich.havalo.filters.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
+
+@ControllerArgumentTypeMapper(KeyPair.class)
+public final class KeyPairArgumentMapper
+	extends ControllerMethodArgumentMapper<KeyPair> {
+
+	@Override
+	public final KeyPair resolve(@Nullable final Annotation annotation,
+        final CuracaoRequestContext context) {
+        final HttpServletRequest request = context.getRequest();
+        return (KeyPair)request.getAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE);
 	}
 	
-	public KeyPair loadKeyPairById(final UUID id) {
-		try {
-			final KeyPair kp = repoManager_.getRepository(
-				new HavaloUUID(id)).getKeyPair();
-			if(kp.getSecret() == null) {
-				throw new NullorEmptySecretException("Oops, KeyPair secret " +
-					"for user (" + id + ") was null or unknown.");
-			}
-			return kp;
-		} catch (Exception e) {
-			throw new UsernameNotFoundException("Failed to load required " +
-				"user details for ID: " + id, e);
-		}
-	}
-		
 }

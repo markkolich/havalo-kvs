@@ -24,36 +24,37 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.kolich.havalo.servlets.api;
+package com.kolich.havalo.filters;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
-import javax.servlet.AsyncContext;
-
-import org.slf4j.Logger;
-
+import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
-import com.kolich.havalo.servlets.HavaloApiServletClosure;
-import com.kolich.havalo.servlets.HavaloAuthenticatingServletClosureHandler;
+import com.kolich.havalo.exceptions.authentication.NullorEmptySecretException;
+import com.kolich.havalo.exceptions.authentication.UsernameNotFoundException;
+import com.kolich.havalo.io.managers.RepositoryManager;
 
-public final class AuthenticateApi extends HavaloApiServletClosure {
-	
-	private static final Logger logger__ = getLogger(AuthenticateApi.class);
+import java.util.UUID;
 
-	private static final long serialVersionUID = 1087288709731427991L;
+public final class HavaloUserService {
 	
-	@Override
-	public final HavaloAuthenticatingServletClosureHandler<KeyPair> post(
-		final AsyncContext context) {
-		return new HavaloAuthenticatingServletClosureHandler<KeyPair>(logger__, context) {
-			@Override
-			public KeyPair execute(final KeyPair userKp) throws Exception {
-				// A bit redundant, but the call to getRepository() here
-				// just verifies that the user account exists ~and~ the
-				// corresponding repository exists in the system as well.
-				return getRepository(userKp.getKey()).getKeyPair();
-			}
-		};
+	private final RepositoryManager repoManager_;
+
+	public HavaloUserService(final RepositoryManager repoManager) {
+		repoManager_ = repoManager;
 	}
 	
+	public KeyPair loadKeyPairById(final UUID id) {
+		try {
+			final KeyPair kp = repoManager_.getRepository(
+				new HavaloUUID(id)).getKeyPair();
+			if(kp.getSecret() == null) {
+				throw new NullorEmptySecretException("Oops, KeyPair secret " +
+					"for user (" + id + ") was null or unknown.");
+			}
+			return kp;
+		} catch (Exception e) {
+			throw new UsernameNotFoundException("Failed to load required " +
+				"user details for ID: " + id, e);
+		}
+	}
+		
 }

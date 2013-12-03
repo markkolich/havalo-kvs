@@ -26,18 +26,17 @@
 
 package com.kolich.havalo;
 
-import static com.typesafe.config.ConfigFactory.load;
-import static java.lang.System.getProperty;
-import static org.slf4j.LoggerFactory.getLogger;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigValue;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.util.Map;
 
-import org.slf4j.Logger;
-
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigValue;
+import static com.typesafe.config.ConfigFactory.load;
+import static java.lang.System.getProperty;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public final class HavaloConfigurationFactory {
 	
@@ -57,10 +56,6 @@ public final class HavaloConfigurationFactory {
 	
 	public static final String HAVALO_UPLOAD_MAX_SIZE_PROPERTY =
 		"havalo.upload.max.size";
-	public static final String HAVALO_MAX_CONCURRENT_REQUESTS_PROPERTY =
-		"havalo.api.max.requests";
-	public static final String HAVALO_ASYNC_REQUEST_TIMEOUT_PROPERTY =
-		"havalo.api.request.timeout.ms";
 	
 	// Private static's
 	
@@ -90,7 +85,7 @@ public final class HavaloConfigurationFactory {
 		} else {
 			logger__.debug("Found no valid override configuration; " +
 				"using default configuration provided by bundled " +
-				"reference.conf");
+				"application.conf");
 			havaloConfig = refConfConfig;
 		}
 		for(final Map.Entry<String,ConfigValue> entry :
@@ -185,16 +180,6 @@ public final class HavaloConfigurationFactory {
 	public static final long getMaxUploadSize() {
 		return getConfigInstance().getLong(
 			HAVALO_UPLOAD_MAX_SIZE_PROPERTY);
-	}
-	
-	public static final int getMaxConcurrentRequests() {
-		return getConfigInstance().getInt(
-			HAVALO_MAX_CONCURRENT_REQUESTS_PROPERTY);
-	}
-	
-	public static final long getAsyncRequestTimeout() {
-		return getConfigInstance().getLong(
-			HAVALO_ASYNC_REQUEST_TIMEOUT_PROPERTY);
 	}
 	
 }

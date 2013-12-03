@@ -26,33 +26,32 @@
 
 package com.kolich.havalo.entities;
 
-import static com.kolich.common.date.ISO8601DateFormat.getPrimaryFormat;
-import static java.util.TimeZone.getTimeZone;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static org.slf4j.LoggerFactory.getLogger;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.kolich.common.entities.gson.KolichDefaultDateTypeAdapter;
+import com.kolich.curacao.gson.GsonAppendableCuracaoEntity;
+import com.kolich.havalo.entities.types.HashedFileObject;
+import com.kolich.havalo.entities.types.HavaloError;
+import com.kolich.havalo.entities.types.HavaloUUID;
+import com.kolich.havalo.entities.types.Repository;
+import org.ardverk.collection.Trie;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.ardverk.collection.Trie;
-import org.slf4j.Logger;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.kolich.common.entities.gson.KolichDefaultDateTypeAdapter;
-import com.kolich.havalo.entities.types.HashedFileObject;
-import com.kolich.havalo.entities.types.HavaloError;
-import com.kolich.havalo.entities.types.HavaloUUID;
-import com.kolich.havalo.entities.types.Repository;
-import com.kolich.servlet.entities.gson.GsonAppendableServletClosureEntity;
+import static com.kolich.common.date.ISO8601DateFormat.getPrimaryFormat;
+import static java.util.TimeZone.getTimeZone;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Any entity should extend this abstract class, {@link HavaloEntity}.
  */
-public abstract class HavaloEntity extends GsonAppendableServletClosureEntity {
+public abstract class HavaloEntity extends GsonAppendableCuracaoEntity {
 	
 	private static final Logger logger__ = getLogger(HavaloEntity.class);
 
@@ -71,7 +70,7 @@ public abstract class HavaloEntity extends GsonAppendableServletClosureEntity {
 	 * @return
 	 */
 	public static final GsonBuilder getHavaloGsonBuilder() {
-		final GsonBuilder builder = getDefaultGsonBuilder();
+		final GsonBuilder builder = new GsonBuilder().serializeNulls();
 		// Register a type adapter for the HavaloUUID entity type.
 		builder.registerTypeAdapter(new TypeToken<HavaloUUID>(){}.getType(),
 			new HavaloUUID.HavaloUUIDTypeAdapter());
@@ -93,24 +92,6 @@ public abstract class HavaloEntity extends GsonAppendableServletClosureEntity {
 	@Override
 	public int getStatus() {
 		return SC_OK;
-	}
-	
-	/**
-	 * Serialize this entity into a String; default behavior
-	 * is usually to first to convert the entity into a {@link Gson}
-	 * object then serializes that Gson object into a String.  Basically
-	 * this method causes the entity to return a JSON serialized
-	 * representation of itself.
-	 */
-	@Override
-	public final String toString() {
-		final StringBuilder sb = new StringBuilder();
-		try {
-			toWriter(sb);
-		} catch (Exception e) {
-			logger__.error("Failed to toString() write entity.", e);
-		}
-		return sb.toString();
 	}
 	
 }
