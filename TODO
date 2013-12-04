@@ -1,0 +1,12 @@
+== Update SBT version in README.md
+
+== Tweak code to take advantage of Java 7's try(...){ } auto-closable's
+
+== Identify and remove unused parameters in ObjectApi controller methods
+
+== @Path("key") final String key and URLEncodingUtils.urlDecode(key) are used a lot.. might make sense to define a custom argument type mapper for these that automatically looks for the "path" in the pathVars and decodes it for the method
+
+== Let's add some comments into application.conf to clarify what each config option is all about
+
+== web.xml could use a little love. The servlet-name feels off.
+   -- Remove <load-on-startup> 
