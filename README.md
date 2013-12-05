@@ -8,7 +8,7 @@ Havalo is perfect for testing, maintaining fast indexes of data stored "elsewher
 
 The latest <a href="http://markkolich.github.io/downloads/havalo/1.5/havalo-1.5.war">stable version of Havalo is 1.5</a>.
 
-Written in Java 7, but can be cross compiled against Java 6 if desired.
+Written in Java 7, for a Java 7 compatible JVM.
 
 ## Features
 
@@ -94,7 +94,7 @@ If desired, Havalo supports "hot deployment" which allows you to deploy or undep
 
 Havalo is configured using the HOCON configuration format provided by the <a href="https://github.com/typesafehub/config">Typesafe Config</a> library.  Read more about HOCON and its similarities to JSON <a href="https://github.com/typesafehub/config#json-superset">here</a>.
 
-The Havalo default configuration file, <a href="https://github.com/markkolich/havalo/blob/master/src/main/resources/reference.conf">reference.conf</a>, is shipped inside of the Havalo `.war` file.  To override any of these configuration properties, simply drop a file named `havalo.conf` into your Servlet container's `conf` directory.  For example, if running Havalo inside of Tomcat, drop your custom `havalo.conf` into `$CATALINA_HOME/conf` before deploying `havalo.war`.
+The Havalo default configuration file, <a href="https://github.com/markkolich/havalo/blob/master/src/main/resources/application.conf">application.conf</a>, is shipped inside of the Havalo `.war` file.  To override any of these configuration properties, simply drop a file named `havalo.conf` into your Servlet container's `conf` directory.  For example, if running Havalo inside of Tomcat, drop your custom `havalo.conf` into `$CATALINA_HOME/conf` before deploying `havalo.war`.
 
 Finally, note you only need to override the configuration properties you want to change.  For example, if you only want to override the location on disk where Havalo stores its repositories and objects, create a `havalo.conf` file that looks like this:
 
@@ -110,7 +110,7 @@ havalo {
 }
 ```
 
-For a complete list of configurable properties and their description, see the <a href="https://github.com/markkolich/havalo/blob/master/src/main/resources/reference.conf">Havalo default reference.conf</a>.
+For a complete list of configurable properties and their description, see the <a href="https://github.com/markkolich/havalo/blob/master/src/main/resources/application.conf">Havalo default application.conf</a>.
 
 ### Security
 
@@ -249,7 +249,7 @@ You can download the latest version of Havalo on the <a href="http://markkolich.
 
 ### Build from Source
 
-Havalo is built and managed using <a href="https://github.com/harrah/xsbt">SBT 0.12.3</a>.
+Havalo is built and managed using <a href="https://github.com/sbt/sbt">SBT</a>.
 
 To clone and build this project, you must have <a href="http://www.scala-sbt.org/release/docs/Getting-Started/Setup">SBT installed and configured on your computer</a>.
 

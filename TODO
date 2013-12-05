@@ -1,7 +1,3 @@
-== Update SBT version in README.md
-
-== Update references/pointers to reference.conf -> application.conf in README.md
-
 == Tweak code to take advantage of Java 7's try(...){ } auto-closable's
 
 == Identify and remove unused parameters in ObjectApi controller methods
