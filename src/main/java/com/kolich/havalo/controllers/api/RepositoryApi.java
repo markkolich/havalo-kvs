@@ -27,13 +27,11 @@
 package com.kolich.havalo.controllers.api;
 
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
-import com.kolich.common.util.URLEncodingUtils;
 import com.kolich.curacao.annotations.Controller;
 import com.kolich.curacao.annotations.Injectable;
 import com.kolich.curacao.annotations.methods.DELETE;
 import com.kolich.curacao.annotations.methods.GET;
 import com.kolich.curacao.annotations.methods.POST;
-import com.kolich.curacao.annotations.parameters.Path;
 import com.kolich.curacao.annotations.parameters.Query;
 import com.kolich.curacao.entities.empty.StatusCodeOnlyCuracaoEntity;
 import com.kolich.havalo.components.RepositoryManagerComponent;
@@ -44,10 +42,10 @@ import com.kolich.havalo.entities.types.ObjectList;
 import com.kolich.havalo.entities.types.Repository;
 import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.filters.HavaloAuthenticationFilter;
+import com.kolich.havalo.mappers.ObjectKeyArgumentMapper.ObjectKey;
 
 import static com.kolich.havalo.HavaloConfigurationFactory.getHavaloAdminUUID;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
-import static org.apache.commons.lang3.Validate.notEmpty;
 
 @Controller
 public class RepositoryApi extends HavaloApiController {
@@ -97,20 +95,16 @@ public class RepositoryApi extends HavaloApiController {
         return kp;
     }
 
-    @DELETE(value="/api/repository/{repoId}", filter=HavaloAuthenticationFilter.class)
-    public final StatusCodeOnlyCuracaoEntity delete(
-        @Path("repoId") final String repoId, final KeyPair userKp)
-        throws Exception {
-        // URL-decode the incoming key (the name of the object)
-        notEmpty(repoId, "Repository ID cannot be null or empty.");
-        final String key = URLEncodingUtils.urlDecode(repoId);
+    @DELETE(value="/api/repository/{key}", filter=HavaloAuthenticationFilter.class)
+    public final StatusCodeOnlyCuracaoEntity delete(final ObjectKey key,
+        final KeyPair userKp) throws Exception {
         // Only admin level users have the right to delete repositories.
         if(!userKp.isAdmin()) {
             throw new RepositoryForbiddenException("Authenticated " +
                 "user does not have permission to delete repositories: " +
                 "(userId=" + userKp.getKey() + ", repoId=" + key + ")");
         }
-        final HavaloUUID toDelete = new HavaloUUID(key);
+        final HavaloUUID toDelete = new HavaloUUID(key.getDecodedKey());
         // Admin users cannot delete the root "admin" repository.
         if(adminUUID_.equals(toDelete)) {
             throw new RepositoryForbiddenException("Authenticated " +

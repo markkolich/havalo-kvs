@@ -28,6 +28,7 @@ package com.kolich.havalo.controllers;
 
 import com.kolich.havalo.entities.types.*;
 import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.mappers.ObjectKeyArgumentMapper.ObjectKey;
 
 public abstract class HavaloApiController {
 
@@ -56,8 +57,18 @@ public abstract class HavaloApiController {
     }
 
     protected final HashedFileObject getHashedFileObject(final Repository repo,
+        final ObjectKey key, final boolean failIfNotFound) {
+        return getHashedFileObject(repo, key.getDecodedKey(), failIfNotFound);
+    }
+
+    protected final HashedFileObject getHashedFileObject(final Repository repo,
         final String key) {
         return getHashedFileObject(repo, key, false);
+    }
+
+    protected final HashedFileObject getHashedFileObject(final Repository repo,
+        final ObjectKey key) {
+        return getHashedFileObject(repo, key.getDecodedKey());
     }
 
     protected final DiskObject getCanonicalObject(final Repository repo,
@@ -75,9 +86,20 @@ public abstract class HavaloApiController {
         return repositoryManager_.deleteHashedFileObject(repo, key, ifMatch);
     }
 
+    protected final HashedFileObject deleteHashedFileObject(final Repository repo,
+        final ObjectKey key, final String ifMatch) {
+        return repositoryManager_.deleteHashedFileObject(repo,
+            key.getDecodedKey(), ifMatch);
+    }
+
     protected final HashedFileObject deleteHashedFileObject(final HavaloUUID id,
         final String key, final String ifMatch) {
         return repositoryManager_.deleteHashedFileObject(id, key, ifMatch);
+    }
+
+    protected final HashedFileObject deleteHashedFileObject(final HavaloUUID id,
+        final ObjectKey key, final String ifMatch) {
+        return deleteHashedFileObject(id, key.getDecodedKey(), ifMatch);
     }
 
     protected final void flushRepository(final Repository repo) {

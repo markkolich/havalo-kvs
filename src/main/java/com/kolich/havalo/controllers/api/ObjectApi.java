@@ -27,7 +27,6 @@
 package com.kolich.havalo.controllers.api;
 
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
-import com.kolich.common.util.URLEncodingUtils;
 import com.kolich.common.util.secure.KolichChecksum;
 import com.kolich.curacao.annotations.Controller;
 import com.kolich.curacao.annotations.Injectable;
@@ -35,7 +34,6 @@ import com.kolich.curacao.annotations.methods.DELETE;
 import com.kolich.curacao.annotations.methods.GET;
 import com.kolich.curacao.annotations.methods.HEAD;
 import com.kolich.curacao.annotations.methods.PUT;
-import com.kolich.curacao.annotations.parameters.Path;
 import com.kolich.curacao.annotations.parameters.convenience.ContentLength;
 import com.kolich.curacao.annotations.parameters.convenience.ContentType;
 import com.kolich.curacao.annotations.parameters.convenience.IfMatch;
@@ -51,7 +49,7 @@ import com.kolich.havalo.exceptions.objects.ObjectLengthNotSpecifiedException;
 import com.kolich.havalo.exceptions.objects.ObjectNotFoundException;
 import com.kolich.havalo.exceptions.objects.ObjectTooLargeException;
 import com.kolich.havalo.filters.HavaloAuthenticationFilter;
-import com.kolich.havalo.io.managers.RepositoryManager;
+import com.kolich.havalo.mappers.ObjectKeyArgumentMapper.ObjectKey;
 import org.slf4j.Logger;
 
 import javax.servlet.AsyncContext;
@@ -72,7 +70,6 @@ import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.io.FileUtils.deleteQuietly;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.io.IOUtils.copyLarge;
-import static org.apache.commons.lang3.Validate.notEmpty;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Controller
@@ -91,19 +88,16 @@ public class ObjectApi extends HavaloApiController {
     }
 
     @HEAD(value="/api/object/{key}", filter=HavaloAuthenticationFilter.class)
-    public final void head(@Path("key") final String key, final KeyPair userKp,
+    public final void head(final ObjectKey key, final KeyPair userKp,
         final HttpServletResponse response, final AsyncContext context)
         throws Exception {
         final Repository repo = getRepository(userKp.getKey());
         new ReentrantReadWriteEntityLock<Void>(repo) {
             @Override
             public Void transaction() throws Exception {
-                // URL-decode the incoming key (the name of the object)
-                notEmpty(key, "Key cannot be null or empty.");
-                final String objectKey = URLEncodingUtils.urlDecode(key);
                 final HashedFileObject hfo = getHashedFileObject(repo,
                     // The URL-decoded key of the object to delete.
-                    objectKey,
+                    key,
                     // Fail if not found.
                     true);
                 new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
@@ -124,19 +118,16 @@ public class ObjectApi extends HavaloApiController {
     }
 
     @GET(value="/api/object/{key}", filter=HavaloAuthenticationFilter.class)
-    public final void get(@Path("key") final String key, final KeyPair userKp,
+    public final void get(final ObjectKey key, final KeyPair userKp,
         final HttpServletResponse response, final AsyncContext context)
         throws Exception {
         final Repository repo = getRepository(userKp.getKey());
         new ReentrantReadWriteEntityLock<Void>(repo) {
             @Override
             public Void transaction() throws Exception {
-                // URL-decode the incoming key (the name of the object)
-                notEmpty(key, "Key cannot be null or empty.");
-                final String objectKey = URLEncodingUtils.urlDecode(key);
                 final HashedFileObject hfo = getHashedFileObject(repo,
                     // The URL-decoded key of the object to delete.
-                    objectKey,
+                    key,
                     // Fail if not found.
                     true);
                 new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
@@ -148,7 +139,7 @@ public class ObjectApi extends HavaloApiController {
                         if(!object.getFile().exists()) {
                             throw new ObjectNotFoundException("Failed " +
                                 "to find canonical object on disk " +
-                                "(key=" + objectKey + ", file=" +
+                                "(key=" + key + ", file=" +
                                 object.getFile().getAbsolutePath() +
                                 ")");
                         }
@@ -167,18 +158,14 @@ public class ObjectApi extends HavaloApiController {
     }
 
     @PUT(value="/api/object/{key}", filter=HavaloAuthenticationFilter.class)
-    public final HashedFileObject put(@Path("key") final String key,
-        final KeyPair userKp, @ContentType final String contentType,
-        @IfMatch final String ifMatch, @ContentLength final Long contentLength,
-        final AsyncContext context, final HttpServletRequest request,
+    public final HashedFileObject put(final ObjectKey key, final KeyPair userKp,
+        @ContentType final String contentType, @IfMatch final String ifMatch,
+        @ContentLength final Long contentLength, final HttpServletRequest request,
         final HttpServletResponse response) throws Exception {
         final Repository repo = getRepository(userKp.getKey());
         return new ReentrantReadWriteEntityLock<HashedFileObject>(repo) {
             @Override
             public HashedFileObject transaction() throws Exception {
-                // URL-decode the incoming key (the name of the object)
-                notEmpty(key, "Key cannot be null or empty.");
-                final String objectKey = URLEncodingUtils.urlDecode(key);
                 // Havalo requires the consumer to send a Content-Length
                 // request header with the request when uploading an
                 // object.
@@ -198,7 +185,7 @@ public class ObjectApi extends HavaloApiController {
                         "is too large. Max upload size allowed is " +
                         uploadMaxSize_ + "-bytes.");
                 }
-                final HashedFileObject hfo = getHashedFileObject(repo, objectKey);
+                final HashedFileObject hfo = getHashedFileObject(repo, key);
                 return new ReentrantReadWriteEntityLock<HashedFileObject>(hfo) {
                     @Override
                     public HashedFileObject transaction() throws Exception {
@@ -297,17 +284,14 @@ public class ObjectApi extends HavaloApiController {
     }
 
     @DELETE(value="/api/object/{key}", filter=HavaloAuthenticationFilter.class)
-    public final StatusCodeOnlyCuracaoEntity delete(@Path("key") final String key,
+    public final StatusCodeOnlyCuracaoEntity delete(final ObjectKey key,
         @IfMatch final String ifMatch, final KeyPair userKp) throws Exception {
-        // URL-decode the incoming key (the name of the object)
-        notEmpty(key, "Key cannot be null or empty.");
-        final String objectKey = URLEncodingUtils.urlDecode(key);
         // The delete operation does return a pointer to the "deleted"
         // HFO, but we're not using it, we're just dropping it on the
         // floor (intentionally not returning it to the caller).
         deleteHashedFileObject(userKp.getKey(),
             // The URL-decoded key of the object to delete.
-            objectKey,
+            key,
             // Only delete the object if the provided ETag via the
             // If-Match header matches the object on disk.
             ifMatch);

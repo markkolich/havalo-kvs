@@ -18,7 +18,7 @@ Written in Java 7, for a Java 7 compatible JVM.
 
 * **In-Memory Indexing** &ndash; Searchable object indexes are held in memory and flushed to disk as needed.  The size of your object indexes are only limited by the amount of memory available to your Servlet container JVM.
 
-* **Trusted Stack** &ndash; Written in Java, built around *raw asynchronous* servlet's with no "bloated frameworks" to get in the way.  Deployable in any **Servlet 3.0** compatible container.  Fully tested and qualified on Tomcat 7 and Jetty 8.
+* **Trusted Stack** &ndash; Written in Java, built around *raw asynchronous* Servlet's with no "bloated frameworks" to get in the way.  Deployable in any **Servlet 3.0** compatible container.  Fully tested and qualified on Tomcat 7, Tomcat 8, Jetty 8, and Jetty 9.
 
 * **RESTful API** &ndash; Havalo offers a <a href="#api">simple RESTful API that just makes perfect sense</a>.  All API responses are in pure JSON &mdash; no XML, anywhere. 
 
@@ -264,13 +264,13 @@ Run SBT from within your newly cloned *havalo* directory.
     #~> cd havalo
     #~/havalo> sbt
     ...
-    havalo:1.5>
+    havalo:1.7-SNAPSHOT>
 
 You will see a `havalo` SBT prompt once all dependencies are resolved and the project is loaded.
 
 In SBT, run `container:start` to start the local Servlet container.  By default the server listens on **port 8080**.
 
-    havalo:1.5> container:start
+    havalo:1.7-SNAPSHOT> container:start
     [info] jetty-8.1.10.v20130312
     [info] Started SelectChannelConnector@0.0.0.0:8080
     [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
@@ -283,27 +283,24 @@ See the <a href="https://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki">xsbt-
 
 In SBT, run `package` to build a deployable WAR for your favorite Servlet container.
 
-    havalo:1.5> package
+    havalo:1.7-SNAPSHOT> package
     ...
     [info] Compiling 51 Java sources to ~/havalo/target/classes...
-    [info] Packaging ~/havalo/dist/havalo-1.5.jar ...
+    [info] Packaging ~/havalo/dist/havalo-1.7-SNAPSHOT.jar ...
     [info] Done packaging.
-    [info] Packaging ~/havalo/dist/havalo-1.5.war ...
+    [info] Packaging ~/havalo/dist/havalo-1.7-SNAPSHOT.war ...
     [info] Done packaging.
     [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
 
 Note the resulting WAR is placed into the **havalo/dist** directory.  Deploy and enjoy.
 
-To create an Eclipse Java project for Havalo, run `eclipse` in SBT.
+To create an IntelliJ IDEA project for Havalo, run `gen-idea` in SBT.
 
-    havalo:1.5> eclipse
+    havalo:1.7-SNAPSHOT> gen-idea
     ...
-    [info] Successfully created Eclipse project files for project(s):
-    [info] havalo
+    [info] Creating IDEA module for project 'havalo' ...
 
-You'll now have a real Eclipse **.project** file worthy of an Eclipse import.
-
-Note your new **.classpath** file as well &mdash; all source JAR's are fetched and injected into the Eclipse project automatically.
+You'll now have an IntelliJ IDEA project worthy of an import.
 
 ## Licensing
 
