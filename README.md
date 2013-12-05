@@ -271,8 +271,8 @@ You will see a `havalo` SBT prompt once all dependencies are resolved and the pr
 In SBT, run `container:start` to start the local Servlet container.  By default the server listens on **port 8080**.
 
     havalo:1.7-SNAPSHOT> container:start
-    [info] jetty-8.1.10.v20130312
-    [info] Started SelectChannelConnector@0.0.0.0:8080
+    [info] jetty-9.1.0.v20131115
+    [info] Started ServerConnector@{HTTP/1.1}{0.0.0.0:8080}    
     [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
 
 In your nearest web-browser, visit <a href="http://localhost:8080">http://localhost:8080</a> and you should see the Havalo application homepage &mdash; it's a blank page that says *Havalo*.  The Havalo API endpoint can be found at <a href="http://localhost:8080/api">http://localhost:8080/api</a>.
