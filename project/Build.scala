@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013 Mark S. Kolich
+ * Copyright (c) 2014 Mark S. Kolich
  * http://mark.koli.ch
  *
  * Permission is hereby granted, free of charge, to any person
@@ -40,13 +40,13 @@ object Dependencies {
 
   // External dependencies
 
-  private val curacao = "com.kolich.curacao" % "curacao" % "2.0-M3" % "compile"
-  private val curacaoGson = "com.kolich.curacao" % "curacao-gson" % "2.0-M3" % "compile"
+  private val curacao = "com.kolich.curacao" % "curacao" % "2.0-M10" % "compile"
+  private val curacaoGson = "com.kolich.curacao" % "curacao-gson" % "2.0-M10" % "compile"
 
-  // Jetty 9.1 "stable", version 9.1.0.v20131115 (as of 11/25/13)
-  private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % "9.1.0.v20131115" % "container"
-  private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % "9.1.0.v20131115" % "container"
-  private val jettyJsp = "org.eclipse.jetty" % "jetty-jsp" % "9.1.0.v20131115" % "container"
+  // Jetty 9 stable, version 9.1.1.v20140108 (as of 2/7/14)
+  private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % "9.1.1.v20140108" % "container"
+  private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % "9.1.1.v20140108" % "container"
+  private val jettyJsp = "org.eclipse.jetty" % "jetty-jsp" % "9.1.1.v20140108" % "container"
   
   private val jspApi = "javax.servlet.jsp" % "jsp-api" % "2.2" % "provided" // Provided by container  
   private val jstl = "javax.servlet" % "jstl" % "1.2" % "compile" // Package with WAR
