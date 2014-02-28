@@ -33,6 +33,7 @@ import com.kolich.curacao.annotations.methods.DELETE;
 import com.kolich.curacao.annotations.methods.GET;
 import com.kolich.curacao.annotations.methods.POST;
 import com.kolich.curacao.annotations.parameters.Query;
+import com.kolich.curacao.entities.CuracaoEntity;
 import com.kolich.curacao.entities.empty.StatusCodeOnlyCuracaoEntity;
 import com.kolich.havalo.components.RepositoryManagerComponent;
 import com.kolich.havalo.controllers.HavaloApiController;
@@ -60,7 +61,7 @@ public class RepositoryApi extends HavaloApiController {
 
     @GET(value="/api/repository", filter=HavaloAuthenticationFilter.class)
     public final ObjectList get(@Query("startsWith") final String startsWith,
-        final KeyPair userKp) throws Exception {
+                                final KeyPair userKp) throws Exception {
         final Repository repo = getRepository(userKp.getKey());
         return new ReentrantReadWriteEntityLock<ObjectList>(repo) {
             @Override
@@ -96,8 +97,8 @@ public class RepositoryApi extends HavaloApiController {
     }
 
     @DELETE(value="/api/repository/{key}", filter=HavaloAuthenticationFilter.class)
-    public final StatusCodeOnlyCuracaoEntity delete(final ObjectKey key,
-        final KeyPair userKp) throws Exception {
+    public final CuracaoEntity delete(final ObjectKey key,
+                                      final KeyPair userKp) throws Exception {
         // Only admin level users have the right to delete repositories.
         if(!userKp.isAdmin()) {
             throw new RepositoryForbiddenException("Authenticated " +

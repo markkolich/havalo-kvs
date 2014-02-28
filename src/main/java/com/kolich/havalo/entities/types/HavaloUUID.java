@@ -26,27 +26,22 @@
 
 package com.kolich.havalo.entities.types;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.gson.*;
 
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class HavaloUUID implements Comparable<HavaloUUID> {
 		
 	private final UUID id_;
 	
-	public HavaloUUID(UUID id) {
-		id_ = id;
+	public HavaloUUID(final UUID id) {
+		id_ = checkNotNull(id, "ID cannot be null.");
 	}
 	
-	public HavaloUUID(String id) {
+	public HavaloUUID(final String id) {
 		id_ = UUID.fromString(id);
 	}
 	
@@ -61,7 +56,6 @@ public final class HavaloUUID implements Comparable<HavaloUUID> {
 	
 	@Override
 	public String toString() {
-		checkNotNull(id_);
 		return id_.toString();
 	}
 	

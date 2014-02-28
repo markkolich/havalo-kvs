@@ -34,12 +34,14 @@ import com.kolich.havalo.io.managers.RepositoryManager;
 
 import java.util.UUID;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public final class HavaloUserService {
 	
 	private final RepositoryManager repoManager_;
 
 	public HavaloUserService(final RepositoryManager repoManager) {
-		repoManager_ = repoManager;
+		repoManager_ = checkNotNull(repoManager, "Repository manager cannot be null.");
 	}
 	
 	public KeyPair loadKeyPairById(final UUID id) {

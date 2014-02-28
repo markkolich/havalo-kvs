@@ -26,14 +26,14 @@
 
 package com.kolich.havalo.io.stores;
 
-import static com.kolich.common.util.crypt.Base32Utils.encodeBase32;
-import static org.apache.commons.io.FileUtils.forceMkdir;
+import com.kolich.havalo.entities.types.DiskObject;
+import com.kolich.havalo.exceptions.objects.ObjectLoadException;
 
 import java.io.File;
 import java.io.IOException;
 
-import com.kolich.havalo.entities.types.DiskObject;
-import com.kolich.havalo.exceptions.objects.ObjectLoadException;
+import static com.kolich.common.util.crypt.Base32Utils.encodeBase32;
+import static org.apache.commons.io.FileUtils.forceMkdir;
 
 public abstract class ObjectStore {
 	
@@ -55,7 +55,8 @@ public abstract class ObjectStore {
 	
 	protected final File storeDir_;
 	
-	public ObjectStore(final File storeDir, final int maxFileNameLength) {
+	public ObjectStore(final File storeDir,
+                       final int maxFileNameLength) {
 		storeDir_ = storeDir;
 		maxFileNameLength_ = maxFileNameLength;
 	}
@@ -73,8 +74,9 @@ public abstract class ObjectStore {
 	 * for the cached entity, set makeParents to true.
 	 */
 	protected final DiskObject getCanonicalObject(final File parent,
-		final String index, final int maxFileNameLength,
-		final boolean makeParentDirs) {
+                                                  final String index,
+                                                  final int maxFileNameLength,
+                                                  final boolean makeParentDirs) {
 		File f = null;
 		try {
 			// Get the encoded file name (with extension if one exists);
@@ -120,7 +122,8 @@ public abstract class ObjectStore {
 	}
 		
 	protected final DiskObject getCanonicalObject(final File parent,
-		final String index, final boolean makeParentDirs) {
+                                                  final String index,
+                                                  final boolean makeParentDirs) {
 		return getCanonicalObject(parent, index, maxFileNameLength_,
 			makeParentDirs);
 	}

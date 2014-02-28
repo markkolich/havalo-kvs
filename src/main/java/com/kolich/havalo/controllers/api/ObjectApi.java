@@ -37,6 +37,7 @@ import com.kolich.curacao.annotations.methods.PUT;
 import com.kolich.curacao.annotations.parameters.convenience.ContentLength;
 import com.kolich.curacao.annotations.parameters.convenience.ContentType;
 import com.kolich.curacao.annotations.parameters.convenience.IfMatch;
+import com.kolich.curacao.entities.CuracaoEntity;
 import com.kolich.curacao.entities.empty.StatusCodeOnlyCuracaoEntity;
 import com.kolich.havalo.components.RepositoryManagerComponent;
 import com.kolich.havalo.controllers.HavaloApiController;
@@ -68,7 +69,6 @@ import static com.kolich.common.util.secure.KolichChecksum.getSHA1HashAndCopy;
 import static com.kolich.havalo.HavaloConfigurationFactory.getMaxUploadSize;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.io.FileUtils.deleteQuietly;
-import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.io.IOUtils.copyLarge;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -88,9 +88,10 @@ public class ObjectApi extends HavaloApiController {
     }
 
     @HEAD(value="/api/object/{key}", filter=HavaloAuthenticationFilter.class)
-    public final void head(final ObjectKey key, final KeyPair userKp,
-        final HttpServletResponse response, final AsyncContext context)
-        throws Exception {
+    public final void head(final ObjectKey key,
+                           final KeyPair userKp,
+                           final HttpServletResponse response,
+                           final AsyncContext context) throws Exception {
         final Repository repo = getRepository(userKp.getKey());
         new ReentrantReadWriteEntityLock<Void>(repo) {
             @Override
@@ -118,9 +119,10 @@ public class ObjectApi extends HavaloApiController {
     }
 
     @GET(value="/api/object/{key}", filter=HavaloAuthenticationFilter.class)
-    public final void get(final ObjectKey key, final KeyPair userKp,
-        final HttpServletResponse response, final AsyncContext context)
-        throws Exception {
+    public final void get(final ObjectKey key,
+                          final KeyPair userKp,
+                          final HttpServletResponse response,
+                          final AsyncContext context) throws Exception {
         final Repository repo = getRepository(userKp.getKey());
         new ReentrantReadWriteEntityLock<Void>(repo) {
             @Override
@@ -158,10 +160,13 @@ public class ObjectApi extends HavaloApiController {
     }
 
     @PUT(value="/api/object/{key}", filter=HavaloAuthenticationFilter.class)
-    public final HashedFileObject put(final ObjectKey key, final KeyPair userKp,
-        @ContentType final String contentType, @IfMatch final String ifMatch,
-        @ContentLength final Long contentLength, final HttpServletRequest request,
-        final HttpServletResponse response) throws Exception {
+    public final HashedFileObject put(final ObjectKey key,
+                                      final KeyPair userKp,
+                                      @IfMatch final String ifMatch,
+                                      @ContentType final String contentType,
+                                      @ContentLength final Long contentLength,
+                                      final HttpServletRequest request,
+                                      final HttpServletResponse response) throws Exception {
         final Repository repo = getRepository(userKp.getKey());
         return new ReentrantReadWriteEntityLock<HashedFileObject>(repo) {
             @Override
@@ -215,13 +220,8 @@ public class ObjectApi extends HavaloApiController {
                         // The file itself (should exist now).
                         final File objFile = object.getFile();
                         final File tempObjFile = object.getTempFile();
-                        InputStream is = null;
-                        OutputStream os = null;
-                        try {
-                            is = request.getInputStream();
-                            // Create a new output stream which will point at
-                            // the new home of this temp HFO on the file system.
-                            os = new FileOutputStream(tempObjFile);
+                        try(final InputStream is = request.getInputStream();
+                            final OutputStream os = new FileOutputStream(tempObjFile);) {
                             // Compute the ETag (an MD5 hash of the file) while
                             // copying the file into place.  The bytes of the
                             // input stream and piped into an MD5 digest _and_
@@ -261,10 +261,6 @@ public class ObjectApi extends HavaloApiController {
                             // if the upload was successful and the object
                             // was moved into place.. which is OK here.
                             deleteQuietly(tempObjFile);
-                            // Close any associated streams for this
-                            // object upload.
-                            closeQuietly(os);
-                            closeQuietly(is);
                         }
                         // Append an ETag header to the response for the
                         // PUT'ed object.
@@ -284,8 +280,9 @@ public class ObjectApi extends HavaloApiController {
     }
 
     @DELETE(value="/api/object/{key}", filter=HavaloAuthenticationFilter.class)
-    public final StatusCodeOnlyCuracaoEntity delete(final ObjectKey key,
-        @IfMatch final String ifMatch, final KeyPair userKp) throws Exception {
+    public final CuracaoEntity delete(final ObjectKey key,
+                                      @IfMatch final String ifMatch,
+                                      final KeyPair userKp) throws Exception {
         // The delete operation does return a pointer to the "deleted"
         // HFO, but we're not using it, we're just dropping it on the
         // floor (intentionally not returning it to the caller).
@@ -299,9 +296,9 @@ public class ObjectApi extends HavaloApiController {
     }
 
     private static final void streamHeaders(final DiskObject object,
-        final HashedFileObject hfo, final HttpServletResponse response) {
+                                            final HashedFileObject hfo,
+                                            final HttpServletResponse response) {
         checkNotNull(hfo, "Hashed file object cannot be null.");
-        //final File hfoFile = hfo.getFile();
         // Validate that the File object still exists.
         if(!object.getFile().exists()) {
             throw new ObjectNotFoundException("Object not " +
@@ -313,13 +310,11 @@ public class ObjectApi extends HavaloApiController {
         // Always set the Content-Length header to the actual length of the
         // file on disk -- effectively overriding any "Content-Length" meta
         // data header set by the user in the PUT request.
-        headers.put(CONTENT_LENGTH, Arrays.asList(new String[]{
-            Long.toString(object.getFile().length())}));
+        headers.put(CONTENT_LENGTH, Arrays.asList(Long.toString(object.getFile().length())));
         // Set the Content-Type header to a default if one was not set by
         // the consumer in the meta data.
         if(headers.get(CONTENT_TYPE) == null) {
-            headers.put(CONTENT_TYPE, Arrays.asList(new String[]{
-                OCTET_STREAM_TYPE}));
+            headers.put(CONTENT_TYPE, Arrays.asList(OCTET_STREAM_TYPE));
         }
         // Now, send all headers to the response stream.
         for(final Map.Entry<String,List<String>> entry : headers.entrySet()) {
@@ -331,14 +326,9 @@ public class ObjectApi extends HavaloApiController {
     }
 
     private static final void streamObject(final DiskObject object,
-        final HttpServletResponse response) {
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            // Open an input stream to read the file from disk.
-            // Write it directly to the output stream of the response.
-            is = new FileInputStream(object.getFile());
-            os = response.getOutputStream();
+                                           final HttpServletResponse response) {
+        try(final InputStream is = new FileInputStream(object.getFile());
+            final OutputStream os = response.getOutputStream();){
             copyLarge(is, os);
         } catch (Exception e) {
             // On any Exception case, just log the failure and move on.
@@ -347,9 +337,6 @@ public class ObjectApi extends HavaloApiController {
             // message to the API consumer.  We're handling this as gracefully
             // as best we can.
             logger__.error("Failed to stream object to client.", e);
-        } finally {
-            closeQuietly(is);
-            closeQuietly(os);
         }
     }
 

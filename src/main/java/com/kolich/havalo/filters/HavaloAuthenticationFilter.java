@@ -163,7 +163,8 @@ public final class HavaloAuthenticationFilter extends CuracaoRequestFilter {
 		/**
 	     * Returns a Base-64 encoded HMAC-SHA256 signature.
 	     */
-		public static final String sign(final KeyPair kp, final String input) {
+		public static final String sign(final KeyPair kp,
+                                        final String input) {
 			try {
 				// Get a new instance of the HMAC-SHA256 algorithm.
 				final Mac mac = Mac.getInstance(HMAC_SHA256_ALGORITHM_NAME);

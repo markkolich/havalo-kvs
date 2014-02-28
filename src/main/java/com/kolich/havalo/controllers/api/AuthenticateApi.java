@@ -33,7 +33,6 @@ import com.kolich.havalo.components.RepositoryManagerComponent;
 import com.kolich.havalo.controllers.HavaloApiController;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.filters.HavaloAuthenticationFilter;
-import com.kolich.havalo.io.managers.RepositoryManager;
 
 @Controller
 public class AuthenticateApi extends HavaloApiController {

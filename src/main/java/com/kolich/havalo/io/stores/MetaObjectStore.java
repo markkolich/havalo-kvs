@@ -26,25 +26,19 @@
 
 package com.kolich.havalo.io.stores;
 
-import static com.kolich.common.DefaultCharacterEncoding.UTF_8;
-import static java.util.zip.Deflater.BEST_COMPRESSION;
-import static org.apache.commons.io.FileUtils.deleteQuietly;
-import static org.apache.commons.io.IOUtils.closeQuietly;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
 import com.kolich.havalo.entities.StoreableEntity;
 import com.kolich.havalo.exceptions.objects.ObjectFlushException;
 import com.kolich.havalo.exceptions.objects.ObjectLoadException;
 import com.kolich.havalo.io.MetaStore;
+
+import java.io.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+
+import static com.kolich.common.DefaultCharacterEncoding.UTF_8;
+import static java.util.zip.Deflater.BEST_COMPRESSION;
+import static org.apache.commons.io.FileUtils.deleteQuietly;
+import static org.apache.commons.io.IOUtils.closeQuietly;
 
 public abstract class MetaObjectStore extends ObjectStore implements MetaStore {
 		
@@ -118,7 +112,8 @@ public abstract class MetaObjectStore extends ObjectStore implements MetaStore {
 		return getCanonicalFile(entity.getKey(), true);
 	}
 	
-	private File getCanonicalFile(final String index, final boolean create) {
+	private File getCanonicalFile(final String index,
+                                  final boolean create) {
 		return getCanonicalObject(storeDir_, index + JSON_EXTENSION,
 			create).getFile();
 	}

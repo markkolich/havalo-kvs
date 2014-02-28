@@ -30,16 +30,19 @@ import com.kolich.havalo.entities.types.*;
 import com.kolich.havalo.io.managers.RepositoryManager;
 import com.kolich.havalo.mappers.ObjectKeyArgumentMapper.ObjectKey;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public abstract class HavaloApiController {
 
     protected final RepositoryManager repositoryManager_;
 
     public HavaloApiController(final RepositoryManager repositoryManager) {
-        repositoryManager_ = repositoryManager;
+        repositoryManager_ = checkNotNull(repositoryManager,
+            "Repository manager cannot be null.");
     }
 
     protected final Repository createRepository(final HavaloUUID id,
-        final KeyPair keyPair) {
+                                                final KeyPair keyPair) {
         return repositoryManager_.createRepository(id, keyPair);
     }
 
@@ -52,53 +55,60 @@ public abstract class HavaloApiController {
     }
 
     protected final HashedFileObject getHashedFileObject(final Repository repo,
-        final String key, final boolean failIfNotFound) {
+                                                         final String key,
+                                                         final boolean failIfNotFound) {
         return repositoryManager_.getHashedFileObject(repo, key, failIfNotFound);
     }
 
     protected final HashedFileObject getHashedFileObject(final Repository repo,
-        final ObjectKey key, final boolean failIfNotFound) {
+                                                         final ObjectKey key,
+                                                         final boolean failIfNotFound) {
         return getHashedFileObject(repo, key.getDecodedKey(), failIfNotFound);
     }
 
     protected final HashedFileObject getHashedFileObject(final Repository repo,
-        final String key) {
+                                                         final String key) {
         return getHashedFileObject(repo, key, false);
     }
 
     protected final HashedFileObject getHashedFileObject(final Repository repo,
-        final ObjectKey key) {
+                                                         final ObjectKey key) {
         return getHashedFileObject(repo, key.getDecodedKey());
     }
 
     protected final DiskObject getCanonicalObject(final Repository repo,
-        final HashedFileObject hfo, final boolean makeParentDirs) {
+                                                  final HashedFileObject hfo,
+                                                  final boolean makeParentDirs) {
         return repositoryManager_.getCanonicalObject(repo, hfo, makeParentDirs);
     }
 
     protected final DiskObject getCanonicalObject(final Repository repo,
-        final HashedFileObject hfo) {
+                                                  final HashedFileObject hfo) {
         return getCanonicalObject(repo, hfo, false);
     }
 
     protected final HashedFileObject deleteHashedFileObject(final Repository repo,
-        final String key, final String ifMatch) {
+                                                            final String key,
+                                                            final String ifMatch) {
         return repositoryManager_.deleteHashedFileObject(repo, key, ifMatch);
     }
 
     protected final HashedFileObject deleteHashedFileObject(final Repository repo,
-        final ObjectKey key, final String ifMatch) {
+                                                            final ObjectKey key,
+                                                            final String ifMatch) {
         return repositoryManager_.deleteHashedFileObject(repo,
             key.getDecodedKey(), ifMatch);
     }
 
     protected final HashedFileObject deleteHashedFileObject(final HavaloUUID id,
-        final String key, final String ifMatch) {
+                                                            final String key,
+                                                            final String ifMatch) {
         return repositoryManager_.deleteHashedFileObject(id, key, ifMatch);
     }
 
     protected final HashedFileObject deleteHashedFileObject(final HavaloUUID id,
-        final ObjectKey key, final String ifMatch) {
+                                                            final ObjectKey key,
+                                                            final String ifMatch) {
         return deleteHashedFileObject(id, key.getDecodedKey(), ifMatch);
     }
 

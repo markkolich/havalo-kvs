@@ -13,6 +13,3 @@ bin
 config
 
 src/main/webapp/WEB-INF/work
-
-content/static/js/build
-content/static/css/build

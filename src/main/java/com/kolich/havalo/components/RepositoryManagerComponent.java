@@ -27,7 +27,7 @@
 package com.kolich.havalo.components;
 
 import com.kolich.curacao.annotations.Component;
-import com.kolich.curacao.handlers.components.CuracaoComponent;
+import com.kolich.curacao.annotations.Injectable;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.UserRole;
@@ -48,7 +48,7 @@ import static org.apache.commons.lang3.StringUtils.abbreviate;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Component
-public class RepositoryManagerComponent implements CuracaoComponent {
+public class RepositoryManagerComponent {
 
     private static final Logger logger__ =
         getLogger(RepositoryManagerComponent.class);
@@ -57,16 +57,11 @@ public class RepositoryManagerComponent implements CuracaoComponent {
 
     private static final Config config__ = getConfigInstance();
 
-    private RepositoryManager repositoryManager_;
+    private final RepositoryManager repositoryManager_;
 
-    @Override
-    public void initialize(final ServletContext context) throws Exception {
+    @Injectable
+    public RepositoryManagerComponent(final ServletContext context) {
         repositoryManager_ = createInitialAdminRepository(context, config__);
-    }
-
-    @Override
-    public void destroy(final ServletContext context) throws Exception {
-        // Nothing, intentional.
     }
 
     public RepositoryManager getRepositoryManager() {
