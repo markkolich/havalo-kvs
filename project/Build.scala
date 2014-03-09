@@ -35,13 +35,13 @@ object Dependencies {
 
   // Internal dependencies
   
-  private val kolichCommon = "com.kolich" % "kolich-common" % "0.1.0" % "compile"
+  private val kolichCommon = "com.kolich" % "kolich-common" % "0.2" % "compile"
   private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.5" % "compile"
 
   // External dependencies
 
-  private val curacao = "com.kolich.curacao" % "curacao" % "2.0-M10" % "compile"
-  private val curacaoGson = "com.kolich.curacao" % "curacao-gson" % "2.0-M10" % "compile"
+  private val curacao = "com.kolich.curacao" % "curacao" % "2.0-M11" % "compile"
+  private val curacaoGson = "com.kolich.curacao" % "curacao-gson" % "2.0-M11" % "compile"
 
   // Jetty 9 stable, version 9.1.1.v20140108 (as of 2/7/14)
   private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % "9.1.1.v20140108" % "container"
@@ -89,7 +89,7 @@ object Havalo extends Build {
   import Resolvers._
 
   private val aName = "havalo"
-  private val aVer = "1.7-SNAPSHOT"
+  private val aVer = "2.0-M1"
   private val aOrg = "com.kolich"
 
   lazy val havalo: Project = Project(
@@ -98,7 +98,7 @@ object Havalo extends Build {
     settings = Defaults.defaultSettings ++ Seq(resolvers := depResolvers) ++ Seq(
       version := aVer,
       organization := aOrg,
-      scalaVersion := "2.10.1",
+      scalaVersion := "2.10.2",
       javacOptions ++= Seq(
         "-Xlint", "-g"/*,
         // Java "cross compiling" against Java 6. Note you need to provide the "rt"

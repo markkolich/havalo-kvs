@@ -46,7 +46,7 @@ import static org.apache.commons.codec.binary.StringUtils.newStringUtf8;
 import static org.apache.commons.io.IOUtils.LINE_SEPARATOR_UNIX;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public final class HavaloAuthenticationFilter extends CuracaoRequestFilter {
+public final class HavaloAuthenticationFilter implements CuracaoRequestFilter {
 
 	private static final Logger logger__ =
         getLogger(HavaloAuthenticationFilter.class);
