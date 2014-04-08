@@ -29,9 +29,7 @@ package com.kolich.havalo.controllers.api;
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
 import com.kolich.curacao.annotations.Controller;
 import com.kolich.curacao.annotations.Injectable;
-import com.kolich.curacao.annotations.methods.DELETE;
-import com.kolich.curacao.annotations.methods.GET;
-import com.kolich.curacao.annotations.methods.POST;
+import com.kolich.curacao.annotations.methods.RequestMapping;
 import com.kolich.curacao.annotations.parameters.Query;
 import com.kolich.curacao.entities.CuracaoEntity;
 import com.kolich.curacao.entities.empty.StatusCodeOnlyCuracaoEntity;
@@ -46,6 +44,7 @@ import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.filters.HavaloAuthenticationFilter;
 import com.kolich.havalo.mappers.ObjectKeyArgumentMapper.ObjectKey;
 
+import static com.kolich.curacao.annotations.methods.RequestMapping.RequestMethod.*;
 import static com.kolich.havalo.HavaloConfigurationFactory.getHavaloAdminUUID;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 
@@ -60,9 +59,10 @@ public class RepositoryApi extends HavaloApiController {
         adminUUID_ = new HavaloUUID(getHavaloAdminUUID());
     }
 
-    @GET(value="/api/repository",
-            matcher=AntPathMatcher.class,
-            filter=HavaloAuthenticationFilter.class)
+    @RequestMapping(methods=GET,
+                    value="/api/repository",
+                    matcher=AntPathMatcher.class,
+                    filter=HavaloAuthenticationFilter.class)
     public final ObjectList get(@Query("startsWith") final String startsWith,
                                 final KeyPair userKp) throws Exception {
         final Repository repo = getRepository(userKp.getKey());
@@ -77,9 +77,10 @@ public class RepositoryApi extends HavaloApiController {
         }.read(false); // Shared read lock on repo, no wait
     }
 
-    @POST(value="/api/repository",
-            matcher=AntPathMatcher.class,
-            filter=HavaloAuthenticationFilter.class)
+    @RequestMapping(methods=POST,
+                    value="/api/repository",
+                    matcher=AntPathMatcher.class,
+                    filter=HavaloAuthenticationFilter.class)
     public final KeyPair post(final KeyPair userKp) {
         // Only admin level users have the right to delete repositories.
         if(!userKp.isAdmin()) {
@@ -101,9 +102,10 @@ public class RepositoryApi extends HavaloApiController {
         return kp;
     }
 
-    @DELETE(value="/api/repository/{key}",
-            matcher=AntPathMatcher.class,
-            filter=HavaloAuthenticationFilter.class)
+    @RequestMapping(methods=DELETE,
+                    value="/api/repository/{key}",
+                    matcher=AntPathMatcher.class,
+                    filter=HavaloAuthenticationFilter.class)
     public final CuracaoEntity delete(final ObjectKey key,
                                       final KeyPair userKp) throws Exception {
         // Only admin level users have the right to delete repositories.

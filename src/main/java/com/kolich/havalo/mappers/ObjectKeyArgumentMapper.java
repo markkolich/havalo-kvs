@@ -45,7 +45,7 @@ public final class ObjectKeyArgumentMapper
 	@Override
 	public final ObjectKey resolve(@Nullable final Annotation annotation,
         final CuracaoRequestContext context) {
-        return new ObjectKey(context.getPathVars().get(PATHVAR_KEY));
+        return new ObjectKey(context.pathVars_.get(PATHVAR_KEY));
 	}
 
     public static final class ObjectKey {

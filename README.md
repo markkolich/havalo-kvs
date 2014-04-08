@@ -6,7 +6,7 @@ Sometimes you just need fast NoSQL storage, but don't need full redundancy and s
 
 Havalo is perfect for testing, maintaining fast indexes of data stored "elsewhere", and almost any other deployment scenario where relational databases are just too heavy.
 
-The latest <a href="http://markkolich.github.io/downloads/havalo/1.5/havalo-1.5.war">stable version of Havalo is 1.5</a>.
+The latest <a href="http://markkolich.github.io/downloads/havalo-kvs/1.5/havalo-1.5.war">stable version of Havalo is 1.5</a>.
 
 Written in Java 7, for a Java 7 compatible JVM.
 
@@ -24,7 +24,7 @@ Written in Java 7, for a Java 7 compatible JVM.
 
 * **ETag and If-Match Support** &ndash; All objects are stored with an automatically generated SHA-1 `ETag` hash of the binary object data.  As such, subsequent update operations on that object can be conditional if desired.  In slightly more technical terms, accept a `PUT` for an object only if the SHA-1 hash sent with the `If-Match` HTTP request header matches the existing object `ETag` hash.
 
-* **Havalo Client** &ndash; A Java client for the <a href="#api">Havalo API</a> is available off-the-shelf as provided by the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> project.  If you'd rather not use the provided Java client, it's straightforward to write a client for the <a href="#api">Havalo API</a> in a language of your choice.
+* **Havalo Client** &ndash; A Java client for the <a href="#api">Havalo API</a> is available off-the-shelf as provided by the <a href="https://github.com/markkolich/havalo-kvs-client">havalo-kvs-client</a> project.  If you'd rather not use the provided Java client, it's straightforward to write a client for the <a href="#api">Havalo API</a> in a language of your choice.
 
 ## Compatibility
 
@@ -86,7 +86,7 @@ You have two deployment options:
 
 If desired, Havalo supports "hot deployment" which allows you to deploy or undeploy the application without stopping your Servlet container.
 
-1. Download the <a href="http://markkolich.github.com/downloads/havalo">latest version</a> of Havalo.  This is a `.war` file you will drop into your Servlet container.
+1. Download the <a href="http://markkolich.github.com/downloads/havalo-kvs">latest version</a> of Havalo.  This is a `.war` file you will drop into your Servlet container.
 2. Copy the `.war` file into your Servlet container's `webapps` directory.
 3. Start your Servlet container, if not already running.
 
@@ -94,7 +94,7 @@ If desired, Havalo supports "hot deployment" which allows you to deploy or undep
 
 Havalo is configured using the HOCON configuration format provided by the <a href="https://github.com/typesafehub/config">Typesafe Config</a> library.  Read more about HOCON and its similarities to JSON <a href="https://github.com/typesafehub/config#json-superset">here</a>.
 
-The Havalo default configuration file, <a href="https://github.com/markkolich/havalo/blob/master/src/main/resources/application.conf">application.conf</a>, is shipped inside of the Havalo `.war` file.  To override any of these configuration properties, simply drop a file named `havalo.conf` into your Servlet container's `conf` directory.  For example, if running Havalo inside of Tomcat, drop your custom `havalo.conf` into `$CATALINA_HOME/conf` before deploying `havalo.war`.
+The Havalo default configuration file, <a href="https://github.com/markkolich/havalo-kvs/blob/master/src/main/resources/application.conf">application.conf</a>, is shipped inside of the Havalo `.war` file.  To override any of these configuration properties, simply drop a file named `havalo.conf` into your Servlet container's `conf` directory.  For example, if running Havalo inside of Tomcat, drop your custom `havalo.conf` into `$CATALINA_HOME/conf` before deploying `havalo.war`.
 
 Finally, note you only need to override the configuration properties you want to change.  For example, if you only want to override the location on disk where Havalo stores its repositories and objects, create a `havalo.conf` file that looks like this:
 
@@ -110,7 +110,7 @@ havalo {
 }
 ```
 
-For a complete list of configurable properties and their description, see the <a href="https://github.com/markkolich/havalo/blob/master/src/main/resources/application.conf">Havalo default application.conf</a>.
+For a complete list of configurable properties and their description, see the <a href="https://github.com/markkolich/havalo-kvs/blob/master/src/main/resources/application.conf">Havalo default application.conf</a>.
 
 ### Security
 
@@ -196,7 +196,7 @@ public static final Mac getHmacSHA256Instance(final KeyPair kp) {
 }
 ```
 
-See <a href="https://github.com/markkolich/havalo-client/blob/master/src/main/java/com/kolich/havalo/client/signing/algorithms/HMACSHA256Signer.java">HMACSHA256Signer.java</a> in the <a href="https://github.com/markkolich/havalo-client">havalo-client</a> package for a complete example of wiring together real `HMAC-SHA256` signer.
+See <a href="https://github.com/markkolich/havalo-kvs-client/blob/master/src/main/java/com/kolich/havalo/client/signing/algorithms/HMACSHA256Signer.java">HMACSHA256Signer.java</a> in the <a href="https://github.com/markkolich/havalo-kvs-client">havalo-kvs-client</a> package for a complete example of wiring together real `HMAC-SHA256` signer.
 
 ### Working with Repositories
 
@@ -245,7 +245,7 @@ Delete an object.
 
 ### Download
 
-You can download the latest version of Havalo on the <a href="http://markkolich.github.com/downloads/havalo">Havalo download page</a>.
+You can download the latest version of Havalo on the <a href="http://markkolich.github.com/downloads/havalo-kvs">Havalo download page</a>.
 
 ### Build from Source
 
@@ -253,20 +253,20 @@ Havalo is built and managed using <a href="https://github.com/sbt/sbt">SBT</a>.
 
 To clone and build this project, you must have <a href="http://www.scala-sbt.org/release/docs/Getting-Started/Setup">SBT installed and configured on your computer</a>.
 
-The Havalo <a href="https://github.com/markkolich/havalo/blob/master/project/Build.scala">Build.scala</a> file is highly customized to build and package this Java web-application.
+The Havalo <a href="https://github.com/markkolich/havalo-kvs/blob/master/project/Build.scala">Build.scala</a> file is highly customized to build and package this Java web-application.
 
 To build, clone the repository.
 
-    #~> git clone git://github.com/markkolich/havalo.git
+    #~> git clone git://github.com/markkolich/havalo-kvs.git
 
-Run SBT from within your newly cloned *havalo* directory.
+Run SBT from within your newly cloned *havalo-kvs* directory.
 
-    #~> cd havalo
-    #~/havalo> sbt
+    #~> cd havalo-kvs
+    #~/havalo-kvs> sbt
     ...
-    havalo:1.7-SNAPSHOT>
+    havalo-kvs:1.7-SNAPSHOT>
 
-You will see a `havalo` SBT prompt once all dependencies are resolved and the project is loaded.
+You will see a `havalo-kvs` SBT prompt once all dependencies are resolved and the project is loaded.
 
 In SBT, run `container:start` to start the local Servlet container.  By default the server listens on **port 8080**.
 
@@ -283,22 +283,22 @@ See the <a href="https://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki">xsbt-
 
 In SBT, run `package` to build a deployable WAR for your favorite Servlet container.
 
-    havalo:1.7-SNAPSHOT> package
+    havalo-kvs:1.7-SNAPSHOT> package
     ...
-    [info] Compiling 51 Java sources to ~/havalo/target/classes...
-    [info] Packaging ~/havalo/dist/havalo-1.7-SNAPSHOT.jar ...
+    [info] Compiling 51 Java sources to ~/havalo-kvs/target/classes...
+    [info] Packaging ~/havalo-kvs/dist/havalo-1.7-SNAPSHOT.jar ...
     [info] Done packaging.
-    [info] Packaging ~/havalo/dist/havalo-1.7-SNAPSHOT.war ...
+    [info] Packaging ~/havalo-kvs/dist/havalo-1.7-SNAPSHOT.war ...
     [info] Done packaging.
     [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
 
-Note the resulting WAR is placed into the **havalo/dist** directory.  Deploy and enjoy.
+Note the resulting WAR is placed into the **havalo-kvs/dist** directory.  Deploy and enjoy.
 
 To create an IntelliJ IDEA project for Havalo, run `gen-idea` in SBT.
 
-    havalo:1.7-SNAPSHOT> gen-idea
+    havalo-kvs:1.7-SNAPSHOT> gen-idea
     ...
-    [info] Creating IDEA module for project 'havalo' ...
+    [info] Creating IDEA module for project 'havalo-kvs' ...
 
 You'll now have an IntelliJ IDEA project worthy of an import.
 
@@ -308,4 +308,4 @@ Copyright (c) 2013 <a href="http://mark.koli.ch">Mark S. Kolich</a>
 
 All code in this project is freely available for use and redistribution under the <a href="http://opensource.org/comment/991">MIT License</a>.
 
-See <a href="https://github.com/markkolich/havalo/blob/master/LICENSE">LICENSE</a> for details.
+See <a href="https://github.com/markkolich/havalo-kvs/blob/master/LICENSE">LICENSE</a> for details.

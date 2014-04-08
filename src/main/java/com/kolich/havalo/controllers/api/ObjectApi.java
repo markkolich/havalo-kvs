@@ -30,10 +30,7 @@ import com.kolich.bolt.ReentrantReadWriteEntityLock;
 import com.kolich.common.util.secure.KolichChecksum;
 import com.kolich.curacao.annotations.Controller;
 import com.kolich.curacao.annotations.Injectable;
-import com.kolich.curacao.annotations.methods.DELETE;
-import com.kolich.curacao.annotations.methods.GET;
-import com.kolich.curacao.annotations.methods.HEAD;
-import com.kolich.curacao.annotations.methods.PUT;
+import com.kolich.curacao.annotations.methods.RequestMapping;
 import com.kolich.curacao.annotations.parameters.convenience.ContentLength;
 import com.kolich.curacao.annotations.parameters.convenience.ContentType;
 import com.kolich.curacao.annotations.parameters.convenience.IfMatch;
@@ -67,6 +64,7 @@ import static com.google.common.io.Files.move;
 import static com.google.common.net.HttpHeaders.*;
 import static com.google.common.net.MediaType.OCTET_STREAM;
 import static com.kolich.common.util.secure.KolichChecksum.getSHA1HashAndCopy;
+import static com.kolich.curacao.annotations.methods.RequestMapping.RequestMethod.*;
 import static com.kolich.havalo.HavaloConfigurationFactory.getMaxUploadSize;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.io.FileUtils.deleteQuietly;
@@ -88,9 +86,10 @@ public class ObjectApi extends HavaloApiController {
         uploadMaxSize_ = getMaxUploadSize();
     }
 
-    @HEAD(value="/api/object/{key}",
-            matcher=AntPathMatcher.class,
-            filter=HavaloAuthenticationFilter.class)
+    @RequestMapping(methods=HEAD,
+                    value="/api/object/{key}",
+                    matcher=AntPathMatcher.class,
+                    filter=HavaloAuthenticationFilter.class)
     public final void head(final ObjectKey key,
                            final KeyPair userKp,
                            final HttpServletResponse response,
@@ -121,9 +120,10 @@ public class ObjectApi extends HavaloApiController {
         }.read(); // Shared read lock on repo
     }
 
-    @GET(value="/api/object/{key}",
-            matcher=AntPathMatcher.class,
-            filter=HavaloAuthenticationFilter.class)
+    @RequestMapping(methods=GET,
+                    value="/api/object/{key}",
+                    matcher=AntPathMatcher.class,
+                    filter=HavaloAuthenticationFilter.class)
     public final void get(final ObjectKey key,
                           final KeyPair userKp,
                           final HttpServletResponse response,
@@ -164,9 +164,10 @@ public class ObjectApi extends HavaloApiController {
         }.read(false); // Shared read lock on repo, no wait
     }
 
-    @PUT(value="/api/object/{key}",
-            matcher=AntPathMatcher.class,
-            filter=HavaloAuthenticationFilter.class)
+    @RequestMapping(methods=PUT,
+                    value="/api/object/{key}",
+                    matcher=AntPathMatcher.class,
+                    filter=HavaloAuthenticationFilter.class)
     public final HashedFileObject put(final ObjectKey key,
                                       final KeyPair userKp,
                                       @IfMatch final String ifMatch,
@@ -286,9 +287,10 @@ public class ObjectApi extends HavaloApiController {
         }.read(false); // Shared read lock on repo, no wait
     }
 
-    @DELETE(value="/api/object/{key}",
-            matcher=AntPathMatcher.class,
-            filter=HavaloAuthenticationFilter.class)
+    @RequestMapping(methods=DELETE,
+                    value="/api/object/{key}",
+                    matcher=AntPathMatcher.class,
+                    filter=HavaloAuthenticationFilter.class)
     public final CuracaoEntity delete(final ObjectKey key,
                                       @IfMatch final String ifMatch,
                                       final KeyPair userKp) throws Exception {

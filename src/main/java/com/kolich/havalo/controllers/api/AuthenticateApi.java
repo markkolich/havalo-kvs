@@ -28,12 +28,14 @@ package com.kolich.havalo.controllers.api;
 
 import com.kolich.curacao.annotations.Controller;
 import com.kolich.curacao.annotations.Injectable;
-import com.kolich.curacao.annotations.methods.POST;
+import com.kolich.curacao.annotations.methods.RequestMapping;
 import com.kolich.curacao.handlers.requests.matchers.AntPathMatcher;
 import com.kolich.havalo.components.RepositoryManagerComponent;
 import com.kolich.havalo.controllers.HavaloApiController;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.filters.HavaloAuthenticationFilter;
+
+import static com.kolich.curacao.annotations.methods.RequestMapping.RequestMethod.POST;
 
 @Controller
 public class AuthenticateApi extends HavaloApiController {
@@ -43,9 +45,10 @@ public class AuthenticateApi extends HavaloApiController {
         super(component.getRepositoryManager());
     }
 
-    @POST(value="/api/authenticate",
-            matcher=AntPathMatcher.class,
-            filter=HavaloAuthenticationFilter.class)
+    @RequestMapping(methods=POST,
+                    value="/api/authenticate",
+                    matcher=AntPathMatcher.class,
+                    filter=HavaloAuthenticationFilter.class)
     public final KeyPair authenticate(final KeyPair userKp) {
         // A bit redundant, but the call to getRepository() here just
         // verifies that the user account exists ~and~ the corresponding

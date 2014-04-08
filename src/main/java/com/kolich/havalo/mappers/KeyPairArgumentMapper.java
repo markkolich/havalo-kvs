@@ -43,7 +43,7 @@ public final class KeyPairArgumentMapper
 	@Override
 	public final KeyPair resolve(@Nullable final Annotation annotation,
         final CuracaoRequestContext context) {
-        final HttpServletRequest request = context.getRequest();
+        final HttpServletRequest request = context.request_;
         return (KeyPair)request.getAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE);
 	}
 	

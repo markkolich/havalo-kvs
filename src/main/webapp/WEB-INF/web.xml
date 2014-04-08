@@ -7,10 +7,9 @@
 	<display-name>Havalo</display-name>
 	<description>A zero configuration, non-distributed key-value store that runs in your existing Servlet container.</description>
 
-	<context-param>
-		<param-name>webAppRootKey</param-name>
-		<param-value>havalo.root</param-value>
-	</context-param>
+    <listener>
+        <listener-class>com.kolich.curacao.CuracaoContextListener</listener-class>
+    </listener>
 	
 	<!--
 		Disable the use of session cookies.  This turns off the setting
