@@ -2,17 +2,17 @@
 
 A zero configuration, non-distributed NoSQL key-value store that runs in any Servlet 3.0 compatible container.
 
-Sometimes you just need fast NoSQL storage, but don't need full redundancy and scalability (that's right, `localhost` will do just fine).  With Havalo, simply drop `havalo.war` into your favorite Servlet 3.0 compatible container and with <a href="#deployment">almost no configuration</a> you'll have access to a fast and lightweight K,V store backed by any local mount point for persistent storage.  And, Havalo has a pleasantly simple RESTful API for your added enjoyment.
+Sometimes you just need fast NoSQL storage, but don't need full redundancy and scalability (that's right, `localhost` will do just fine).  With Havalo, simply drop `havalo-kvs.war` into your favorite Servlet 3.0 compatible container and with <a href="#deployment">almost no configuration</a> you'll have access to a fast and lightweight K,V store backed by any local mount point for persistent storage.  And, Havalo has a pleasantly simple RESTful API for your added enjoyment.
 
 Havalo is perfect for testing, maintaining fast indexes of data stored "elsewhere", and almost any other deployment scenario where relational databases are just too heavy.
 
-The latest <a href="http://markkolich.github.io/downloads/havalo-kvs/1.5/havalo-1.5.war">stable version of Havalo is 1.5</a>.
+The latest <a href="http://markkolich.github.io/downloads/havalo-kvs/2.0/havalo-kvs-2.0.war">stable version of Havalo is 2.0</a>.
 
 Written in Java 7, for a Java 7 compatible JVM.
 
 ## Features
 
-* **Zero Configuration** &ndash; Drop `havalo.war` into your Servlet 3.0 compatible container, and get local NoSQL storage with nothing else to install &mdash; Havalo is built to run alongside your exsting applications.  For a slightly more secure deployment, create one `.conf` file with the right magic inside and place it in your Servlet container's default configuration directory.
+* **Zero Configuration** &ndash; Drop `havalo-kvs.war` into your Servlet 3.0 compatible container, and get local NoSQL storage with nothing else to install &mdash; Havalo is built to run alongside your exsting applications.  For a slightly more secure deployment, create one `.conf` file with the right magic inside and place it in your Servlet container's default configuration directory.
 
 * **In-Memory Locking** &ndash; Completely avoids relying on the filesystem to manage resource locking.  As a result, Havalo manages all locks on objects and repositories in local memory.  As such, Havalo behaves the same on ext3, ext4, NTFS, NFS Plus, etc.  No matter where you deploy Havalo, you can trust it will do the right thing.
 
@@ -94,7 +94,7 @@ If desired, Havalo supports "hot deployment" which allows you to deploy or undep
 
 Havalo is configured using the HOCON configuration format provided by the <a href="https://github.com/typesafehub/config">Typesafe Config</a> library.  Read more about HOCON and its similarities to JSON <a href="https://github.com/typesafehub/config#json-superset">here</a>.
 
-The Havalo default configuration file, <a href="https://github.com/markkolich/havalo-kvs/blob/master/src/main/resources/application.conf">application.conf</a>, is shipped inside of the Havalo `.war` file.  To override any of these configuration properties, simply drop a file named `havalo.conf` into your Servlet container's `conf` directory.  For example, if running Havalo inside of Tomcat, drop your custom `havalo.conf` into `$CATALINA_HOME/conf` before deploying `havalo.war`.
+The Havalo default configuration file, <a href="https://github.com/markkolich/havalo-kvs/blob/master/src/main/resources/application.conf">application.conf</a>, is shipped inside of the Havalo `.war` file.  To override any of these configuration properties, simply drop a file named `havalo.conf` into your Servlet container's `conf` directory.  For example, if running Havalo inside of Tomcat, drop your custom `havalo.conf` into `$CATALINA_HOME/conf` before deploying `havalo-kvs.war`.
 
 Finally, note you only need to override the configuration properties you want to change.  For example, if you only want to override the location on disk where Havalo stores its repositories and objects, create a `havalo.conf` file that looks like this:
 
@@ -264,13 +264,13 @@ Run SBT from within your newly cloned *havalo-kvs* directory.
     #~> cd havalo-kvs
     #~/havalo-kvs> sbt
     ...
-    havalo-kvs:1.7-SNAPSHOT>
+    havalo-kvs:2.0>
 
 You will see a `havalo-kvs` SBT prompt once all dependencies are resolved and the project is loaded.
 
 In SBT, run `container:start` to start the local Servlet container.  By default the server listens on **port 8080**.
 
-    havalo:1.7-SNAPSHOT> container:start
+    havalo:2.0> container:start
     [info] jetty-9.1.0.v20131115
     [info] Started ServerConnector@{HTTP/1.1}{0.0.0.0:8080}    
     [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
@@ -283,12 +283,12 @@ See the <a href="https://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki">xsbt-
 
 In SBT, run `package` to build a deployable WAR for your favorite Servlet container.
 
-    havalo-kvs:1.7-SNAPSHOT> package
+    havalo-kvs:2.0> package
     ...
     [info] Compiling 51 Java sources to ~/havalo-kvs/target/classes...
-    [info] Packaging ~/havalo-kvs/dist/havalo-1.7-SNAPSHOT.jar ...
+    [info] Packaging ~/havalo-kvs/dist/havalo-2.0.jar ...
     [info] Done packaging.
-    [info] Packaging ~/havalo-kvs/dist/havalo-1.7-SNAPSHOT.war ...
+    [info] Packaging ~/havalo-kvs/dist/havalo-2.0.war ...
     [info] Done packaging.
     [success] Total time: 4 s, completed Mar 27, 2013 10:32:31 PM
 
@@ -296,7 +296,7 @@ Note the resulting WAR is placed into the **havalo-kvs/dist** directory.  Deploy
 
 To create an IntelliJ IDEA project for Havalo, run `gen-idea` in SBT.
 
-    havalo-kvs:1.7-SNAPSHOT> gen-idea
+    havalo-kvs:2.0> gen-idea
     ...
     [info] Creating IDEA module for project 'havalo-kvs' ...
 
@@ -304,7 +304,7 @@ You'll now have an IntelliJ IDEA project worthy of an import.
 
 ## Licensing
 
-Copyright (c) 2013 <a href="http://mark.koli.ch">Mark S. Kolich</a>
+Copyright (c) 2014 <a href="http://mark.koli.ch">Mark S. Kolich</a>
 
 All code in this project is freely available for use and redistribution under the <a href="http://opensource.org/comment/991">MIT License</a>.
 
