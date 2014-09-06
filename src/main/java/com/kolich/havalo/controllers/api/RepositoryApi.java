@@ -62,7 +62,7 @@ public class RepositoryApi extends HavaloApiController {
     @RequestMapping(methods=GET,
                     value="/api/repository",
                     matcher=AntPathMatcher.class,
-                    filter=HavaloAuthenticationFilter.class)
+                    filters=HavaloAuthenticationFilter.class)
     public final ObjectList get(@Query("startsWith") final String startsWith,
                                 final KeyPair userKp) throws Exception {
         final Repository repo = getRepository(userKp.getKey());
@@ -80,7 +80,7 @@ public class RepositoryApi extends HavaloApiController {
     @RequestMapping(methods=POST,
                     value="/api/repository",
                     matcher=AntPathMatcher.class,
-                    filter=HavaloAuthenticationFilter.class)
+                    filters=HavaloAuthenticationFilter.class)
     public final KeyPair post(final KeyPair userKp) {
         // Only admin level users have the right to delete repositories.
         if(!userKp.isAdmin()) {
@@ -105,7 +105,7 @@ public class RepositoryApi extends HavaloApiController {
     @RequestMapping(methods=DELETE,
                     value="/api/repository/{key}",
                     matcher=AntPathMatcher.class,
-                    filter=HavaloAuthenticationFilter.class)
+                    filters=HavaloAuthenticationFilter.class)
     public final CuracaoEntity delete(final ObjectKey key,
                                       final KeyPair userKp) throws Exception {
         // Only admin level users have the right to delete repositories.

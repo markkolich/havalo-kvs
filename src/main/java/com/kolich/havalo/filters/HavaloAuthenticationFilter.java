@@ -27,6 +27,7 @@
 package com.kolich.havalo.filters;
 
 import com.kolich.curacao.annotations.Injectable;
+import com.kolich.curacao.handlers.requests.CuracaoRequestContext;
 import com.kolich.curacao.handlers.requests.filters.CuracaoRequestFilter;
 import com.kolich.havalo.components.RepositoryManagerComponent;
 import com.kolich.havalo.entities.types.KeyPair;
@@ -65,8 +66,9 @@ public final class HavaloAuthenticationFilter implements CuracaoRequestFilter {
 	}
 
     @Override
-    public final void filter(final HttpServletRequest request) throws Exception {
+    public final void filter(final CuracaoRequestContext context) throws Exception {
         try {
+            final HttpServletRequest request = context.request_;
             // Extract the Authorization header from the incoming HTTP request.
             String header = request.getHeader(AUTHORIZATION);
             // If the header does not exist or does not start with the correct

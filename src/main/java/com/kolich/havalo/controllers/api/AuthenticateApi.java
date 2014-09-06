@@ -48,7 +48,7 @@ public class AuthenticateApi extends HavaloApiController {
     @RequestMapping(methods=POST,
                     value="/api/authenticate",
                     matcher=AntPathMatcher.class,
-                    filter=HavaloAuthenticationFilter.class)
+                    filters=HavaloAuthenticationFilter.class)
     public final KeyPair authenticate(final KeyPair userKp) {
         // A bit redundant, but the call to getRepository() here just
         // verifies that the user account exists ~and~ the corresponding
