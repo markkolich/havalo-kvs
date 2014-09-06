@@ -89,7 +89,7 @@ object Havalo extends Build {
   import Resolvers._
 
   private val aName = "havalo-kvs"
-  private val aVer = "2.0-M2"
+  private val aVer = "2.0-M1"
   private val aOrg = "com.kolich"
 
   lazy val havaloKvs: Project = Project(
