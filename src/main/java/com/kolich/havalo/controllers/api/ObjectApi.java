@@ -339,7 +339,7 @@ public class ObjectApi extends HavaloApiController {
     private static final void streamObject(final DiskObject object,
                                            final HttpServletResponse response) {
         try(final InputStream is = new FileInputStream(object.getFile());
-            final OutputStream os = response.getOutputStream();){
+            final OutputStream os = response.getOutputStream()) {
             copyLarge(is, os);
         } catch (Exception e) {
             // On any Exception case, just log the failure and move on.
