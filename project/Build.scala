@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014 Mark S. Kolich
+ * Copyright (c) 2015 Mark S. Kolich
  * http://mark.koli.ch
  *
  * Permission is hereby granted, free of charge, to any person
@@ -90,7 +90,7 @@ object Havalo extends Build {
   import Resolvers._
 
   private val aName = "havalo-kvs"
-  private val aVer = "2.0-M3"
+  private val aVer = "2.1"
   private val aOrg = "com.kolich"
 
   lazy val havaloKvs: Project = Project(

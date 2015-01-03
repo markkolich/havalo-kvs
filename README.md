@@ -304,7 +304,7 @@ You'll now have an IntelliJ IDEA project worthy of an import.
 
 ## Licensing
 
-Copyright (c) 2014 <a href="http://mark.koli.ch">Mark S. Kolich</a>
+Copyright (c) 2015 <a href="http://mark.koli.ch">Mark S. Kolich</a>
 
 All code in this project is freely available for use and redistribution under the <a href="http://opensource.org/comment/991">MIT License</a>.
 
