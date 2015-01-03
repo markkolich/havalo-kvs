@@ -27,7 +27,7 @@
 package com.kolich.havalo.mappers;
 
 import com.kolich.curacao.annotations.mappers.ControllerArgumentTypeMapper;
-import com.kolich.curacao.handlers.requests.CuracaoRequestContext;
+import com.kolich.curacao.handlers.requests.CuracaoContext;
 import com.kolich.curacao.handlers.requests.mappers.ControllerMethodArgumentMapper;
 import com.kolich.havalo.entities.types.KeyPair;
 
@@ -43,7 +43,7 @@ public final class KeyPairArgumentMapper
 
 	@Override
 	public final KeyPair resolve(@Nullable final Annotation annotation,
-                                 final CuracaoRequestContext context) {
+                                 final CuracaoContext context) {
         final HttpServletRequest request = context.request_;
         return (KeyPair)request.getAttribute(HAVALO_AUTHENTICATION_ATTRIBUTE);
 	}

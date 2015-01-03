@@ -44,7 +44,7 @@ import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.filters.HavaloAuthenticationFilter;
 import com.kolich.havalo.mappers.ObjectKeyArgumentMapper.ObjectKey;
 
-import static com.kolich.curacao.annotations.methods.RequestMapping.RequestMethod.*;
+import static com.kolich.curacao.annotations.methods.RequestMapping.Method.*;
 import static com.kolich.havalo.HavaloConfigurationFactory.getHavaloAdminUUID;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 

@@ -35,18 +35,19 @@ object Dependencies {
 
   // Internal dependencies
   
-  private val kolichCommon = "com.kolich" % "kolich-common" % "0.2" % "compile"
-  private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.5" % "compile"
+  private val kolichCommon = "com.kolich" % "kolich-common" % "0.3" % "compile"
+  private val kolichBolt = "com.kolich" % "kolich-bolt" % "0.0.8" % "compile"
 
   // External dependencies
 
-  private val curacao = "com.kolich.curacao" % "curacao" % "2.6.2" % "compile"
-  private val curacaoGson = "com.kolich.curacao" % "curacao-gson" % "2.6.2" % "compile"
+  private val curacao = "com.kolich.curacao" % "curacao" % "2.8.5" % "compile"
+  private val curacaoGson = "com.kolich.curacao" % "curacao-gson" % "2.8.5" % "compile"
 
-  // Jetty 9 stable, version 9.2.2.v20140723 (as of 9/6/14)
-  private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % "9.2.2.v20140723" % "container"
-  private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % "9.2.2.v20140723" % "container"
-  private val jettyJsp = "org.eclipse.jetty" % "jetty-jsp" % "9.2.2.v20140723" % "container"
+  // Jetty 9 stable, version 9.2.6.v20141205 (as of 12/20/14)
+  private val jettyVersion = "9.2.6.v20141205"
+  private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % jettyVersion % "container"
+  private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % jettyVersion % "container"
+  private val jettyJsp = "org.eclipse.jetty" % "jetty-jsp" % jettyVersion % "container"
   
   private val jspApi = "javax.servlet.jsp" % "jsp-api" % "2.2" % "provided" // Provided by container  
   private val jstl = "javax.servlet" % "jstl" % "1.2" % "compile" // Package with WAR
@@ -89,7 +90,7 @@ object Havalo extends Build {
   import Resolvers._
 
   private val aName = "havalo-kvs"
-  private val aVer = "2.0-M2"
+  private val aVer = "2.0-M3"
   private val aOrg = "com.kolich"
 
   lazy val havaloKvs: Project = Project(
@@ -98,7 +99,7 @@ object Havalo extends Build {
     settings = Defaults.coreDefaultSettings ++ Seq(resolvers := depResolvers) ++ Seq(
       version := aVer,
       organization := aOrg,
-      scalaVersion := "2.10.2",
+      scalaVersion := "2.11.4",
       javacOptions ++= Seq(
         "-Xlint", "-g"/*,
         // Java "cross compiling" against Java 6. Note you need to provide the "rt"

@@ -35,7 +35,7 @@ import com.kolich.havalo.controllers.HavaloApiController;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.filters.HavaloAuthenticationFilter;
 
-import static com.kolich.curacao.annotations.methods.RequestMapping.RequestMethod.POST;
+import static com.kolich.curacao.annotations.methods.RequestMapping.Method.POST;
 
 @Controller
 public class AuthenticateApi extends HavaloApiController {

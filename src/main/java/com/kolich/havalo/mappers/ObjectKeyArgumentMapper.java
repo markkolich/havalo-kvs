@@ -28,7 +28,7 @@ package com.kolich.havalo.mappers;
 
 import com.kolich.common.util.URLEncodingUtils;
 import com.kolich.curacao.annotations.mappers.ControllerArgumentTypeMapper;
-import com.kolich.curacao.handlers.requests.CuracaoRequestContext;
+import com.kolich.curacao.handlers.requests.CuracaoContext;
 import com.kolich.curacao.handlers.requests.mappers.ControllerMethodArgumentMapper;
 
 import javax.annotation.Nullable;
@@ -45,8 +45,8 @@ public final class ObjectKeyArgumentMapper
 
 	@Override
 	public final ObjectKey resolve(@Nullable final Annotation annotation,
-                                   final CuracaoRequestContext context) {
-        return new ObjectKey(context.pathVars_.get(PATHVAR_KEY));
+                                   final CuracaoContext context) {
+        return new ObjectKey(context.getPathVariables().get(PATHVAR_KEY));
 	}
 
     public static final class ObjectKey {

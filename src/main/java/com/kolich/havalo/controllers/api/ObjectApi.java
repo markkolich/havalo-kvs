@@ -64,7 +64,7 @@ import static com.google.common.io.Files.move;
 import static com.google.common.net.HttpHeaders.*;
 import static com.google.common.net.MediaType.OCTET_STREAM;
 import static com.kolich.common.util.secure.KolichChecksum.getSHA1HashAndCopy;
-import static com.kolich.curacao.annotations.methods.RequestMapping.RequestMethod.*;
+import static com.kolich.curacao.annotations.methods.RequestMapping.Method.*;
 import static com.kolich.havalo.HavaloConfigurationFactory.getMaxUploadSize;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static org.apache.commons.io.FileUtils.deleteQuietly;
