@@ -27,18 +27,18 @@
 package com.kolich.havalo.mappers;
 
 import com.kolich.common.util.URLEncodingUtils;
-import com.kolich.curacao.annotations.mappers.ControllerArgumentTypeMapper;
-import com.kolich.curacao.handlers.requests.CuracaoContext;
-import com.kolich.curacao.handlers.requests.mappers.ControllerMethodArgumentMapper;
+import com.kolich.curacao.CuracaoContext;
+import com.kolich.curacao.annotations.Mapper;
+import com.kolich.curacao.mappers.request.ControllerArgumentMapper;
 
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 
 import static org.apache.commons.lang3.Validate.notEmpty;
 
-@ControllerArgumentTypeMapper(ObjectKeyArgumentMapper.ObjectKey.class)
+@Mapper
 public final class ObjectKeyArgumentMapper
-	extends ControllerMethodArgumentMapper<ObjectKeyArgumentMapper.ObjectKey> {
+	extends ControllerArgumentMapper<ObjectKeyArgumentMapper.ObjectKey> {
 
     // In a path "/api/foo/{key}", this maps to {key}
     private static final String PATHVAR_KEY = "key";

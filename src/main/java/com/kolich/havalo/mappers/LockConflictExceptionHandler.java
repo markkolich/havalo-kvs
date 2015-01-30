@@ -27,8 +27,8 @@
 package com.kolich.havalo.mappers;
 
 import com.kolich.bolt.exceptions.LockConflictException;
-import com.kolich.curacao.annotations.mappers.ControllerReturnTypeMapper;
-import com.kolich.curacao.handlers.responses.mappers.RenderingResponseTypeMapper;
+import com.kolich.curacao.annotations.Mapper;
+import com.kolich.curacao.mappers.response.ControllerReturnTypeMapper;
 
 import javax.annotation.Nonnull;
 import javax.servlet.AsyncContext;
@@ -36,9 +36,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 
-@ControllerReturnTypeMapper(LockConflictException.class)
+@Mapper
 public final class LockConflictExceptionHandler
-    extends RenderingResponseTypeMapper<LockConflictException> {
+    extends ControllerReturnTypeMapper<LockConflictException> {
 
     @Override
     public final void render(final AsyncContext context,

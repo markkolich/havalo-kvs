@@ -29,11 +29,11 @@ package com.kolich.havalo.controllers.api;
 import com.kolich.bolt.ReentrantReadWriteEntityLock;
 import com.kolich.curacao.annotations.Controller;
 import com.kolich.curacao.annotations.Injectable;
-import com.kolich.curacao.annotations.methods.RequestMapping;
+import com.kolich.curacao.annotations.RequestMapping;
 import com.kolich.curacao.annotations.parameters.Query;
 import com.kolich.curacao.entities.CuracaoEntity;
 import com.kolich.curacao.entities.empty.StatusCodeOnlyCuracaoEntity;
-import com.kolich.curacao.handlers.requests.matchers.AntPathMatcher;
+import com.kolich.curacao.mappers.request.matchers.AntPathMatcher;
 import com.kolich.havalo.components.RepositoryManagerComponent;
 import com.kolich.havalo.controllers.HavaloApiController;
 import com.kolich.havalo.entities.types.HavaloUUID;
@@ -44,7 +44,7 @@ import com.kolich.havalo.exceptions.repositories.RepositoryForbiddenException;
 import com.kolich.havalo.filters.HavaloAuthenticationFilter;
 import com.kolich.havalo.mappers.ObjectKeyArgumentMapper.ObjectKey;
 
-import static com.kolich.curacao.annotations.methods.RequestMapping.Method.*;
+import static com.kolich.curacao.annotations.RequestMapping.Method.*;
 import static com.kolich.havalo.HavaloConfigurationFactory.getHavaloAdminUUID;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 

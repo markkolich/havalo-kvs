@@ -40,8 +40,8 @@ object Dependencies {
 
   // External dependencies
 
-  private val curacao = "com.kolich.curacao" % "curacao" % "2.8.5" % "compile"
-  private val curacaoGson = "com.kolich.curacao" % "curacao-gson" % "2.8.5" % "compile"
+  private val curacao = "com.kolich.curacao" % "curacao" % "2.9-M1" % "compile"
+  private val curacaoGson = "com.kolich.curacao" % "curacao-gson" % "2.9-M1" % "compile"
 
   // Jetty 9 stable, version 9.2.6.v20141205 (as of 12/20/14)
   private val jettyVersion = "9.2.6.v20141205"
@@ -90,7 +90,7 @@ object Havalo extends Build {
   import Resolvers._
 
   private val aName = "havalo-kvs"
-  private val aVer = "2.1"
+  private val aVer = "2.2"
   private val aOrg = "com.kolich"
 
   lazy val havaloKvs: Project = Project(

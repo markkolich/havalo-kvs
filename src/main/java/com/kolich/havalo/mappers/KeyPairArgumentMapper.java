@@ -26,9 +26,9 @@
 
 package com.kolich.havalo.mappers;
 
-import com.kolich.curacao.annotations.mappers.ControllerArgumentTypeMapper;
-import com.kolich.curacao.handlers.requests.CuracaoContext;
-import com.kolich.curacao.handlers.requests.mappers.ControllerMethodArgumentMapper;
+import com.kolich.curacao.CuracaoContext;
+import com.kolich.curacao.annotations.Mapper;
+import com.kolich.curacao.mappers.request.ControllerArgumentMapper;
 import com.kolich.havalo.entities.types.KeyPair;
 
 import javax.annotation.Nullable;
@@ -37,9 +37,9 @@ import java.lang.annotation.Annotation;
 
 import static com.kolich.havalo.filters.HavaloAuthenticationFilter.HAVALO_AUTHENTICATION_ATTRIBUTE;
 
-@ControllerArgumentTypeMapper(KeyPair.class)
+@Mapper
 public final class KeyPairArgumentMapper
-	extends ControllerMethodArgumentMapper<KeyPair> {
+	extends ControllerArgumentMapper<KeyPair> {
 
 	@Override
 	public final KeyPair resolve(@Nullable final Annotation annotation,

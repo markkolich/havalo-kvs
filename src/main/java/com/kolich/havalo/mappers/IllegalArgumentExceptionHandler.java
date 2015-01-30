@@ -26,8 +26,8 @@
 
 package com.kolich.havalo.mappers;
 
-import com.kolich.curacao.annotations.mappers.ControllerReturnTypeMapper;
-import com.kolich.curacao.handlers.responses.mappers.RenderingResponseTypeMapper;
+import com.kolich.curacao.annotations.Mapper;
+import com.kolich.curacao.mappers.response.ControllerReturnTypeMapper;
 
 import javax.annotation.Nonnull;
 import javax.servlet.AsyncContext;
@@ -35,9 +35,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
-@ControllerReturnTypeMapper(IllegalArgumentException.class)
+@Mapper
 public final class IllegalArgumentExceptionHandler
-    extends RenderingResponseTypeMapper<IllegalArgumentException> {
+    extends ControllerReturnTypeMapper<IllegalArgumentException> {
 
     @Override
     public final void render(final AsyncContext context,

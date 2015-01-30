@@ -26,9 +26,9 @@
 
 package com.kolich.havalo.filters;
 
+import com.kolich.curacao.CuracaoContext;
 import com.kolich.curacao.annotations.Injectable;
-import com.kolich.curacao.handlers.requests.CuracaoContext;
-import com.kolich.curacao.handlers.requests.filters.CuracaoRequestFilter;
+import com.kolich.curacao.mappers.request.filters.CuracaoRequestFilter;
 import com.kolich.havalo.components.RepositoryManagerComponent;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.exceptions.authentication.AuthenticationException;
