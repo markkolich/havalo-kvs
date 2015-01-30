@@ -1,4 +1,4 @@
-# Havalo
+# Havalo-KVS
 
 A zero configuration, non-distributed NoSQL key-value store that runs in any Servlet 3.0 compatible container.
 
