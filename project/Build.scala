@@ -43,7 +43,7 @@ object Dependencies {
   private val curacao = "com.kolich.curacao" % "curacao" % "2.9-M1" % "compile"
   private val curacaoGson = "com.kolich.curacao" % "curacao-gson" % "2.9-M1" % "compile"
 
-  // Jetty 9 stable, version 9.2.10.v20150310
+  // Jetty 9 stable
   private val jettyVersion = "9.2.10.v20150310"
   private val jettyWebApp = "org.eclipse.jetty" % "jetty-webapp" % jettyVersion % "container"
   private val jettyPlus = "org.eclipse.jetty" % "jetty-plus" % jettyVersion % "container"
