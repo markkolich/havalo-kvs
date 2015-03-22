@@ -61,15 +61,14 @@ public class RepositoryManagerComponent {
 
     @Injectable
     public RepositoryManagerComponent(final ServletContext context) {
-        repositoryManager_ = createInitialAdminRepository(context, config__);
+        repositoryManager_ = createInitialAdminRepository(context);
     }
 
     public RepositoryManager getRepositoryManager() {
         return repositoryManager_;
     }
 
-    private static final RepositoryManager getRepositoryManager(
-        final ServletContext context) {
+    private static final RepositoryManager getRepositoryManager(final ServletContext context) {
         String repositoryBase = getRepositoryBase();
         if(repositoryBase == null) {
             logger__.warn("Config property '" + HAVALO_REPO_BASE_CONFIG_PROPERTY +
@@ -94,8 +93,7 @@ public class RepositoryManagerComponent {
         return new RepositoryManager(realPath, maxFilenameLength);
     }
 
-    private static final RepositoryManager createInitialAdminRepository(
-        final ServletContext context, final Config config) {
+    private static final RepositoryManager createInitialAdminRepository(final ServletContext context) {
         RepositoryManager repoManager = null;
         try {
             repoManager = getRepositoryManager(context);

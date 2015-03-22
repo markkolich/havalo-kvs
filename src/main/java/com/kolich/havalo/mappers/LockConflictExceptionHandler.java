@@ -42,8 +42,8 @@ public final class LockConflictExceptionHandler
 
     @Override
     public final void render(final AsyncContext context,
-        final HttpServletResponse response,
-        final @Nonnull LockConflictException entity) throws Exception {
+                             final HttpServletResponse response,
+                             final @Nonnull LockConflictException entity) throws Exception {
         renderEntity(response, SC_CONFLICT);
     }
 
