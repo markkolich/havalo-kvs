@@ -155,6 +155,8 @@
                 <configuration>
                     <webApp>
                         <contextPath>/havalo-kvs</contextPath>
+                        <!-- Intentionally skip scanning JARs for Servlet 3 annotations. -->
+                        <WebInfIncludeJarPattern>^$</WebInfIncludeJarPattern>
                     </webApp>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                 </configuration>
