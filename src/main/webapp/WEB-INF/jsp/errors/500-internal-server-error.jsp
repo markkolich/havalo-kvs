@@ -2,7 +2,7 @@
 
 <html><body>
 
-	<h2>Havalo</h2>
+	<h2>Havalo-KVS</h2>
 	<h3>500 Internal Server Error</h3>
 	
 	<pre>

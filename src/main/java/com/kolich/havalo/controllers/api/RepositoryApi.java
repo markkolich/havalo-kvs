@@ -33,7 +33,7 @@ import com.kolich.curacao.annotations.RequestMapping;
 import com.kolich.curacao.annotations.parameters.Query;
 import com.kolich.curacao.entities.CuracaoEntity;
 import com.kolich.curacao.entities.empty.StatusCodeOnlyCuracaoEntity;
-import com.kolich.curacao.mappers.request.matchers.AntPathMatcher;
+import com.kolich.curacao.mappers.request.matchers.CuracaoAntPathMatcher;
 import com.kolich.havalo.components.RepositoryManagerComponent;
 import com.kolich.havalo.controllers.HavaloApiController;
 import com.kolich.havalo.entities.types.HavaloUUID;
@@ -61,7 +61,7 @@ public class RepositoryApi extends HavaloApiController {
 
     @RequestMapping(methods=GET,
                     value="/api/repository",
-                    matcher=AntPathMatcher.class,
+                    matcher=CuracaoAntPathMatcher.class,
                     filters=HavaloAuthenticationFilter.class)
     public final ObjectList get(@Query("startsWith") final String startsWith,
                                 final KeyPair userKp) throws Exception {
@@ -79,7 +79,7 @@ public class RepositoryApi extends HavaloApiController {
 
     @RequestMapping(methods=POST,
                     value="/api/repository",
-                    matcher=AntPathMatcher.class,
+                    matcher=CuracaoAntPathMatcher.class,
                     filters=HavaloAuthenticationFilter.class)
     public final KeyPair post(final KeyPair userKp) {
         // Only admin level users have the right to delete repositories.
@@ -104,7 +104,7 @@ public class RepositoryApi extends HavaloApiController {
 
     @RequestMapping(methods=DELETE,
                     value="/api/repository/{key}",
-                    matcher=AntPathMatcher.class,
+                    matcher=CuracaoAntPathMatcher.class,
                     filters=HavaloAuthenticationFilter.class)
     public final CuracaoEntity delete(final ObjectKey key,
                                       final KeyPair userKp) throws Exception {
