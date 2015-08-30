@@ -46,21 +46,21 @@ public final class HavaloConfigurationFactory {
 	// Public static's
 		
 	public static final String HAVALO_REPO_BASE_CONFIG_PROPERTY =
-		"havalo.repository.base";
+		"havalo-kvs.repository.base";
 	public static final String HAVALO_REPO_MAX_FILENAME_LENGTH_PROPERTY =
-		"havalo.repository.maxfilename.length";
+		"havalo-kvs.repository.maxfilename.length";
 	public static final String HAVALO_ADMIN_API_UUID_PROPERTY =
-		"havalo.api.admin.uuid";
+		"havalo-kvs.api.admin.uuid";
 	public static final String HAVALO_ADMIN_API_SECRET_PROPERTY =
-		"havalo.api.admin.secret";
+		"havalo-kvs.api.admin.secret";
 	
 	public static final String HAVALO_UPLOAD_MAX_SIZE_PROPERTY =
-		"havalo.upload.max.size";
+		"havalo-kvs.upload.max.size";
 	
 	// Private static's
 	
 	private static final String HAVALO_EXTERNAL_CONFIG_FILENAME =
-		"havalo.conf";
+		"havalo-kvs.conf";
 	private static final String CONTAINER_CONF_DIRNAME =
 		"conf";
 	private static final String JETTY_HOME_SYS_PROPERTY =

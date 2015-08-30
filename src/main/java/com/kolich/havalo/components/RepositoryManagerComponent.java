@@ -55,8 +55,6 @@ public class RepositoryManagerComponent {
 
     private static final String REPO_BASE_DEFAULT = "WEB-INF/work";
 
-    private static final Config config__ = getConfigInstance();
-
     private final RepositoryManager repositoryManager_;
 
     @Injectable

@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
   
-	<display-name>Havalo</display-name>
-	<description>A zero configuration, non-distributed key-value store that runs in your existing Servlet container.</description>
+	<display-name>Havalo-KVS</display-name>
+	<description>A zero configuration, non-distributed key-value store that runs in your Servlet container.</description>
 
     <listener>
         <listener-class>com.kolich.curacao.CuracaoContextListener</listener-class>

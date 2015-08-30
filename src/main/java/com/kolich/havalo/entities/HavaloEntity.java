@@ -35,7 +35,7 @@ import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.HavaloError;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.Repository;
-import org.ardverk.collection.Trie;
+import org.apache.commons.collections4.Trie;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -78,7 +78,7 @@ public abstract class HavaloEntity extends GsonAppendableCuracaoEntity {
 			new KolichDefaultDateTypeAdapter(iso8601Format__));
 		builder.registerTypeAdapter(new TypeToken<File>(){}.getType(),
 			new Repository.FileTypeAdapter());
-		builder.registerTypeAdapter(new TypeToken<Trie<String, HashedFileObject>>(){}.getType(), 
+		builder.registerTypeAdapter(new TypeToken<Trie<String, HashedFileObject>>(){}.getType(),
 			new Repository.TrieTypeAdapter());
 		builder.registerTypeAdapter(new TypeToken<Exception>(){}.getType(), 
 			new HavaloError.ExceptionTypeAdapter());

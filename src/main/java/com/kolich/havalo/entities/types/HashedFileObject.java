@@ -26,11 +26,9 @@
 
 package com.kolich.havalo.entities.types;
 
-import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
-import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static com.google.common.net.HttpHeaders.ETAG;
-import static com.google.common.net.HttpHeaders.LAST_MODIFIED;
-import static com.kolich.common.date.RFC822DateFormat.getNewInstance;
+import com.google.common.net.HttpHeaders;
+import com.google.gson.annotations.SerializedName;
+import com.kolich.havalo.entities.HavaloFileEntity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,12 +37,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.google.common.net.HttpHeaders;
-import com.google.gson.annotations.SerializedName;
-import com.kolich.havalo.entities.HavaloFileEntity;
+import static com.google.common.net.HttpHeaders.*;
+import static com.kolich.common.date.RFC822DateFormat.getNewInstance;
 
-public final class HashedFileObject extends HavaloFileEntity
-	implements Serializable {
+public final class HashedFileObject extends HavaloFileEntity implements Serializable {
 	
 	private static final long serialVersionUID = 7496664023986725650L;
 						
@@ -96,8 +92,6 @@ public final class HashedFileObject extends HavaloFileEntity
 	
 	/**
 	 * Set the Content-Type of this entity.
-	 * @param contentLength
-	 * @return
 	 */
 	public HashedFileObject setContentType(final String contentType) {
 		return setHeader(CONTENT_TYPE, contentType);

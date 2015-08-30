@@ -26,34 +26,25 @@
 
 package com.kolich.havalo.entities.types;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.ardverk.collection.StringKeyAnalyzer.CHAR;
+import com.google.gson.*;
+import com.google.gson.annotations.SerializedName;
+import com.kolich.havalo.entities.StoreableEntity;
+import org.apache.commons.collections4.Trie;
+import org.apache.commons.collections4.trie.PatriciaTrie;
 
 import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import org.ardverk.collection.PatriciaTrie;
-import org.ardverk.collection.Trie;
-
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.google.gson.annotations.SerializedName;
-import com.kolich.havalo.entities.StoreableEntity;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class Repository extends StoreableEntity implements Serializable {
 	
 	private static final long serialVersionUID = 8231197578192198012L;
 	
 	@SerializedName("repo_dir")
-	private File repositoryDir_;
+	private final File repositoryDir_;
 	
 	@SerializedName("id")
 	private HavaloUUID repoId_;
@@ -62,13 +53,13 @@ public final class Repository extends StoreableEntity implements Serializable {
 	private KeyPair keyPair_;
 	
 	@SerializedName("objects")
-	private Trie<String, HashedFileObject> objects_;
+	private final Trie<String, HashedFileObject> objects_;
 	
 	public Repository(File repositoryDir, HavaloUUID repoId) {
 		super((repoId != null) ? repoId.toString() : null);
 		repositoryDir_ = repositoryDir;
 		repoId_ = repoId;
-		objects_ = new PatriciaTrie<String, HashedFileObject>(CHAR);
+		objects_ = new PatriciaTrie<>();
 	}
 	
 	// For GSON
@@ -251,8 +242,7 @@ public final class Repository extends StoreableEntity implements Serializable {
 				throw new JsonParseException("Dood! The Trie to " +
 		    		"deserialize should be an object!");
 			}
-			final Trie<String, HashedFileObject> trie =
-				new PatriciaTrie<String, HashedFileObject>(CHAR);
+			final Trie<String, HashedFileObject> trie = new PatriciaTrie<>();
 			for(final Map.Entry<String, JsonElement> entry :
 				json.getAsJsonObject().entrySet()) {
 				trie.put(entry.getKey(),
