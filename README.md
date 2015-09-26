@@ -6,7 +6,7 @@ Sometimes you just need fast NoSQL storage, but don't need full redundancy and s
 
 Havalo-KVS is perfect for testing, maintaining fast indexes of data stored "elsewhere", and almost any other deployment scenario where relational databases are just too heavy.
 
-The latest <a href="http://markkolich.github.io/downloads/havalo-kvs/2.1/havalo-kvs-2.1.war">stable version of Havalo-KVS is 2.1</a>.
+See the <a href="https://github.com/markkolich/havalo-kvs/releases">Releases</a> page for the latest version.
 
 Written in Java 8, for a Java 8 compatible JVM.
 
