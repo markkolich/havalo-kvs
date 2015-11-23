@@ -8,7 +8,7 @@
 	<description>A zero configuration, non-distributed key-value store that runs in your Servlet container.</description>
 
     <listener>
-        <listener-class>com.kolich.curacao.CuracaoContextListener</listener-class>
+        <listener-class>curacao.CuracaoContextListener</listener-class>
     </listener>
 	
 	<!--
@@ -22,7 +22,7 @@
 		
 	<servlet>
 		<servlet-name>CuracaoDispatcherServlet</servlet-name>
-		<servlet-class>com.kolich.curacao.CuracaoDispatcherServlet</servlet-class>
+		<servlet-class>curacao.CuracaoDispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>

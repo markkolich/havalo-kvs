@@ -30,7 +30,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.kolich.common.entities.gson.KolichDefaultDateTypeAdapter;
-import com.kolich.curacao.gson.GsonAppendableCuracaoEntity;
+import curacao.gson.GsonAppendableCuracaoEntity;
 import com.kolich.havalo.entities.types.HashedFileObject;
 import com.kolich.havalo.entities.types.HavaloError;
 import com.kolich.havalo.entities.types.HavaloUUID;

@@ -27,8 +27,8 @@
 package com.kolich.havalo.mappers;
 
 import com.kolich.bolt.exceptions.LockConflictException;
-import com.kolich.curacao.annotations.Mapper;
-import com.kolich.curacao.mappers.response.ControllerReturnTypeMapper;
+import curacao.annotations.Mapper;
+import curacao.mappers.response.ControllerReturnTypeMapper;
 
 import javax.annotation.Nonnull;
 import javax.servlet.AsyncContext;

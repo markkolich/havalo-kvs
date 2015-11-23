@@ -26,16 +26,16 @@
 
 package com.kolich.havalo.controllers.api;
 
-import com.kolich.curacao.annotations.Controller;
-import com.kolich.curacao.annotations.Injectable;
-import com.kolich.curacao.annotations.RequestMapping;
-import com.kolich.curacao.mappers.request.matchers.CuracaoAntPathMatcher;
+import curacao.annotations.Controller;
+import curacao.annotations.Injectable;
+import curacao.annotations.RequestMapping;
+import curacao.mappers.request.matchers.CuracaoAntPathMatcher;
 import com.kolich.havalo.components.RepositoryManagerComponent;
 import com.kolich.havalo.controllers.HavaloApiController;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.filters.HavaloAuthenticationFilter;
 
-import static com.kolich.curacao.annotations.RequestMapping.Method.POST;
+import static curacao.annotations.RequestMapping.Method.POST;
 
 @Controller
 public class AuthenticateApi extends HavaloApiController {

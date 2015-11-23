@@ -26,7 +26,7 @@
 
 package com.kolich.havalo.exceptions;
 
-import com.kolich.curacao.exceptions.CuracaoException;
+import curacao.exceptions.CuracaoException;
 
 public class HavaloException extends CuracaoException.WithStatus {
 	

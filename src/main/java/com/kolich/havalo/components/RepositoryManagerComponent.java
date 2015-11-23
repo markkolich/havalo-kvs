@@ -26,8 +26,8 @@
 
 package com.kolich.havalo.components;
 
-import com.kolich.curacao.annotations.Component;
-import com.kolich.curacao.annotations.Injectable;
+import curacao.annotations.Component;
+import curacao.annotations.Injectable;
 import com.kolich.havalo.entities.types.HavaloUUID;
 import com.kolich.havalo.entities.types.KeyPair;
 import com.kolich.havalo.entities.types.UserRole;

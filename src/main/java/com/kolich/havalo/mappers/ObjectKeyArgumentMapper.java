@@ -27,9 +27,9 @@
 package com.kolich.havalo.mappers;
 
 import com.kolich.common.util.URLEncodingUtils;
-import com.kolich.curacao.CuracaoContext;
-import com.kolich.curacao.annotations.Mapper;
-import com.kolich.curacao.mappers.request.ControllerArgumentMapper;
+import curacao.CuracaoContext;
+import curacao.annotations.Mapper;
+import curacao.mappers.request.ControllerArgumentMapper;
 
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
